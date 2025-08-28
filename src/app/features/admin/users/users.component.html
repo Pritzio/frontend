@@ -24,28 +24,29 @@
           type="text" 
           class="input" 
           placeholder="Nombre, email o username..."
-          [(ngModel)]="searchTerm"
+          [formControlName]="'searchTerm'"
+          (input)="onSearch()"
         >
       </div>
       
       <div class="filter-group">
         <label class="filter-label">Estado</label>
-        <select class="input" [(ngModel)]="statusFilter">
+        <select class="input" [formControlName]="'statusFilter'" (change)="onStatusFilterChange()">
           <option value="">Todos los estados</option>
-          <option value="ACTIVE">Activo</option>
-          <option value="INACTIVE">Inactivo</option>
-          <option value="SUSPENDED">Suspendido</option>
-          <option value="PENDING_VERIFICATION">Pendiente</option>
+          <option [value]="UserStatus.ACTIVE">Activo</option>
+          <option [value]="UserStatus.INACTIVE">Inactivo</option>
+          <option [value]="UserStatus.SUSPENDED">Suspendido</option>
+          <option [value]="UserStatus.PENDING_VERIFICATION">Pendiente</option>
         </select>
       </div>
       
       <div class="filter-group">
         <label class="filter-label">Tipo</label>
-        <select class="input" [(ngModel)]="typeFilter">
+        <select class="input" [formControlName]="'typeFilter'" (change)="onTypeFilterChange()">
           <option value="">Todos los tipos</option>
-          <option value="INDIVIDUAL">Individual</option>
-          <option value="BUSINESS">Empresarial</option>
-          <option value="SYSTEM">Sistema</option>
+          <option [value]="UserType.INDIVIDUAL">Individual</option>
+          <option [value]="UserType.BUSINESS">Empresarial</option>
+          <option [value]="UserType.SYSTEM">Sistema</option>
         </select>
       </div>
       
@@ -110,13 +111,13 @@
             
             <td class="type-cell">
               <span class="type-badge" [class]="getTypeColor(user.type)">
-                {{ user.type === 'INDIVIDUAL' ? 'Individual' : user.type === 'BUSINESS' ? 'Empresarial' : 'Sistema' }}
+                {{ user.type === UserType.INDIVIDUAL ? 'Individual' : user.type === UserType.BUSINESS ? 'Empresarial' : 'Sistema' }}
               </span>
             </td>
             
             <td class="status-cell">
               <span class="status-badge" [class]="getStatusColor(user.status)">
-                {{ user.status === 'ACTIVE' ? 'Activo' : user.status === 'INACTIVE' ? 'Inactivo' : user.status === 'SUSPENDED' ? 'Suspendido' : 'Pendiente' }}
+                {{ user.status === UserStatus.ACTIVE ? 'Activo' : user.status === UserStatus.INACTIVE ? 'Inactivo' : user.status === UserStatus.SUSPENDED ? 'Suspendido' : 'Pendiente' }}
               </span>
             </td>
             
@@ -144,7 +145,7 @@
             <td class="actions-cell">
               <div class="action-buttons">
                 <button 
-                  *ngIf="user.status === 'ACTIVE'" 
+                  *ngIf="user.status === UserStatus.ACTIVE" 
                   class="btn btn-warning btn-sm"
                   (click)="suspendUser(user)"
                   title="Suspender usuario"
@@ -155,7 +156,7 @@
                 </button>
                 
                 <button 
-                  *ngIf="user.status === 'SUSPENDED'" 
+                  *ngIf="user.status === UserStatus.SUSPENDED" 
                   class="btn btn-success btn-sm"
                   (click)="activateUser(user)"
                   title="Activar usuario"

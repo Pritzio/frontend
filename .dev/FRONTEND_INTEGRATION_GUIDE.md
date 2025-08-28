@@ -572,4 +572,47 @@ const searchProducts = async (query, filters = {}) => {
 
 ---
 
+## ⚠️ **IMPORTANTE: Discrepancia en Estructura de Respuesta**
+
+### **🚨 Problema Identificado**
+El backend **NO implementa** la estructura de respuesta `IApiResponse<T>` documentada para los endpoints de autenticación.
+
+### **📊 Estructura Real del Backend (Implementada)**
+```json
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expiresIn": 900,
+  "user": {
+    "id": "uuid",
+    "username": "testuser",
+    "email": "test@test.com",
+    "type": "individual"
+  }
+}
+```
+
+### **📊 Estructura Documentada (NO Implementada)**
+```json
+{
+  "success": true,
+  "data": {
+    "accessToken": "...",
+    "refreshToken": "...",
+    "user": {...}
+  },
+  "message": "Login successful",
+  "timestamp": "2024-01-15T10:00:00Z"
+}
+```
+
+### **🔧 Solución Implementada**
+El frontend ha sido actualizado para manejar la estructura real del backend. **NO usar** `IApiResponse<T>` para endpoints de autenticación.
+
+### **📚 Documentación Adicional**
+- **Guía de Debugging**: `.dev/LOGIN_SYSTEM_DEBUG.md`
+- **Implementación Técnica**: `.docs/LOGIN_IMPLEMENTATION.md`
+
+---
+
 > **💡 Tip**: Esta documentación se actualiza automáticamente con cada cambio en el backend. Para la información más reciente, consulta siempre la documentación Swagger en `/api/docs`.

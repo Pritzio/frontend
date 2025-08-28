@@ -46,24 +46,4 @@ export interface IProduct {
   updatedAt: Date;
 }
 
-export interface IStoreProduct {
-  id: string;
-  storeId: string;
-  productId: string;
-  price: number;
-  originalPrice?: number;
-  currency: string;
-  stockQuantity?: number;
-  availability: AvailabilityStatus;
-  lastScrapedAt?: Date;
-  metadata?: Record<string, any>;
-  createdAt: Date;
-  updatedAt: Date;
-}
 
-export enum AvailabilityStatus {
-  IN_STOCK = 'in_stock',
-  OUT_OF_STOCK = 'out_of_stock',
-  LIMITED_STOCK = 'limited_stock',
-  PRE_ORDER = 'pre_order'
-}

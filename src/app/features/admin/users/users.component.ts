@@ -1,30 +1,60 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
-import { AdminService, User } from '../../../core/services/admin.service';
+import { UsersService } from '../../../core/services/users.service';
+import { IUser, UserType, UserStatus } from '../../../models/user.model';
+import { IApiFilters } from '../../../models/api.model';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit, OnDestroy {
   private _destroy$ = new Subject<void>();
 
-  public users: User[] = [];
+  public users: IUser[] = [];
   public isLoading = true;
   public searchTerm = '';
   public statusFilter = '';
   public typeFilter = '';
+  public currentPage = 1;
+  public totalPages = 1;
+  public totalUsers = 0;
+  public limit = 20;
+  public loginForm!: FormGroup;
 
-  constructor(private _adminService: AdminService) {}
+  // Make enums available in template
+  public UserStatus = UserStatus;
+  public UserType = UserType;
+
+  constructor(
+    private _usersService: UsersService,
+    private _formBuilder: FormBuilder
+  ) {}
 
   ngOnInit(): void {
+    this._initForm();
     this._loadUsers();
+  }
+
+  private _initForm(): void {
+    this.loginForm = this._formBuilder.group({
+      searchTerm: [''],
+      statusFilter: [''],
+      typeFilter: ['']
+    });
+
+    // Set initial values
+    this.loginForm.patchValue({
+      searchTerm: this.searchTerm,
+      statusFilter: this.statusFilter,
+      typeFilter: this.typeFilter
+    });
   }
 
   ngOnDestroy(): void {
@@ -34,17 +64,34 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   private _loadUsers(): void {
     this.isLoading = true;
-    this._adminService.users$
-      .pipe(takeUntil(this._destroy$))
-      .subscribe(users => {
-        this.users = users;
-        this.isLoading = false;
-      });
+    
+    const filters: IApiFilters = {
+      page: this.currentPage,
+      limit: this.limit,
+      search: this.searchTerm || undefined,
+      sortBy: 'createdAt',
+      sortOrder: 'desc'
+    };
 
-    this._adminService.getUsers().subscribe();
+    this._usersService.getUsers(filters)
+      .pipe(takeUntil(this._destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            this.users = response.data.data;
+            this.totalPages = response.data.meta.totalPages;
+            this.totalUsers = response.data.meta.total;
+          }
+          this.isLoading = false;
+        },
+        error: (error: any) => {
+          console.error('Error loading users:', error);
+          this.isLoading = false;
+        }
+      });
   }
 
-  public get filteredUsers(): User[] {
+  public get filteredUsers(): IUser[] {
     let filtered = this.users;
 
     if (this.searchTerm) {
@@ -68,45 +115,48 @@ export class UsersComponent implements OnInit, OnDestroy {
     return filtered;
   }
 
-  public suspendUser(user: User): void {
+  public suspendUser(user: IUser): void {
     if (confirm(`¿Estás seguro de que quieres suspender a ${user.firstName} ${user.lastName}?`)) {
-      this._adminService.suspendUser(user.id).subscribe({
-        next: () => {
-          this._loadUsers();
-        },
-        error: (error) => {
-          console.error('Error suspending user:', error);
-          alert('Error al suspender usuario');
-        }
-      });
+      this._usersService.updateUser(user.id, { status: UserStatus.SUSPENDED })
+        .subscribe({
+          next: () => {
+            this._loadUsers();
+          },
+          error: (error: any) => {
+            console.error('Error suspending user:', error);
+            alert('Error al suspender usuario');
+          }
+        });
     }
   }
 
-  public activateUser(user: User): void {
+  public activateUser(user: IUser): void {
     if (confirm(`¿Estás seguro de que quieres activar a ${user.firstName} ${user.lastName}?`)) {
-      this._adminService.activateUser(user.id).subscribe({
-        next: () => {
-          this._loadUsers();
-        },
-        error: (error) => {
-          console.error('Error activating user:', error);
-          alert('Error al activar usuario');
-        }
-      });
+      this._usersService.updateUser(user.id, { status: UserStatus.ACTIVE })
+        .subscribe({
+          next: () => {
+            this._loadUsers();
+          },
+          error: (error: any) => {
+            console.error('Error activating user:', error);
+            alert('Error al activar usuario');
+          }
+        });
     }
   }
 
-  public deleteUser(user: User): void {
+  public deleteUser(user: IUser): void {
     if (confirm(`¿Estás seguro de que quieres eliminar a ${user.firstName} ${user.lastName}? Esta acción no se puede deshacer.`)) {
-      this._adminService.deleteUser(user.id).subscribe({
-        next: () => {
-          this._loadUsers();
-        },
-        error: (error) => {
-          console.error('Error deleting user:', error);
-          alert('Error al eliminar usuario');
-        }
-      });
+      this._usersService.deleteUser(user.id)
+        .subscribe({
+          next: () => {
+            this._loadUsers();
+          },
+          error: (error: any) => {
+            console.error('Error deleting user:', error);
+            alert('Error al eliminar usuario');
+          }
+        });
     }
   }
 
@@ -137,5 +187,27 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.searchTerm = '';
     this.statusFilter = '';
     this.typeFilter = '';
+    this.currentPage = 1;
+    this._loadUsers();
+  }
+
+  public onSearch(): void {
+    this.currentPage = 1;
+    this._loadUsers();
+  }
+
+  public onPageChange(page: number): void {
+    this.currentPage = page;
+    this._loadUsers();
+  }
+
+  public onStatusFilterChange(): void {
+    this.currentPage = 1;
+    this._loadUsers();
+  }
+
+  public onTypeFilterChange(): void {
+    this.currentPage = 1;
+    this._loadUsers();
   }
 }
