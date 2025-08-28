@@ -1,22 +1,26 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { AdminLayoutComponent } from './admin-layout.component';
+import { AdminGuard } from '../../core/guards/admin.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminLayoutComponent,
+    canActivate: [AdminGuard],
     children: [
       {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      },
+      {
         path: 'dashboard',
-        loadChildren: () =>
-          import('../dashboard/dashboard.module').then(m => m.DashboardModule)
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
       },
       {
         path: 'users',
-        loadChildren: () =>
-          import('./users/users.module').then(m => m.UsersModule)
+        loadChildren: () => import('./users/users.module').then(m => m.UsersModule)
       },
       {
         path: 'stores',
@@ -37,11 +41,6 @@ const routes: Routes = [
       {
         path: 'settings',
         loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)
-      },
-      {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
       }
     ]
   }
@@ -49,8 +48,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forChild(routes),
-    AdminLayoutComponent
+    RouterModule.forChild(routes)
   ]
 })
 export class AdminModule {}
