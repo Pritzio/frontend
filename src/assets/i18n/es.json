@@ -1,0 +1,337 @@
+{
+  "COMMON": {
+    "LOADING": "Cargando...",
+    "SAVE": "Guardar",
+    "CANCEL": "Cancelar",
+    "DELETE": "Eliminar",
+    "EDIT": "Editar",
+    "CREATE": "Crear",
+    "SEARCH": "Buscar",
+    "FILTER": "Filtrar",
+    "ACTIONS": "Acciones",
+    "STATUS": "Estado",
+    "ACTIVE": "Activo",
+    "INACTIVE": "Inactivo",
+    "YES": "Sí",
+    "NO": "No",
+    "SUCCESS": "Éxito",
+    "ERROR": "Error",
+    "WARNING": "Advertencia",
+    "INFO": "Información",
+    "CLOSE": "Cerrar",
+    "BACK": "Atrás",
+    "NEXT": "Siguiente",
+    "PREVIOUS": "Anterior",
+    "SUBMIT": "Enviar",
+    "RESET": "Restablecer",
+    "CONFIRM": "Confirmar",
+    "DISCARD": "Descartar",
+    "UPLOAD": "Subir",
+    "DOWNLOAD": "Descargar",
+    "EXPORT": "Exportar",
+    "IMPORT": "Importar",
+    "REFRESH": "Actualizar",
+    "UPDATE": "Actualizar",
+    "VIEW": "Ver",
+    "DETAILS": "Detalles",
+    "SETTINGS": "Configuración",
+    "PROFILE": "Perfil",
+    "LOGOUT": "Cerrar Sesión",
+    "LOGIN": "Iniciar Sesión",
+    "REGISTER": "Registrarse",
+    "FORGOT_PASSWORD": "Olvidé mi Contraseña",
+    "RESET_PASSWORD": "Restablecer Contraseña",
+    "CHANGE_PASSWORD": "Cambiar Contraseña",
+    "EMAIL": "Correo Electrónico",
+    "PASSWORD": "Contraseña",
+    "USERNAME": "Nombre de Usuario",
+    "FIRST_NAME": "Nombre",
+    "LAST_NAME": "Apellido",
+    "PHONE": "Teléfono",
+    "ADDRESS": "Dirección",
+    "CITY": "Ciudad",
+    "COUNTRY": "País",
+    "POSTAL_CODE": "Código Postal",
+    "LANGUAGE": "Idioma",
+    "ENGLISH": "Inglés",
+    "SPANISH": "Español"
+  },
+  "AUTH": {
+    "LOGIN_TITLE": "Bienvenido de Vuelta",
+    "LOGIN_SUBTITLE": "Inicia sesión en tu cuenta para continuar",
+    "LOGIN_IDENTIFIER": "Correo o Nombre de Usuario",
+    "LOGIN_PASSWORD": "Contraseña",
+    "LOGIN_BUTTON": "Iniciar Sesión",
+    "LOGIN_ERROR": "Error en el inicio de sesión",
+    "LOGIN_INVALID_CREDENTIALS": "Credenciales inválidas. Por favor verifica tu nombre de usuario/correo y contraseña.",
+    "LOGIN_AUTH_FAILED": "Falló la autenticación. Por favor verifica tus credenciales.",
+    "LOGIN_CONNECTION_ERROR": "No se puede conectar al servidor. Por favor verifica tu conexión.",
+    "LOGIN_GENERAL_ERROR": "Ocurrió un error durante el inicio de sesión. Por favor intenta de nuevo.",
+    "LOGIN_NO_ACCOUNT": "¿No tienes una cuenta?",
+    "LOGIN_SIGN_UP": "Regístrate",
+    "LOGIN_FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
+    "REGISTER_TITLE": "Crear Cuenta",
+    "REGISTER_SUBTITLE": "Regístrate para comenzar",
+    "REGISTER_BUTTON": "Crear Cuenta",
+    "REGISTER_SUCCESS": "Cuenta creada exitosamente",
+    "REGISTER_ERROR": "Falló el registro",
+    "LOGOUT_SUCCESS": "Sesión cerrada exitosamente",
+    "LOGOUT_ERROR": "Error durante el cierre de sesión"
+  },
+  "ADMIN": {
+    "DASHBOARD": {
+      "TITLE": "Panel de Administración",
+      "SUBTITLE": "Gestiona usuarios, tiendas, productos y scraping de la plataforma",
+      "QUICK_ACTIONS": "Acciones Rápidas",
+      "RECENT_ACTIVITY": "Actividad Reciente",
+      "SCRAPING_CONTROL": "Control de Scraping",
+      "ALERTS": "Alertas del Sistema"
+    },
+    "STATS": {
+      "TOTAL_USERS": "Total de Usuarios",
+      "NEW_THIS_WEEK": "nuevos esta semana",
+      "TOTAL_STORES": "Total de Tiendas",
+      "VERIFIED": "Verificadas",
+      "PENDING": "Pendientes",
+      "TOTAL_PRODUCTS": "Total de Productos",
+      "ACTIVE": "Activos",
+      "INACTIVE": "Inactivos",
+      "SCRAPING_STATUS": "Estado del Scraping"
+    },
+    "ACTIONS": {
+      "MANAGE_USERS": "Gestionar Usuarios",
+      "USERS_DESCRIPTION": "Administra usuarios, roles y permisos del sistema",
+      "MANAGE_STORES": "Gestionar Tiendas",
+      "STORES_DESCRIPTION": "Administra tiendas y sus ubicaciones físicas",
+      "MANAGE_PRODUCTS": "Gestionar Productos",
+      "PRODUCTS_DESCRIPTION": "Administra productos maestros y categorías",
+      "CONTROL_SCRAPING": "Control de Scraping",
+      "SCRAPING_DESCRIPTION": "Controla procesos de scraping y monitoreo de precios"
+    },
+    "SCRAPING": {
+      "STATUS": "Estado",
+      "START": "Iniciar",
+      "PAUSE": "Pausar",
+      "STOP": "Detener",
+      "HISTORY": "Historial",
+      "LAST_RUN": "Última Ejecución",
+      "PRODUCTS_UPDATED": "Productos Actualizados Hoy",
+      "STORES_ACTIVE": "Tiendas Activas en Scraping"
+    },
+    "NAVIGATION": {
+      "DASHBOARD": "Panel Principal",
+      "USERS": "Usuarios",
+      "STORES": "Tiendas",
+      "PRODUCTS": "Productos",
+      "SCRAPING": "Scraping",
+      "ANALYTICS": "Análisis",
+      "REPORTS": "Reportes",
+      "SETTINGS": "Configuración"
+    }
+  },
+  "USER": {
+    "DASHBOARD_TITLE": "Bienvenido a Pritzio",
+    "DASHBOARD_SUBTITLE": "Panel de Inteligencia de Precios",
+    "DASHBOARD_DESCRIPTION": "Rastrea precios, compara productos y toma decisiones informadas.",
+    "FEATURES": {
+      "SEARCH_PRODUCTS": {
+        "TITLE": "Buscar Productos",
+        "DESCRIPTION": "Encuentra productos en múltiples tiendas y compara precios",
+        "BUTTON": "Comenzar Búsqueda"
+      },
+      "PRICE_HISTORY": {
+        "TITLE": "Historial de Precios",
+        "DESCRIPTION": "Visualiza tendencias de precios y datos históricos de productos",
+        "BUTTON": "Ver Historial"
+      },
+      "PRICE_ALERTS": {
+        "TITLE": "Alertas de Precio",
+        "DESCRIPTION": "Recibe notificaciones cuando bajen los precios de tus productos favoritos",
+        "BUTTON": "Configurar Alertas"
+      },
+      "MOBILE_APP": {
+        "TITLE": "Aplicación Móvil",
+        "DESCRIPTION": "Accede a Pritzio desde cualquier lugar con nuestra aplicación móvil",
+        "BUTTON": "Descargar"
+      }
+    }
+  },
+  "USERS": {
+    "TITLE": "Gestión de Usuarios",
+    "CREATE_USER": "Crear Usuario",
+    "EDIT_USER": "Editar Usuario",
+    "DELETE_USER": "Eliminar Usuario",
+    "USER_DETAILS": "Detalles del Usuario",
+    "USER_LIST": "Lista de Usuarios",
+    "USER_TYPES": {
+      "INDIVIDUAL": "Individual",
+      "BUSINESS": "Empresarial",
+      "SYSTEM": "Sistema"
+    },
+    "USER_STATUS": {
+      "ACTIVE": "Activo",
+      "INACTIVE": "Inactivo",
+      "SUSPENDED": "Suspendido",
+      "PENDING_VERIFICATION": "Pendiente de Verificación"
+    },
+    "FIELDS": {
+      "ID": "ID",
+      "USERNAME": "Nombre de Usuario",
+      "EMAIL": "Correo Electrónico",
+      "FIRST_NAME": "Nombre",
+      "LAST_NAME": "Apellido",
+      "PHONE": "Teléfono",
+      "STATUS": "Estado",
+      "TYPE": "Tipo",
+      "EMAIL_VERIFIED": "Correo Verificado",
+      "PHONE_VERIFIED": "Teléfono Verificado",
+      "CREATED_AT": "Creado El",
+      "UPDATED_AT": "Actualizado El"
+    }
+  },
+  "STORES": {
+    "TITLE": "Gestión de Tiendas",
+    "CREATE_STORE": "Crear Tienda",
+    "EDIT_STORE": "Editar Tienda",
+    "DELETE_STORE": "Eliminar Tienda",
+    "STORE_DETAILS": "Detalles de la Tienda",
+    "STORE_LIST": "Lista de Tiendas",
+    "STORE_TYPES": {
+      "ONLINE": "En Línea",
+      "PHYSICAL": "Física",
+      "HYBRID": "Híbrida"
+    },
+    "STORE_STATUS": {
+      "ACTIVE": "Activa",
+      "INACTIVE": "Inactiva",
+      "SUSPENDED": "Suspendida",
+      "PENDING_VERIFICATION": "Pendiente de Verificación"
+    },
+    "STORE_CATEGORIES": {
+      "ELECTRONICS": "Electrónicos",
+      "CLOTHING": "Ropa",
+      "HOME_AND_GARDEN": "Hogar y Jardín",
+      "SPORTS": "Deportes",
+      "BEAUTY": "Belleza",
+      "BOOKS": "Libros",
+      "AUTOMOTIVE": "Automotriz",
+      "FOOD_AND_BEVERAGES": "Alimentos y Bebidas",
+      "HEALTH": "Salud",
+      "TOYS": "Juguetes",
+      "OTHER": "Otros"
+    },
+    "FIELDS": {
+      "ID": "ID",
+      "NAME": "Nombre",
+      "DESCRIPTION": "Descripción",
+      "WEBSITE": "Sitio Web",
+      "LOGO": "Logo",
+      "TYPE": "Tipo",
+      "STATUS": "Estado",
+      "CATEGORY": "Categoría",
+      "PHONE": "Teléfono",
+      "EMAIL": "Correo Electrónico",
+      "COUNTRY": "País",
+      "TIMEZONE": "Zona Horaria",
+      "VERIFIED": "Verificada",
+      "VERIFIED_AT": "Verificada El",
+      "VERIFIED_BY": "Verificada Por",
+      "CREATED_AT": "Creada El",
+      "UPDATED_AT": "Actualizada El"
+    }
+  },
+  "PRODUCTS": {
+    "TITLE": "Gestión de Productos",
+    "CREATE_PRODUCT": "Crear Producto",
+    "EDIT_PRODUCT": "Editar Producto",
+    "DELETE_PRODUCT": "Eliminar Producto",
+    "PRODUCT_DETAILS": "Detalles del Producto",
+    "PRODUCT_LIST": "Lista de Productos",
+    "PRODUCT_TYPES": {
+      "PHYSICAL": "Físico",
+      "DIGITAL": "Digital",
+      "SERVICE": "Servicio",
+      "SUBSCRIPTION": "Suscripción"
+    },
+    "PRODUCT_STATUS": {
+      "ACTIVE": "Activo",
+      "INACTIVE": "Inactivo",
+      "DISCONTINUED": "Descontinuado",
+      "OUT_OF_STOCK": "Sin Stock",
+      "COMING_SOON": "Próximamente"
+    },
+    "PRODUCT_CONDITION": {
+      "NEW": "Nuevo",
+      "USED": "Usado",
+      "REFURBISHED": "Reacondicionado",
+      "OPEN_BOX": "Caja Abierta"
+    },
+    "AVAILABILITY_STATUS": {
+      "IN_STOCK": "En Stock",
+      "OUT_OF_STOCK": "Sin Stock",
+      "LIMITED_STOCK": "Stock Limitado",
+      "PRE_ORDER": "Pedido Anticipado"
+    },
+    "FIELDS": {
+      "ID": "ID",
+      "NAME": "Nombre",
+      "DESCRIPTION": "Descripción",
+      "CODE": "Código",
+      "SKU": "SKU",
+      "BARCODE": "Código de Barras",
+      "IMAGE": "Imagen",
+      "BRAND": "Marca",
+      "CATEGORY": "Categoría",
+      "SUBCATEGORY": "Subcategoría",
+      "TYPE": "Tipo",
+      "STATUS": "Estado",
+      "CONDITION": "Condición",
+      "MODEL": "Modelo",
+      "MANUFACTURER": "Fabricante",
+      "COUNTRY": "País",
+      "WEIGHT": "Peso",
+      "WEIGHT_UNIT": "Unidad de Peso",
+      "DIMENSIONS": "Dimensiones",
+      "DIMENSIONS_UNIT": "Unidad de Dimensiones",
+      "CREATED_AT": "Creado El",
+      "UPDATED_AT": "Actualizado El"
+    }
+  },
+  "VALIDATION": {
+    "REQUIRED": "Este campo es requerido",
+    "MIN_LENGTH": "La longitud mínima es {{min}} caracteres",
+    "MAX_LENGTH": "La longitud máxima es {{max}} caracteres",
+    "EMAIL_INVALID": "Por favor ingresa un correo electrónico válido",
+    "PASSWORD_MIN": "La contraseña debe tener al menos 8 caracteres",
+    "PASSWORD_MATCH": "Las contraseñas deben coincidir",
+    "USERNAME_MIN": "El nombre de usuario debe tener al menos 3 caracteres",
+    "PHONE_INVALID": "Por favor ingresa un número de teléfono válido"
+  },
+  "MESSAGES": {
+    "CREATE_SUCCESS": "{{item}} creado exitosamente",
+    "UPDATE_SUCCESS": "{{item}} actualizado exitosamente",
+    "DELETE_SUCCESS": "{{item}} eliminado exitosamente",
+    "DELETE_CONFIRM": "¿Estás seguro de que quieres eliminar este {{item}}?",
+    "OPERATION_FAILED": "La operación falló. Por favor intenta de nuevo.",
+    "NETWORK_ERROR": "Error de red. Por favor verifica tu conexión.",
+    "UNAUTHORIZED": "No estás autorizado para realizar esta acción.",
+    "FORBIDDEN": "Acceso denegado.",
+    "NOT_FOUND": "{{item}} no encontrado.",
+    "SERVER_ERROR": "Error del servidor. Por favor intenta más tarde."
+  },
+  "PAGINATION": {
+    "ITEMS_PER_PAGE": "Elementos por página",
+    "SHOWING": "Mostrando {{from}} a {{to}} de {{total}} elementos",
+    "FIRST_PAGE": "Primera página",
+    "LAST_PAGE": "Última página",
+    "NEXT_PAGE": "Página siguiente",
+    "PREVIOUS_PAGE": "Página anterior"
+  },
+  "DATE_FORMATS": {
+    "SHORT": "dd/MM/yyyy",
+    "MEDIUM": "dd/MM/yyyy HH:mm",
+    "LONG": "EEEE, dd 'de' MMMM 'de' yyyy HH:mm",
+    "TIME": "HH:mm",
+    "DATE_TIME": "dd/MM/yyyy HH:mm"
+  }
+}

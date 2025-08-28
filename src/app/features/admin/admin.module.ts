@@ -1,17 +1,22 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { AdminLayoutComponent } from './admin-layout.component';
+
 const routes: Routes = [
   {
     path: '',
+    component: AdminLayoutComponent,
     children: [
       {
         path: 'dashboard',
-        loadChildren: () => import('../dashboard/dashboard.module').then(m => m.DashboardModule)
+        loadChildren: () =>
+          import('../dashboard/dashboard.module').then(m => m.DashboardModule)
       },
       {
         path: 'users',
-        loadChildren: () => import('./users/users.module').then(m => m.UsersModule)
+        loadChildren: () =>
+          import('./users/users.module').then(m => m.UsersModule)
       },
       {
         path: 'stores',
@@ -20,6 +25,18 @@ const routes: Routes = [
       {
         path: 'products',
         loadChildren: () => import('./products/products.module').then(m => m.ProductsModule)
+      },
+      {
+        path: 'scraping',
+        loadChildren: () => import('./scraping/scraping.module').then(m => m.ScrapingModule)
+      },
+      {
+        path: 'reports',
+        loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule)
+      },
+      {
+        path: 'settings',
+        loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)
       },
       {
         path: '',
@@ -31,9 +48,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [],
   imports: [
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    AdminLayoutComponent
   ]
 })
 export class AdminModule {}

@@ -1,0 +1,204 @@
+<div class="users-page">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Gestión de Usuarios</h1>
+      <p class="page-description">Administra usuarios, roles y permisos del sistema</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Nuevo Usuario
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters-section">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label class="filter-label">Buscar</label>
+        <input 
+          type="text" 
+          class="input" 
+          placeholder="Nombre, email o username..."
+          [(ngModel)]="searchTerm"
+        >
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Estado</label>
+        <select class="input" [(ngModel)]="statusFilter">
+          <option value="">Todos los estados</option>
+          <option value="ACTIVE">Activo</option>
+          <option value="INACTIVE">Inactivo</option>
+          <option value="SUSPENDED">Suspendido</option>
+          <option value="PENDING_VERIFICATION">Pendiente</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Tipo</label>
+        <select class="input" [(ngModel)]="typeFilter">
+          <option value="">Todos los tipos</option>
+          <option value="INDIVIDUAL">Individual</option>
+          <option value="BUSINESS">Empresarial</option>
+          <option value="SYSTEM">Sistema</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">&nbsp;</label>
+        <button class="btn btn-secondary" (click)="clearFilters()">
+          Limpiar Filtros
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Cargando usuarios...</p>
+  </div>
+
+  <!-- Users Table -->
+  <div *ngIf="!isLoading" class="users-table-container">
+    <div class="table-header">
+      <div class="table-info">
+        <span class="users-count">{{ filteredUsers.length }} usuarios encontrados</span>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Email</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th>Verificación</th>
+            <th>Fecha Creación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredUsers" class="user-row">
+            <td class="user-cell">
+              <div class="user-info">
+                <div class="user-avatar">
+                  <span class="user-initials">{{ getInitials(user.firstName, user.lastName) }}</span>
+                </div>
+                <div class="user-details">
+                  <div class="user-name">{{ user.firstName }} {{ user.lastName }}</div>
+                  <div class="user-username">@{{ user.username }}</div>
+                </div>
+              </div>
+            </td>
+            
+            <td class="email-cell">
+              <span class="email">{{ user.email }}</span>
+              <span *ngIf="user.emailVerified" class="verified-badge">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+            </td>
+            
+            <td class="type-cell">
+              <span class="type-badge" [class]="getTypeColor(user.type)">
+                {{ user.type === 'INDIVIDUAL' ? 'Individual' : user.type === 'BUSINESS' ? 'Empresarial' : 'Sistema' }}
+              </span>
+            </td>
+            
+            <td class="status-cell">
+              <span class="status-badge" [class]="getStatusColor(user.status)">
+                {{ user.status === 'ACTIVE' ? 'Activo' : user.status === 'INACTIVE' ? 'Inactivo' : user.status === 'SUSPENDED' ? 'Suspendido' : 'Pendiente' }}
+              </span>
+            </td>
+            
+            <td class="verification-cell">
+              <div class="verification-status">
+                <span class="verification-item" [class.verified]="user.emailVerified">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  </svg>
+                  Email
+                </span>
+                <span class="verification-item" [class.verified]="user.phoneVerified">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                  </svg>
+                  Teléfono
+                </span>
+              </div>
+            </td>
+            
+            <td class="date-cell">
+              {{ user.createdAt | date:'short' }}
+            </td>
+            
+            <td class="actions-cell">
+              <div class="action-buttons">
+                <button 
+                  *ngIf="user.status === 'ACTIVE'" 
+                  class="btn btn-warning btn-sm"
+                  (click)="suspendUser(user)"
+                  title="Suspender usuario"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"></path>
+                  </svg>
+                </button>
+                
+                <button 
+                  *ngIf="user.status === 'SUSPENDED'" 
+                  class="btn btn-success btn-sm"
+                  (click)="activateUser(user)"
+                  title="Activar usuario"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </button>
+                
+                <button 
+                  class="btn btn-secondary btn-sm"
+                  title="Editar usuario"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                  </svg>
+                </button>
+                
+                <button 
+                  class="btn btn-danger btn-sm"
+                  (click)="deleteUser(user)"
+                  title="Eliminar usuario"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredUsers.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+        </svg>
+      </div>
+      <h3 class="empty-title">No se encontraron usuarios</h3>
+      <p class="empty-description">Intenta ajustar los filtros de búsqueda</p>
+    </div>
+  </div>
+</div>

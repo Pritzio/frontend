@@ -1,0 +1,209 @@
+<div class="stores-page">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Gestión de Tiendas</h1>
+      <p class="page-description">Administra tiendas y sus ubicaciones físicas</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Nueva Tienda
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters-section">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label class="filter-label">Buscar</label>
+        <input 
+          type="text" 
+          class="input" 
+          placeholder="Nombre, descripción o website..."
+          [(ngModel)]="searchTerm"
+        >
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Estado</label>
+        <select class="input" [(ngModel)]="statusFilter">
+          <option value="">Todos los estados</option>
+          <option value="ACTIVE">Activa</option>
+          <option value="INACTIVE">Inactiva</option>
+          <option value="PENDING_VERIFICATION">Pendiente</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Categoría</label>
+        <select class="input" [(ngModel)]="categoryFilter">
+          <option value="">Todas las categorías</option>
+          <option value="ELECTRONICS">Electrónicos</option>
+          <option value="CLOTHING">Ropa</option>
+          <option value="HOME_AND_GARDEN">Hogar y Jardín</option>
+          <option value="SPORTS">Deportes</option>
+          <option value="BEAUTY">Belleza</option>
+          <option value="BOOKS">Libros</option>
+          <option value="AUTOMOTIVE">Automotriz</option>
+          <option value="FOOD_AND_BEVERAGES">Alimentos y Bebidas</option>
+          <option value="HEALTH">Salud</option>
+          <option value="TOYS">Juguetes</option>
+          <option value="OTHER">Otros</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">&nbsp;</label>
+        <button class="btn btn-secondary" (click)="clearFilters()">
+          Limpiar Filtros
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Cargando tiendas...</p>
+  </div>
+
+  <!-- Stores Table -->
+  <div *ngIf="!isLoading" class="stores-table-container">
+    <div class="table-header">
+      <div class="table-info">
+        <span class="stores-count">{{ filteredStores.length }} tiendas encontradas</span>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="stores-table">
+        <thead>
+          <tr>
+            <th>Tienda</th>
+            <th>Website</th>
+            <th>Categoría</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th>Verificación</th>
+            <th>Fecha Creación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let store of filteredStores" class="store-row">
+            <td class="store-cell">
+              <div class="store-info">
+                <div class="store-logo" *ngIf="store.logo; else storeIcon">
+                  <img [src]="store.logo" [alt]="store.name" class="logo-image">
+                </div>
+                <ng-template #storeIcon>
+                  <div class="store-icon">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                  </div>
+                </ng-template>
+                <div class="store-details">
+                  <div class="store-name">{{ store.name }}</div>
+                  <div class="store-description" *ngIf="store.description">{{ store.description }}</div>
+                </div>
+              </div>
+            </td>
+            
+            <td class="website-cell">
+              <a [href]="store.website" target="_blank" class="website-link">
+                {{ store.website }}
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+              </a>
+            </td>
+            
+            <td class="category-cell">
+              <span class="category-badge">{{ store.category }}</span>
+            </td>
+            
+            <td class="type-cell">
+              <span class="type-badge" [class]="getTypeColor(store.type)">
+                {{ store.type === 'ONLINE' ? 'Online' : store.type === 'PHYSICAL' ? 'Física' : 'Híbrida' }}
+              </span>
+            </td>
+            
+            <td class="status-cell">
+              <span class="status-badge" [class]="getStatusColor(store.status)">
+                {{ store.status === 'ACTIVE' ? 'Activa' : store.status === 'INACTIVE' ? 'Inactiva' : 'Pendiente' }}
+              </span>
+            </td>
+            
+            <td class="verification-cell">
+              <div class="verification-status">
+                <span class="verification-badge" [class.verified]="store.isVerified">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  {{ store.isVerified ? 'Verificada' : 'No verificada' }}
+                </span>
+                <div *ngIf="store.verifiedAt" class="verification-date">
+                  {{ store.verifiedAt | date:'short' }}
+                </div>
+              </div>
+            </td>
+            
+            <td class="date-cell">
+              {{ store.createdAt | date:'short' }}
+            </td>
+            
+            <td class="actions-cell">
+              <div class="action-buttons">
+                <button 
+                  *ngIf="!store.isVerified" 
+                  class="btn btn-success btn-sm"
+                  (click)="verifyStore(store)"
+                  title="Verificar tienda"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </button>
+                
+                <button 
+                  class="btn btn-secondary btn-sm"
+                  title="Editar tienda"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                  </svg>
+                </button>
+                
+                <button 
+                  class="btn btn-danger btn-sm"
+                  (click)="deleteStore(store)"
+                  title="Eliminar tienda"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredStores.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+        </svg>
+      </div>
+      <h3 class="empty-title">No se encontraron tiendas</h3>
+      <p class="empty-description">Intenta ajustar los filtros de búsqueda</p>
+    </div>
+  </div>
+</div>

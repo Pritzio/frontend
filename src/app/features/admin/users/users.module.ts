@@ -1,21 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
-import { SharedModule } from '../../../shared/shared.module';
+import { UsersComponent } from './users.component';
 
 const routes: Routes = [
-  // TODO: Create UsersComponent and uncomment this route
-  // {
-  //   path: '',
-  //   component: UsersComponent
-  // }
+  {
+    path: '',
+    component: UsersComponent
+  }
 ];
 
 @NgModule({
-  declarations: [],
   imports: [
-    SharedModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    UsersComponent,
+    FormsModule
   ]
 })
 export class UsersModule {}

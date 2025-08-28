@@ -1,7 +1,4 @@
 import { Routes } from '@angular/router';
-import { inject } from '@angular/core';
-import { AuthGuard } from './core/guards/auth.guard';
-import { AdminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -10,21 +7,35 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    canActivate: [() => inject(AdminGuard).canActivate()],
     loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule)
   },
   {
     path: 'dashboard',
-    canActivate: [() => inject(AuthGuard).canActivate()],
     loadChildren: () => import('./features/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
   {
-    path: '',
-    redirectTo: '/auth/login',
-    pathMatch: 'full'
+    path: 'products',
+    loadChildren: () => import('./features/products/products.module').then(m => m.ProductsModule)
   },
   {
-    path: '**',
-    redirectTo: '/auth/login'
+    path: 'stores',
+    loadChildren: () => import('./features/stores/stores.module').then(m => m.StoresModule)
+  },
+  {
+    path: 'comparison',
+    loadChildren: () => import('./features/comparison/comparison.module').then(m => m.ComparisonModule)
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./features/profile/profile.module').then(m => m.ProfileModule)
+  },
+  {
+    path: 'settings',
+    loadChildren: () => import('./features/settings/settings.module').then(m => m.SettingsModule)
+  },
+  {
+    path: '',
+    redirectTo: '/dashboard',
+    pathMatch: 'full'
   }
 ];
