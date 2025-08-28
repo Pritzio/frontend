@@ -61,11 +61,27 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     }
   }
 
+  public goToDashboard(): void {
+    this._router.navigate(['/dashboard']);
+  }
+
   public logout(): void {
     this._authService.logout();
+    this._router.navigate(['/auth/login']);
   }
 
   public getInitials(firstName: string, lastName: string): string {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+  }
+
+  public getUserRole(): string {
+    if (!this.currentUser) return 'Usuario';
+    
+    switch (this.currentUser.type) {
+      case 'system': return 'Administrador';
+      case 'business': return 'Empresarial';
+      case 'individual': return 'Individual';
+      default: return 'Usuario';
+    }
   }
 }
