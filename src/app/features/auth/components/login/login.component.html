@@ -1,0 +1,67 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo">
+        <h1>Pritzio</h1>
+        <p>Price Intelligence Platform</p>
+      </div>
+    </div>
+
+    <div class="login-form">
+      <h2>Welcome Back</h2>
+      <p class="subtitle">Sign in to your account to continue</p>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="identifier">Email or Username</label>
+          <input
+            type="text"
+            id="identifier"
+            formControlName="identifier"
+            placeholder="Enter your email or username"
+            [class.error]="loginForm.get('identifier')?.invalid && loginForm.get('identifier')?.touched"
+          />
+          <div class="error-message" *ngIf="loginForm.get('identifier')?.invalid && loginForm.get('identifier')?.touched">
+            <span *ngIf="loginForm.get('identifier')?.errors?.['required']">Email or username is required</span>
+            <span *ngIf="loginForm.get('identifier')?.errors?.['minlength']">Minimum 3 characters required</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            placeholder="Enter your password"
+            [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+          />
+          <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+            <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Minimum 8 characters required</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="btn-primary"
+            [disabled]="loginForm.invalid || isLoading"
+          >
+            <span *ngIf="!isLoading">Sign In</span>
+            <span *ngIf="isLoading" class="loading-spinner"></span>
+          </button>
+        </div>
+
+        <div class="error-message global-error" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+      </form>
+
+      <div class="login-footer">
+        <p>Don't have an account? <a routerLink="/auth/register">Sign up</a></p>
+        <p><a routerLink="/auth/forgot-password">Forgot your password?</a></p>
+      </div>
+    </div>
+  </div>
+</div>

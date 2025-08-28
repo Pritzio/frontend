@@ -1,0 +1,69 @@
+<div class="admin-dashboard">
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1>Admin Dashboard</h1>
+      <div class="user-info">
+        <span>Welcome, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-content">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon users-icon">👥</div>
+        <div class="stat-content">
+          <h3>Total Users</h3>
+          <p class="stat-number">{{ dashboardStats.totalUsers.toLocaleString() }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stores-icon">🏪</div>
+        <div class="stat-content">
+          <h3>Total Stores</h3>
+          <p class="stat-number">{{ dashboardStats.totalStores.toLocaleString() }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon products-icon">📦</div>
+        <div class="stat-content">
+          <h3>Total Products</h3>
+          <p class="stat-number">{{ dashboardStats.totalProducts.toLocaleString() }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon scraping-icon">🕷️</div>
+        <div class="stat-content">
+          <h3>Active Scraping</h3>
+          <p class="stat-number">{{ dashboardStats.activeScraping }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <h2>Quick Actions</h2>
+      <div class="actions-grid">
+        <button class="action-btn" routerLink="/admin/users">
+          <span class="action-icon">👥</span>
+          <span>Manage Users</span>
+        </button>
+        <button class="action-btn" routerLink="/admin/stores">
+          <span class="action-icon">🏪</span>
+          <span>Manage Stores</span>
+        </button>
+        <button class="action-btn" routerLink="/admin/products">
+          <span class="action-icon">📦</span>
+          <span>Manage Products</span>
+        </button>
+        <button class="action-btn">
+          <span class="action-icon">🕷️</span>
+          <span>Start Scraping</span>
+        </button>
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,48 @@
+<div class="user-dashboard">
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1>Welcome to Pritzio</h1>
+      <div class="user-info">
+        <span>Hello, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-content">
+    <div class="welcome-section">
+      <h2>Price Intelligence Dashboard</h2>
+      <p>Track prices, compare products, and make informed decisions.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Search Products</h3>
+        <p>Find products across multiple stores and compare prices</p>
+        <button class="feature-btn">Start Searching</button>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Price History</h3>
+        <p>View price trends and historical data for products</p>
+        <button class="feature-btn">View History</button>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3>Price Alerts</h3>
+        <p>Get notified when prices drop on your favorite products</p>
+        <button class="feature-btn">Set Alerts</button>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Mobile App</h3>
+        <p>Access Pritzio on the go with our mobile application</p>
+        <button class="feature-btn">Download</button>
+      </div>
+    </div>
+  </main>
+</div>
