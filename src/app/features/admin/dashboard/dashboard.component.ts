@@ -48,8 +48,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   private _loadInitialData(): void {
     this.isLoading = true;
-
-    // Load all data in parallel
+    
     combineLatest([
       this._adminService.dashboardStats$,
       this._adminService.users$,
@@ -60,9 +59,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       takeUntil(this._destroy$)
     ).subscribe(([stats, users, stores, products, scraping]) => {
       this.dashboardStats = stats;
-      this.recentUsers = users.slice(0, 5); // Last 5 users
-      this.recentStores = stores.slice(0, 5); // Last 5 stores
-      this.recentProducts = products.slice(0, 5); // Last 5 products
+      this.recentUsers = users ? users.slice(0, 5) : []; // Validación agregada
+      this.recentStores = stores ? stores.slice(0, 5) : []; // Validación agregada
+      this.recentProducts = products ? products.slice(0, 5) : []; // Validación agregada
       this.scrapingStatus = scraping;
       this.isLoading = false;
     });

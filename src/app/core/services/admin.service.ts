@@ -109,7 +109,7 @@ export interface ScrapingHistory {
   providedIn: 'root'
 })
 export class AdminService {
-  private readonly _apiUrl = `${environment.apiUrl}/api/v1`;
+  private readonly _apiUrl = environment.apiUrl; // Removido el /api/v1 duplicado
   
   private _dashboardStats = new BehaviorSubject<DashboardStats | null>(null);
   private _users = new BehaviorSubject<User[]>([]);
