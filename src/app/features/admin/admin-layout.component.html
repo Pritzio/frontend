@@ -1,16 +1,16 @@
-<div class="admin-layout">
+<div class="admin-layout flex flex-col h-screen bg-gray-50">
   <!-- Navbar Superior -->
-  <nav class="navbar">
-    <div class="navbar-left">
+  <nav class="flex items-center justify-between px-6 h-16 bg-white border-b border-gray-200 shadow-sm z-50">
+    <div class="flex items-center gap-4">
       <button class="sidebar-toggle" (click)="toggleSidebar()">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
       </button>
       <div class="brand">
-        <h1 class="brand-title">{{ 'ADMIN.TITLE' | translate }}</h1>
+        <h1 class="text-2xl font-bold text-primary-600 m-0">{{ 'ADMIN.TITLE' | translate }}</h1>
       </div>
-              <button class="back-to-dashboard" (click)="goToDashboard()" [title]="'ADMIN.BACK_TO_USER_VIEW' | translate">
+      <button class="back-to-dashboard" (click)="goToDashboard()" [title]="'ADMIN.BACK_TO_USER_VIEW' | translate">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
@@ -18,7 +18,7 @@
       </button>
     </div>
     
-    <div class="navbar-right">
+    <div class="flex items-center">
       <div class="user-menu">
         <div class="user-info" *ngIf="currentUser">
           <div class="user-avatar">
@@ -39,15 +39,15 @@
   </nav>
 
   <!-- Contenido Principal -->
-  <div class="main-content">
+  <div class="flex flex-1 overflow-hidden">
     <!-- Sidebar -->
     <aside class="sidebar" [class.sidebar-open]="isSidebarOpen">
-      <div class="sidebar-header">
-        <h2 class="sidebar-title">{{ 'ADMIN.MAIN_MENU' | translate }}</h2>
+      <div class="px-6 py-6 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900 m-0">{{ 'ADMIN.MAIN_MENU' | translate }}</h2>
       </div>
       
-      <nav class="sidebar-nav">
-        <ul class="nav-list">
+      <nav class="flex-1 py-4">
+        <ul class="list-none m-0 p-0">
           <li class="nav-item">
             <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-link" (click)="closeSidebar()">
               <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -117,7 +117,7 @@
     </aside>
 
     <!-- Contenido de la Página -->
-    <main class="page-content">
+    <main class="flex-1 overflow-y-auto p-6">
       <router-outlet></router-outlet>
     </main>
   </div>

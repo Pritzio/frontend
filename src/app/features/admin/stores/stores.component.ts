@@ -125,4 +125,14 @@ export class StoresComponent implements OnInit, OnDestroy {
     this.statusFilter = '';
     this.categoryFilter = '';
   }
+
+  public viewStore(store: Store): void {
+    // TODO: Implement view store functionality
+    console.log('View store:', store);
+  }
+
+  public editStore(store: Store): void {
+    // TODO: Implement edit store functionality
+    console.log('Edit store:', store);
+  }
 }

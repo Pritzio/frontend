@@ -98,7 +98,8 @@
       "OTHER": "Otros"
     },
     "VERIFICATION": "Verificación",
-    "CREATION_DATE": "Fecha de Creación"
+    "CREATION_DATE": "Fecha de Creación",
+    "CLEAR_FILTERS": "Limpiar Filtros"
   },
   "AUTH": {
     "LOGIN_TITLE": "Bienvenido de Vuelta",
@@ -228,7 +229,19 @@
         "NO_USERNAME": "Sin Usuario",
         "NO_EMAIL": "Sin Correo",
         "NO_STATUS": "Sin Estado",
-        "NO_DATE": "Sin Fecha"
+        "NO_DATE": "Sin Fecha",
+        "NO_ROLES": "Sin Roles"
+      },
+      "VIEW": "Ver",
+      "EDIT": "Editar",
+      "DELETE": "Eliminar",
+      "DEACTIVATE": "Desactivar",
+      "ACTIVATE": "Activar",
+      "EMAIL": "Correo",
+      "PHONE": "Teléfono",
+      "EMPTY": {
+        "TITLE": "No se Encontraron Usuarios",
+        "DESCRIPTION": "Ningún usuario coincide con los filtros actuales. Intenta ajustar tus criterios de búsqueda."
       }
     }
   },
@@ -407,7 +420,24 @@
     },
     "VERIFY_STORE": "Verificar Tienda",
     "EDIT_STORE": "Editar Tienda",
-    "DELETE_STORE": "Eliminar Tienda"
+    "DELETE_STORE": "Eliminar Tienda",
+    "STORE": "Tienda",
+    "PRODUCTS_COUNT": "Productos",
+    "PRODUCTS": "productos",
+    "VIEW": "Ver",
+    "EDIT": "Editar",
+    "DELETE": "Eliminar",
+    "EMPTY": {
+      "TITLE": "No se Encontraron Tiendas",
+      "DESCRIPTION": "Ninguna tienda coincide con los filtros actuales. Intenta ajustar tus criterios de búsqueda."
+    },
+    "CONFIRMATIONS": {
+      "DELETE": "¿Estás seguro de que quieres eliminar la tienda {{name}}?"
+    },
+    "ERRORS": {
+      "DELETE": "Error al eliminar tienda. Por favor intenta de nuevo.",
+      "VERIFY": "Error al verificar tienda. Por favor intenta de nuevo."
+    }
   },
   "PRODUCTS": {
     "TITLE": "Gestión de Productos",

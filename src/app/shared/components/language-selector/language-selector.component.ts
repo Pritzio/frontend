@@ -9,7 +9,7 @@ import { I18nService } from '../../../core/services/i18n.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="language-selector">
+    <div class="flex gap-2 items-center">
       <button 
         *ngFor="let lang of supportedLanguages" 
         class="lang-btn"
@@ -17,8 +17,8 @@ import { I18nService } from '../../../core/services/i18n.service';
         (click)="changeLanguage(lang)"
         [attr.aria-label]="'Change language to ' + getLanguageDisplayName(lang)"
       >
-        <span class="lang-flag">{{ getLanguageFlag(lang) }}</span>
-        <span class="lang-name">{{ getLanguageDisplayName(lang) }}</span>
+        <span class="text-lg leading-none">{{ getLanguageFlag(lang) }}</span>
+        <span class="font-medium lang-name">{{ getLanguageDisplayName(lang) }}</span>
       </button>
     </div>
   `,

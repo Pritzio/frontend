@@ -1,9 +1,3 @@
-.language-selector {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
 .lang-btn {
   display: flex;
   align-items: center;
@@ -36,20 +30,7 @@
   }
 }
 
-.lang-flag {
-  font-size: 1.125rem;
-  line-height: 1;
-}
-
-.lang-name {
-  font-weight: 500;
-}
-
 @media (max-width: 768px) {
-  .language-selector {
-    gap: 4px;
-  }
-
   .lang-btn {
     padding: 6px 8px;
     font-size: 0.75rem;

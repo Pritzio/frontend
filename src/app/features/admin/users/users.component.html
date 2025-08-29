@@ -1,26 +1,25 @@
-<div class="users-page">
+<div class="max-w-full">
   <!-- Header -->
-  <div class="page-header">
-    <div class="header-content">
-      <h1 class="page-title">{{ 'ADMIN.USERS.TITLE' | translate }}</h1>
-<p class="page-description">{{ 'ADMIN.USERS.DESCRIPTION' | translate }}</p>
-
+  <div class="flex items-center justify-between mb-8 pb-6 border-b border-gray-200">
+    <div class="flex-1">
+      <h1 class="text-3xl font-bold text-gray-900 m-0 mb-2">{{ 'ADMIN.USERS.TITLE' | translate }}</h1>
+      <p class="text-gray-600 m-0">{{ 'ADMIN.USERS.DESCRIPTION' | translate }}</p>
     </div>
-    <div class="header-actions">
-              <button class="btn btn-primary">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-          </svg>
-          {{ 'ADMIN.USERS.NEW_USER' | translate }}
-        </button>
+    <div class="flex gap-4">
+      <button class="btn btn-primary">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        {{ 'ADMIN.USERS.NEW_USER' | translate }}
+      </button>
     </div>
   </div>
 
   <!-- Filtros -->
-  <div class="filters-section">
-    <form [formGroup]="loginForm" class="filters-grid">
-      <div class="filter-group">
-        <label class="filter-label">{{ 'ADMIN.USERS.SEARCH' | translate }}</label>
+  <div class="bg-white rounded-xl p-6 mb-8 shadow-sm border border-gray-200">
+    <form [formGroup]="loginForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end">
+      <div class="flex flex-col">
+        <label class="text-sm font-medium text-gray-700 mb-2">{{ 'ADMIN.USERS.SEARCH' | translate }}</label>
         <input 
           type="text" 
           class="input" 
@@ -30,8 +29,8 @@
         >
       </div>
       
-      <div class="filter-group">
-        <label class="filter-label">{{ 'ADMIN.USERS.STATUS' | translate }}</label>
+      <div class="flex flex-col">
+        <label class="text-sm font-medium text-gray-700 mb-2">{{ 'ADMIN.USERS.STATUS' | translate }}</label>
         <select class="input" formControlName="statusFilter" (change)="onStatusFilterChange()">
           <option value="">{{ 'ADMIN.USERS.ALL_STATUSES' | translate }}</option>
           <option [value]="UserStatus.ACTIVE">{{ 'ADMIN.USERS.STATUSES.ACTIVE' | translate }}</option>
@@ -41,8 +40,8 @@
         </select>
       </div>
       
-      <div class="filter-group">
-        <label class="filter-label">{{ 'ADMIN.USERS.ROLES_LABEL' | translate }}</label>
+      <div class="flex flex-col">
+        <label class="text-sm font-medium text-gray-700 mb-2">{{ 'ADMIN.USERS.ROLES_LABEL' | translate }}</label>
         <select class="input" formControlName="typeFilter" (change)="onTypeFilterChange()">
           <option value="">{{ 'ADMIN.USERS.ALL_ROLES' | translate }}</option>
           <option value="admin">{{ 'ADMIN.USERS.ROLES.ADMIN' | translate }}</option>
@@ -53,9 +52,11 @@
         </select>
       </div>
       
-      <div class="filter-group">
-        <label class="filter-label">&nbsp;</label>
+      <div class="flex flex-col">
         <button class="btn btn-secondary" (click)="clearFilters()">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
           {{ 'ADMIN.USERS.CLEAR_FILTERS' | translate }}
         </button>
       </div>
@@ -63,142 +64,116 @@
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-state">
-    <div class="loading-spinner"></div>
-    <p>{{ 'ADMIN.USERS.LOADING' | translate }}</p>
+  <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-16 text-center">
+    <div class="loading-spinner mb-4"></div>
+    <p class="text-gray-600">{{ 'ADMIN.USERS.LOADING' | translate }}</p>
   </div>
 
   <!-- Users Table -->
-  <div *ngIf="!isLoading" class="users-table-container">
-    <div class="table-header">
-      <div class="table-info">
-        <span class="users-count">{{ filteredUsers.length }} {{ 'ADMIN.USERS.USERS_FOUND' | translate }}</span>
+  <div *ngIf="!isLoading" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="px-6 py-6 border-b border-gray-200 bg-gray-50">
+      <div class="flex items-center justify-between">
+        <span class="text-sm text-gray-600">{{ filteredUsers.length }} {{ 'ADMIN.USERS.USERS_FOUND' | translate }}</span>
       </div>
     </div>
 
-    <div class="table-container">
-      <table class="users-table">
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse text-sm">
         <thead>
           <tr>
-            <th>{{ 'ADMIN.USERS.ROLES.USER' | translate }}</th>
-            <th>{{ 'COMMON.EMAIL' | translate }}</th>
-            <th>{{ 'ADMIN.USERS.ROLES_LABEL' | translate }}</th>
-            <th>{{ 'ADMIN.USERS.STATUS' | translate }}</th>
-            <th>{{ 'COMMON.VERIFICATION' | translate }}</th>
-            <th>{{ 'COMMON.CREATION_DATE' | translate }}</th>
-            <th>{{ 'ADMIN.USERS.ACTIONS.EDIT' | translate }}</th>
+            <th class="bg-gray-50 p-4 text-left font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap min-w-[200px]">{{ 'ADMIN.USERS.ROLES.USER' | translate }}</th>
+            <th class="bg-gray-50 p-4 text-left font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap min-w-[200px]">{{ 'COMMON.EMAIL' | translate }}</th>
+            <th class="bg-gray-50 p-4 text-left font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap min-w-[120px]">{{ 'ADMIN.USERS.ROLES_LABEL' | translate }}</th>
+            <th class="bg-gray-50 p-4 text-left font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap min-w-[120px]">{{ 'ADMIN.USERS.STATUS' | translate }}</th>
+            <th class="bg-gray-50 p-4 text-left font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap min-w-[150px]">{{ 'COMMON.VERIFICATION' | translate }}</th>
+            <th class="bg-gray-50 p-4 text-left font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap min-w-[120px]">{{ 'COMMON.CREATION_DATE' | translate }}</th>
+            <th class="bg-gray-50 p-4 text-left font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap min-w-[150px]">{{ 'ADMIN.USERS.ACTIONS.EDIT' | translate }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of filteredUsers" class="user-row">
-            <td class="user-cell">
-              <div class="user-info">
+          <tr *ngFor="let user of filteredUsers" class="hover:bg-gray-50 transition-colors">
+            <!-- User Info -->
+            <td class="p-4 border-b border-gray-200 align-middle min-w-[200px]">
+              <div class="flex items-center gap-3">
                 <div class="user-avatar">
                   <span class="user-initials">{{ getInitials(user) }}</span>
                 </div>
-                <div class="user-details">
-                  <div class="user-name">
-                                  {{ (user.profile.firstName && user.profile.lastName) ? (user.profile.firstName + ' ' + user.profile.lastName) : 
+                <div class="min-w-0">
+                  <div class="font-semibold text-gray-900 mb-1">
+                    {{ (user.profile.firstName && user.profile.lastName) ? (user.profile.firstName + ' ' + user.profile.lastName) : 
                  (user.profile.firstName || user.profile.lastName || user.username || ('ADMIN.USERS.FALLBACKS.NO_NAME' | translate)) }}
                   </div>
-                                      <div class="user-username">@{{ user.username || ('ADMIN.USERS.FALLBACKS.NO_USERNAME' | translate) }}</div>
+                  <div class="text-xs text-gray-500">@{{ user.username || ('ADMIN.USERS.FALLBACKS.NO_USERNAME' | translate) }}</div>
                 </div>
               </div>
             </td>
             
-            <td class="email-cell">
-              <span class="email">{{ user.email || ('ADMIN.USERS.FALLBACKS.NO_EMAIL' | translate) }}</span>
-              <span *ngIf="user.emailVerified" class="verified-badge">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-              </span>
+            <!-- Email -->
+            <td class="p-4 border-b border-gray-200 align-middle min-w-[200px]">
+              <div class="flex items-center gap-2">
+                <span>{{ user.email || ('ADMIN.USERS.FALLBACKS.NO_EMAIL' | translate) }}</span>
+                <span *ngIf="user.emailVerified" class="text-success-600">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </span>
+              </div>
             </td>
             
-            <td class="type-cell">
-              <span class="type-badge" [class]="getRolesColor(user)">
+            <!-- Type -->
+            <td class="p-4 border-b border-gray-200 align-middle min-w-[120px]">
+              <span class="inline-block py-1 px-3 rounded-full text-xs font-medium text-center" [class]="getRolesColor(user)">
                 {{ getUserRoles(user) }}
               </span>
             </td>
             
-            <td class="status-cell">
-              <span class="status-badge" [class]="getStatusColor(user.status)">
+            <!-- Status -->
+            <td class="p-4 border-b border-gray-200 align-middle min-w-[120px]">
+              <span class="inline-block py-1 px-3 rounded-full text-xs font-medium text-center" [class]="getStatusColor(user.status)">
                 {{ user.status === UserStatus.ACTIVE ? ('ADMIN.USERS.STATUSES.ACTIVE' | translate) : user.status === UserStatus.INACTIVE ? ('ADMIN.USERS.STATUSES.INACTIVE' | translate) : user.status === UserStatus.SUSPENDED ? ('ADMIN.USERS.STATUSES.SUSPENDED' | translate) : user.status === UserStatus.PENDING_VERIFICATION ? ('ADMIN.USERS.STATUSES.PENDING' | translate) : user.status === UserStatus.DELETED ? ('ADMIN.USERS.STATUSES.DELETED' | translate) : (user.status || ('ADMIN.USERS.FALLBACKS.NO_STATUS' | translate)) }}
               </span>
             </td>
             
-            <td class="verification-cell">
-              <div class="verification-status">
-                <span class="verification-item" [class.verified]="user.emailVerified">
+            <!-- Verification -->
+            <td class="p-4 border-b border-gray-200 align-middle min-w-[150px]">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2 text-xs" [class.text-success-600]="user.emailVerified" [class.text-gray-500]="!user.emailVerified">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
                   </svg>
-                  Email
-                </span>
-                <span class="verification-item" [class.verified]="user.phoneVerified">
+                  {{ 'ADMIN.USERS.EMAIL' | translate }}
+                </div>
+                <div class="flex items-center gap-2 text-xs" [class.text-success-600]="user.phoneVerified" [class.text-gray-500]="!user.phoneVerified">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                   </svg>
-                  Phone
-                </span>
+                  {{ 'ADMIN.USERS.PHONE' | translate }}
+                </div>
               </div>
             </td>
             
-            <td class="date-cell">
-              {{ user.createdAt ? (user.createdAt | date:'short') : ('ADMIN.USERS.FALLBACKS.NO_DATE' | translate) }}
+            <!-- Created Date -->
+            <td class="p-4 border-b border-gray-200 align-middle min-w-[120px] text-gray-600 text-xs">
+              {{ user.createdAt | date:'short' }}
             </td>
             
-            <td class="actions-cell">
-              <div class="action-buttons">
-                <button 
-                  *ngIf="user.status === UserStatus.ACTIVE" 
-                  class="btn btn-warning btn-sm"
-                  (click)="suspendUser(user)"
-                  [title]="'ADMIN.USERS.ACTIONS.SUSPEND' | translate"
-                >
+            <!-- Actions -->
+            <td class="p-4 border-b border-gray-200 align-middle min-w-[150px]">
+              <div class="flex gap-2 flex-wrap">
+                <button class="btn btn-secondary px-3 py-1.5 text-xs min-w-[2rem]" (click)="viewUser(user)" [title]="'ADMIN.USERS.VIEW' | translate">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                   </svg>
                 </button>
-                
-                <button 
-                  *ngIf="user.status === UserStatus.SUSPENDED" 
-                  class="btn btn-success btn-sm"
-                  (click)="activateUser(user)"
-                  [title]="'ADMIN.USERS.ACTIONS.ACTIVATE' | translate"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                </button>
-                
-                <button 
-                  class="btn btn-secondary btn-sm"
-                  [title]="'ADMIN.USERS.ACTIONS.EDIT' | translate"
-                >
+                <button class="btn btn-primary px-3 py-1.5 text-xs min-w-[2rem]" (click)="editUser(user)" [title]="'ADMIN.USERS.EDIT' | translate">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                   </svg>
                 </button>
-                
-                <button 
-                  class="btn btn-danger btn-sm"
-                  (click)="deleteUser(user)"
-                  [title]="'ADMIN.USERS.ACTIONS.DELETE' | translate"
-                >
+                <button class="btn btn-danger px-3 py-1.5 text-xs min-w-[2rem]" (click)="deleteUser(user)" [title]="'ADMIN.USERS.DELETE' | translate">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                  </svg>
-                </button>
-                
-                <button 
-                  *ngIf="user.status === UserStatus.DELETED" 
-                  class="btn btn-success btn-sm"
-                  (click)="restoreUser(user)"
-                  [title]="'ADMIN.USERS.ACTIONS.RESTORE' | translate"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                   </svg>
                 </button>
               </div>
@@ -209,14 +184,14 @@
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="filteredUsers.length === 0" class="empty-state">
-      <div class="empty-icon">
-        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+    <div *ngIf="filteredUsers.length === 0" class="flex flex-col items-center justify-center py-16 text-center">
+      <div class="text-gray-400 mb-4">
+        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
         </svg>
       </div>
-            <h3 class="empty-title">{{ 'ADMIN.USERS.NO_USERS' | translate }}</h3>
-      <p class="empty-description">{{ 'ADMIN.USERS.NO_USERS_DESCRIPTION' | translate }}</p>
+      <h3 class="text-xl font-semibold text-gray-900 m-0 mb-2">{{ 'ADMIN.USERS.EMPTY.TITLE' | translate }}</h3>
+      <p class="text-gray-600 m-0">{{ 'ADMIN.USERS.EMPTY.DESCRIPTION' | translate }}</p>
     </div>
   </div>
 </div>

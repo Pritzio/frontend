@@ -319,4 +319,14 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.currentPage = 1;
     this._loadUsers();
   }
+
+  public viewUser(user: IAdminUser): void {
+    // TODO: Implement view user functionality
+    console.log('View user:', user);
+  }
+
+  public editUser(user: IAdminUser): void {
+    // TODO: Implement edit user functionality
+    console.log('Edit user:', user);
+  }
 }

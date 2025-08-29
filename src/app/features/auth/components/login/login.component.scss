@@ -1,107 +1,22 @@
+/* Estilos específicos que no se pueden hacer solo con Tailwind */
 .login-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, var(--primary-50) 0%, var(--gray-50) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #eff6ff 0%, #f9fafb 100%);
 }
 
-.login-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  max-width: 1200px;
-  width: 100%;
-  background-color: white;
-  border-radius: 1.5rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  overflow: hidden;
-  min-height: 600px;
-}
-
-.login-content {
-  padding: 3rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* Login Header */
-.login-header {
-  text-align: center;
-  margin-bottom: 2.5rem;
-}
-
-.logo {
-  margin-bottom: 2rem;
-}
-
-.logo-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--primary-600);
-  margin: 0;
-  line-height: 1;
-}
-
-.logo-subtitle {
-  font-size: 1rem;
-  color: var(--gray-500);
-  margin-top: 0.25rem;
-  display: block;
-}
-
-.login-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--gray-900);
-  margin: 0 0 0.5rem 0;
-}
-
-.login-description {
-  color: var(--gray-600);
-  margin: 0;
-  font-size: 1.125rem;
-}
-
-/* Login Form */
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--gray-700);
-}
-
-.input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
+/* Estilos específicos para inputs con iconos */
 .input-icon {
   position: absolute;
   left: 1rem;
   width: 1.25rem;
   height: 1.25rem;
-  color: var(--gray-400);
+  color: #9ca3af;
   z-index: 10;
 }
 
 .form-input {
   width: 100%;
   padding: 0.875rem 1rem 0.875rem 3rem;
-  border: 2px solid var(--gray-200);
+  border: 2px solid #e5e7eb;
   border-radius: 0.75rem;
   font-size: 1rem;
   line-height: 1.5;
@@ -111,44 +26,23 @@
 
 .form-input:focus {
   outline: none;
-  border-color: var(--primary-500);
-  box-shadow: 0 0 0 3px var(--primary-100);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .form-input.input-error {
-  border-color: var(--danger-500);
+  border-color: #ef4444;
 }
 
 .form-input.input-error:focus {
-  box-shadow: 0 0 0 3px var(--danger-100);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
-.error-message {
-  color: var(--danger-600);
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-}
-
-/* Form Options */
-.form-options {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.checkbox-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-}
-
+/* Checkbox personalizado */
 .checkbox {
   width: 1.25rem;
   height: 1.25rem;
-  border: 2px solid var(--gray-300);
+  border: 2px solid #d1d5db;
   border-radius: 0.375rem;
   appearance: none;
   cursor: pointer;
@@ -157,8 +51,8 @@
 }
 
 .checkbox:checked {
-  background-color: var(--primary-600);
-  border-color: var(--primary-600);
+  background-color: #2563eb;
+  border-color: #2563eb;
 }
 
 .checkbox:checked::after {
@@ -172,47 +66,7 @@
   font-weight: bold;
 }
 
-.checkbox-label {
-  font-size: 0.875rem;
-  color: var(--gray-700);
-  cursor: pointer;
-}
-
-.forgot-link {
-  color: var(--primary-600);
-  text-decoration: none;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.forgot-link:hover {
-  color: var(--primary-700);
-  text-decoration: underline;
-}
-
-/* Submit Button */
-.btn-full {
-  width: 100%;
-  padding: 1rem;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.btn-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.loading-spinner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-}
-
+/* Spinner de loading */
 .spinner {
   width: 1.25rem;
   height: 1.25rem;
@@ -227,20 +81,7 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Error Alert */
-.error-alert {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  background-color: var(--danger-50);
-  border: 1px solid var(--danger-200);
-  border-radius: 0.75rem;
-  color: var(--danger-700);
-  font-size: 0.875rem;
-}
-
-/* Divider */
+/* Divider personalizado */
 .divider {
   position: relative;
   text-align: center;
@@ -254,174 +95,31 @@
   left: 0;
   right: 0;
   height: 1px;
-  background-color: var(--gray-200);
+  background-color: #e5e7eb;
 }
 
 .divider-text {
   background-color: white;
   padding: 0 1rem;
-  color: var(--gray-500);
+  color: #6b7280;
   font-size: 0.875rem;
   font-weight: 500;
 }
 
-/* Social Login */
-.social-login {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.btn-social {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
-  border: 2px solid var(--gray-200);
-  background-color: white;
-  color: var(--gray-700);
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.btn-social:hover {
-  border-color: var(--gray-300);
-  background-color: var(--gray-50);
-}
-
+/* Hover effects para botones sociales */
 .btn-google:hover {
-  border-color: #ea4335;
-  color: #ea4335;
+  border-color: #ea4335 !important;
+  color: #ea4335 !important;
 }
 
 .btn-facebook:hover {
-  border-color: #1877f2;
-  color: #1877f2;
+  border-color: #1877f2 !important;
+  color: #1877f2 !important;
 }
 
-/* Register Link */
-.register-link {
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.register-text {
-  color: var(--gray-600);
-  margin: 0;
-  font-size: 0.875rem;
-}
-
-.register-anchor {
-  color: var(--primary-600);
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.2s ease;
-}
-
-.register-anchor:hover {
-  color: var(--primary-700);
-  text-decoration: underline;
-}
-
-/* Login Visual */
+/* Panel lateral con gradiente */
 .login-visual {
-  background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  color: white;
-}
-
-.visual-content {
-  text-align: center;
-  max-width: 400px;
-}
-
-.visual-icon {
-  margin-bottom: 2rem;
-  opacity: 0.9;
-}
-
-.visual-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin: 0 0 1rem 0;
-  line-height: 1.2;
-}
-
-.visual-description {
-  font-size: 1.125rem;
-  line-height: 1.6;
-  margin: 0;
-  opacity: 0.9;
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .login-container {
-    grid-template-columns: 1fr;
-    max-width: 500px;
-  }
-  
-  .login-visual {
-    display: none;
-  }
-  
-  .login-content {
-    padding: 2.5rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .login-page {
-    padding: 1rem;
-  }
-  
-  .login-container {
-    border-radius: 1rem;
-  }
-  
-  .login-content {
-    padding: 2rem 1.5rem;
-  }
-  
-  .logo-title {
-    font-size: 2rem;
-  }
-  
-  .login-title {
-    font-size: 1.75rem;
-  }
-  
-  .form-options {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-  
-  .social-login {
-    gap: 0.75rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .login-content {
-    padding: 1.5rem 1rem;
-  }
-  
-  .logo-title {
-    font-size: 1.75rem;
-  }
-  
-  .login-title {
-    font-size: 1.5rem;
-  }
-  
-  .btn-full {
-    padding: 0.875rem;
-  }
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
 }
 
 

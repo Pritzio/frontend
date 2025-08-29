@@ -1,16 +1,16 @@
 <div class="app-container">
   <!-- Header Principal - Solo para usuarios NO admin -->
-  <header class="main-header" *ngIf="isAuthenticated && !isAdminRoute">
-    <div class="header-content">
-      <div class="header-left">
+  <header class="main-header bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50" *ngIf="isAuthenticated && !isAdminRoute">
+    <div class="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
+      <div class="flex items-center">
         <div class="logo">
-          <h1 class="logo-title">Pritzio</h1>
-          <span class="logo-subtitle">{{ 'COMMON.COMPARE_AND_SAVE' | translate }}</span>
+          <h1 class="text-2xl font-bold text-primary-600 m-0 leading-none">Pritzio</h1>
+          <span class="text-xs text-gray-500 -mt-1 block">{{ 'COMMON.COMPARE_AND_SAVE' | translate }}</span>
         </div>
       </div>
       
-      <nav class="main-nav">
-        <ul class="nav-list">
+      <nav class="flex-1 flex justify-center mx-8">
+        <ul class="flex list-none m-0 p-0 gap-2">
           <li class="nav-item">
             <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
               <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">

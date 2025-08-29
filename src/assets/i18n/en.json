@@ -98,7 +98,8 @@
       "OTHER": "Other"
     },
     "VERIFICATION": "Verification",
-    "CREATION_DATE": "Creation Date"
+    "CREATION_DATE": "Creation Date",
+    "CLEAR_FILTERS": "Clear Filters"
   },
   "AUTH": {
     "LOGIN_TITLE": "Welcome Back",
@@ -228,7 +229,19 @@
         "NO_USERNAME": "No Username",
         "NO_EMAIL": "No Email",
         "NO_STATUS": "No Status",
-        "NO_DATE": "No Date"
+        "NO_DATE": "No Date",
+        "NO_ROLES": "No Roles"
+      },
+      "VIEW": "View",
+      "EDIT": "Edit",
+      "DELETE": "Delete",
+      "DEACTIVATE": "Deactivate",
+      "ACTIVATE": "Activate",
+      "EMAIL": "Email",
+      "PHONE": "Phone",
+      "EMPTY": {
+        "TITLE": "No Users Found",
+        "DESCRIPTION": "No users match the current filters. Try adjusting your search criteria."
       }
     }
   },
@@ -407,7 +420,24 @@
     },
     "VERIFY_STORE": "Verify Store",
     "EDIT_STORE": "Edit Store",
-    "DELETE_STORE": "Delete Store"
+    "DELETE_STORE": "Delete Store",
+    "STORE": "Store",
+    "PRODUCTS_COUNT": "Products",
+    "PRODUCTS": "products",
+    "VIEW": "View",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "EMPTY": {
+      "TITLE": "No Stores Found",
+      "DESCRIPTION": "No stores match the current filters. Try adjusting your search criteria."
+    },
+    "CONFIRMATIONS": {
+      "DELETE": "Are you sure you want to delete the store {{name}}?"
+    },
+    "ERRORS": {
+      "DELETE": "Error deleting store. Please try again.",
+      "VERIFY": "Error verifying store. Please try again."
+    }
   },
   "PRODUCTS": {
     "TITLE": "Product Management",

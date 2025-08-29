@@ -1,25 +1,25 @@
-<div class="stores-page">
+<div class="max-w-full">
   <!-- Header -->
-  <div class="page-header">
-    <div class="header-content">
-          <h1 class="page-title">{{ 'STORES.STORE_LIST' | translate }}</h1>
-    <p class="page-description">{{ 'STORES.STORE_DESCRIPTION' | translate }}</p>
+  <div class="flex items-center justify-between mb-8 pb-6 border-b border-gray-200">
+    <div class="flex-1">
+      <h1 class="text-3xl font-bold text-gray-900 m-0 mb-2">{{ 'STORES.STORE_LIST' | translate }}</h1>
+      <p class="text-gray-600 m-0">{{ 'STORES.STORE_DESCRIPTION' | translate }}</p>
     </div>
-    <div class="header-actions">
-              <button class="btn btn-primary">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-          </svg>
-          {{ 'STORES.CREATE_STORE' | translate }}
-        </button>
+    <div class="flex gap-4">
+      <button class="btn btn-primary">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        {{ 'STORES.CREATE_STORE' | translate }}
+      </button>
     </div>
   </div>
 
   <!-- Filtros -->
-  <div class="filters-section">
-    <div class="filters-grid">
-      <div class="filter-group">
-        <label class="filter-label">{{ 'COMMON.SEARCH' | translate }}</label>
+  <div class="bg-white rounded-xl p-6 mb-8 shadow-sm border border-gray-200">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end">
+      <div class="flex flex-col">
+        <label class="text-sm font-medium text-gray-700 mb-2">{{ 'COMMON.SEARCH' | translate }}</label>
         <input 
           type="text" 
           class="input" 
@@ -28,8 +28,8 @@
         >
       </div>
       
-      <div class="filter-group">
-        <label class="filter-label">{{ 'COMMON.STATUS' | translate }}</label>
+      <div class="flex flex-col">
+        <label class="text-sm font-medium text-gray-700 mb-2">{{ 'COMMON.STATUS' | translate }}</label>
         <select class="input" [(ngModel)]="statusFilter">
           <option value="">{{ 'STORES.ALL_STATUSES' | translate }}</option>
           <option value="ACTIVE">{{ 'STORES.STATUSES.ACTIVE' | translate }}</option>
@@ -38,8 +38,8 @@
         </select>
       </div>
       
-      <div class="filter-group">
-        <label class="filter-label">{{ 'COMMON.CATEGORY' | translate }}</label>
+      <div class="flex flex-col">
+        <label class="text-sm font-medium text-gray-700 mb-2">{{ 'COMMON.CATEGORY' | translate }}</label>
         <select class="input" [(ngModel)]="categoryFilter">
           <option value="">{{ 'COMMON.ALL_CATEGORIES' | translate }}</option>
           <option value="ELECTRONICS">{{ 'COMMON.CATEGORIES.ELECTRONICS' | translate }}</option>
@@ -48,142 +48,105 @@
           <option value="SPORTS">{{ 'COMMON.CATEGORIES.SPORTS' | translate }}</option>
           <option value="BEAUTY">{{ 'COMMON.CATEGORIES.BEAUTY' | translate }}</option>
           <option value="BOOKS">{{ 'COMMON.CATEGORIES.BOOKS' | translate }}</option>
-          <option value="AUTOMOTIVE">{{ 'COMMON.CATEGORIES.AUTOMOTIVE' | translate }}</option>
-          <option value="FOOD_AND_BEVERAGES">{{ 'COMMON.CATEGORIES.FOOD_AND_BEVERAGES' | translate }}</option>
-          <option value="HEALTH">{{ 'COMMON.CATEGORIES.HEALTH' | translate }}</option>
-          <option value="TOYS">{{ 'COMMON.CATEGORIES.TOYS' | translate }}</option>
-          <option value="OTHER">{{ 'COMMON.CATEGORIES.OTHER' | translate }}</option>
         </select>
       </div>
       
-      <div class="filter-group">
-        <label class="filter-label">&nbsp;</label>
+      <div class="flex flex-col">
         <button class="btn btn-secondary" (click)="clearFilters()">
-          {{ 'STORES.CLEAR_FILTERS' | translate }}
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          {{ 'COMMON.CLEAR_FILTERS' | translate }}
         </button>
       </div>
     </div>
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-state">
-    <div class="loading-spinner"></div>
-    <p>{{ 'STORES.LOADING' | translate }}</p>
+  <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-16 text-center">
+    <div class="loading-spinner mb-4"></div>
+    <p class="text-gray-600">{{ 'STORES.LOADING' | translate }}</p>
   </div>
 
   <!-- Stores Table -->
-  <div *ngIf="!isLoading" class="stores-table-container">
-    <div class="table-header">
-      <div class="table-info">
-        <span class="stores-count">{{ filteredStores.length }} {{ 'STORES.STORES_FOUND' | translate }}</span>
+  <div *ngIf="!isLoading" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="px-6 py-6 border-b border-gray-200 bg-gray-50">
+      <div class="flex items-center justify-between">
+        <span class="text-sm text-gray-600">{{ filteredStores.length }} {{ 'STORES.STORES_FOUND' | translate }}</span>
       </div>
     </div>
 
-    <div class="table-container">
-      <table class="stores-table">
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse text-sm">
         <thead>
           <tr>
-            <th>Tienda</th>
-            <th>Website</th>
-            <th>Categoría</th>
-            <th>Tipo</th>
-            <th>Estado</th>
-            <th>Verificación</th>
-            <th>Fecha Creación</th>
-            <th>Acciones</th>
+            <th class="bg-gray-50 p-4 text-left font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap min-w-[200px]">{{ 'STORES.STORE' | translate }}</th>
+            <th class="bg-gray-50 p-4 text-left font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap min-w-[150px]">{{ 'COMMON.CATEGORY' | translate }}</th>
+            <th class="bg-gray-50 p-4 text-left font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap min-w-[120px]">{{ 'COMMON.STATUS' | translate }}</th>
+            <th class="bg-gray-50 p-4 text-left font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap min-w-[120px]">{{ 'STORES.PRODUCTS_COUNT' | translate }}</th>
+            <th class="bg-gray-50 p-4 text-left font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap min-w-[120px]">{{ 'COMMON.CREATION_DATE' | translate }}</th>
+            <th class="bg-gray-50 p-4 text-left font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap min-w-[150px]">{{ 'COMMON.ACTIONS' | translate }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let store of filteredStores" class="store-row">
-            <td class="store-cell">
-              <div class="store-info">
-                <div class="store-logo" *ngIf="store.logo; else storeIcon">
-                  <img [src]="store.logo" [alt]="store.name" class="logo-image">
+          <tr *ngFor="let store of filteredStores" class="hover:bg-gray-50 transition-colors">
+            <!-- Store Info -->
+            <td class="p-4 border-b border-gray-200 align-middle min-w-[200px]">
+              <div class="flex items-center gap-3">
+                <div class="store-logo">
+                  <img *ngIf="store.logo" [src]="store.logo" [alt]="store.name" class="w-full h-full object-cover">
+                  <span *ngIf="!store.logo" class="store-logo-placeholder">{{ store.name.charAt(0).toUpperCase() }}</span>
                 </div>
-                <ng-template #storeIcon>
-                  <div class="store-icon">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                    </svg>
-                  </div>
-                </ng-template>
-                <div class="store-details">
-                  <div class="store-name">{{ store.name }}</div>
-                  <div class="store-description" *ngIf="store.description">{{ store.description }}</div>
+                <div class="min-w-0">
+                  <div class="font-semibold text-gray-900 mb-1">{{ store.name }}</div>
+                  <div class="text-xs text-gray-500">{{ store.website }}</div>
                 </div>
               </div>
             </td>
             
-            <td class="website-cell">
-              <a [href]="store.website" target="_blank" class="website-link">
-                {{ store.website }}
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                </svg>
-              </a>
-            </td>
-            
-            <td class="category-cell">
-              <span class="category-badge">{{ store.category }}</span>
-            </td>
-            
-            <td class="type-cell">
-              <span class="type-badge" [class]="getTypeColor(store.type)">
-                {{ store.type === 'ONLINE' ? 'Online' : store.type === 'PHYSICAL' ? 'Física' : 'Híbrida' }}
+            <!-- Category -->
+            <td class="p-4 border-b border-gray-200 align-middle min-w-[150px]">
+              <span class="inline-block py-1 px-3 rounded-full text-xs font-medium text-center bg-blue-100 text-blue-700">
+                {{ store.category || ('COMMON.CATEGORIES.OTHER' | translate) }}
               </span>
             </td>
             
-            <td class="status-cell">
-              <span class="status-badge" [class]="getStatusColor(store.status)">
-                {{ store.status === 'ACTIVE' ? 'Activa' : store.status === 'INACTIVE' ? 'Inactiva' : 'Pendiente' }}
+            <!-- Status -->
+            <td class="p-4 border-b border-gray-200 align-middle min-w-[120px]">
+              <span class="inline-block py-1 px-3 rounded-full text-xs font-medium text-center" [ngClass]="{
+                'bg-green-100 text-green-700': store.status === 'ACTIVE',
+                'bg-red-100 text-red-700': store.status === 'INACTIVE',
+                'bg-yellow-100 text-yellow-700': store.status === 'PENDING_VERIFICATION'
+              }">
+                {{ store.status === 'ACTIVE' ? ('STORES.STATUSES.ACTIVE' | translate) : store.status === 'INACTIVE' ? ('STORES.STATUSES.INACTIVE' | translate) : store.status === 'PENDING_VERIFICATION' ? ('STORES.STATUSES.PENDING' | translate) : store.status }}
               </span>
             </td>
             
-            <td class="verification-cell">
-              <div class="verification-status">
-                <span class="verification-badge" [class.verified]="store.isVerified">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                  {{ store.isVerified ? 'Verificada' : 'No verificada' }}
-                </span>
-                <div *ngIf="store.verifiedAt" class="verification-date">
-                  {{ store.verifiedAt | date:'short' }}
-                </div>
-              </div>
+            <!-- Products Count -->
+            <td class="p-4 border-b border-gray-200 align-middle min-w-[120px] text-gray-600">
+              0 {{ 'STORES.PRODUCTS' | translate }}
             </td>
             
-            <td class="date-cell">
+            <!-- Created Date -->
+            <td class="p-4 border-b border-gray-200 align-middle min-w-[120px] text-gray-600 text-xs">
               {{ store.createdAt | date:'short' }}
             </td>
             
-            <td class="actions-cell">
-              <div class="action-buttons">
-                <button 
-                  *ngIf="!store.isVerified" 
-                  class="btn btn-success btn-sm"
-                  (click)="verifyStore(store)"
-                  [title]="'STORES.VERIFY_STORE' | translate"
-                >
+            <!-- Actions -->
+            <td class="p-4 border-b border-gray-200 align-middle min-w-[150px]">
+              <div class="flex gap-2 flex-wrap">
+                <button class="btn btn-secondary px-3 py-1.5 text-xs min-w-[2rem]" (click)="viewStore(store)" [title]="'STORES.VIEW' | translate">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                   </svg>
                 </button>
-                
-                <button 
-                  class="btn btn-secondary btn-sm"
-                  [title]="'STORES.EDIT_STORE' | translate"
-                >
+                <button class="btn btn-primary px-3 py-1.5 text-xs min-w-[2rem]" (click)="editStore(store)" [title]="'STORES.EDIT' | translate">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                   </svg>
                 </button>
-                
-                <button 
-                  class="btn btn-danger btn-sm"
-                  (click)="deleteStore(store)"
-                  [title]="'STORES.DELETE_STORE' | translate"
-                >
+                <button class="btn btn-danger px-3 py-1.5 text-xs min-w-[2rem]" (click)="deleteStore(store)" [title]="'STORES.DELETE' | translate">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                   </svg>
@@ -196,14 +159,14 @@
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="filteredStores.length === 0" class="empty-state">
-      <div class="empty-icon">
-        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div *ngIf="filteredStores.length === 0" class="flex flex-col items-center justify-center py-16 text-center">
+      <div class="text-gray-400 mb-4">
+        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
         </svg>
       </div>
-      <h3 class="empty-title">No se encontraron tiendas</h3>
-      <p class="empty-description">Intenta ajustar los filtros de búsqueda</p>
+      <h3 class="text-xl font-semibold text-gray-900 m-0 mb-2">{{ 'STORES.EMPTY.TITLE' | translate }}</h3>
+      <p class="text-gray-600 m-0">{{ 'STORES.EMPTY.DESCRIPTION' | translate }}</p>
     </div>
   </div>
 </div>
