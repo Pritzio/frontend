@@ -5,11 +5,12 @@ import { Subject, takeUntil, combineLatest } from 'rxjs';
 
 import { AdminService, DashboardStats, User, Store, Product, ScrapingStatus } from '../../../core/services/admin.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
@@ -59,9 +60,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       takeUntil(this._destroy$)
     ).subscribe(([stats, users, stores, products, scraping]) => {
       this.dashboardStats = stats;
-      this.recentUsers = users ? users.slice(0, 5) : []; // Validación agregada
-      this.recentStores = stores ? stores.slice(0, 5) : []; // Validación agregada
-      this.recentProducts = products ? products.slice(0, 5) : []; // Validación agregada
+              this.recentUsers = users ? users.slice(0, 5) : []; // Added validation
+        this.recentStores = stores ? stores.slice(0, 5) : []; // Added validation
+        this.recentProducts = products ? products.slice(0, 5) : []; // Added validation
       this.scrapingStatus = scraping;
       this.isLoading = false;
     });
@@ -105,7 +106,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
           this.isScrapingActionLoading = false;
         },
         error: (error) => {
-          console.error('Error starting scraping:', error);
+  
           this.isScrapingActionLoading = false;
         }
       });
@@ -120,7 +121,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
           this.isScrapingActionLoading = false;
         },
         error: (error) => {
-          console.error('Error stopping scraping:', error);
+  
           this.isScrapingActionLoading = false;
         }
       });
@@ -135,7 +136,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
           this.isScrapingActionLoading = false;
         },
         error: (error) => {
-          console.error('Error pausing scraping:', error);
+  
           this.isScrapingActionLoading = false;
         }
       });

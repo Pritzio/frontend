@@ -4,11 +4,12 @@ import { Router, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
 import { AuthService } from '../../core/services/auth.service';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.scss']
 })
@@ -75,13 +76,13 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   public getUserRole(): string {
-    if (!this.currentUser) return 'Usuario';
+    if (!this.currentUser) return 'User';
     
     switch (this.currentUser.type) {
-      case 'system': return 'Administrador';
-      case 'business': return 'Empresarial';
+      case 'system': return 'Administrator';
+              case 'business': return 'Business';
       case 'individual': return 'Individual';
-      default: return 'Usuario';
+      default: return 'User';
     }
   }
 }

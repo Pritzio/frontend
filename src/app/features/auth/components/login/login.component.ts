@@ -5,11 +5,13 @@ import { Router, RouterModule } from '@angular/router';
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { ILoginRequest } from '../../../../models/user.model';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
+import { I18nService } from '../../../../core/services/i18n.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -22,7 +24,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private _authService: AuthService,
     private _router: Router,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private _i18nService: I18nService
   ) {}
 
   ngOnInit(): void {
@@ -63,11 +66,11 @@ export class LoginComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.isLoading = false;
-          // La navegación se maneja en el AuthService
+          // Navigation is handled in AuthService
         },
         error: (error) => {
           this.isLoading = false;
-          console.error('Error en login:', error);
+
           
           if (error.error?.error?.message) {
             this.errorMessage = error.error.error.message;
@@ -76,40 +79,11 @@ export class LoginComponent implements OnInit {
           } else if (error.message) {
             this.errorMessage = error.message;
           } else {
-            this.errorMessage = 'Error al iniciar sesión. Verifica tus credenciales.';
+            this.errorMessage = this._i18nService.translate('AUTH.LOGIN_INVALID_CREDENTIALS');
           }
         }
       });
   }
 
-  public debugLogin(): void {
-    console.log('=== DEBUG LOGIN ===');
-    console.log('Form valid:', this.loginForm.valid);
-    console.log('Form values:', this.loginForm.value);
-    console.log('Form errors:', this.loginForm.errors);
-    
-    // Test with hardcoded credentials
-    const testCredentials: ILoginRequest = {
-      identifier: 'test@test.com',
-      password: 'password123'
-    };
-    
-    console.log('Testing with credentials:', testCredentials);
-    
-    this._authService.login(testCredentials)
-      .subscribe({
-        next: (response) => {
-          console.log('Debug login success:', response);
-        },
-        error: (error) => {
-          console.error('Debug login error:', error);
-          console.error('Error details:', {
-            status: error.status,
-            statusText: error.statusText,
-            error: error.error,
-            message: error.message
-          });
-        }
-      });
-  }
+
 }

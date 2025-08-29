@@ -5,7 +5,7 @@
       <div class="header-left">
         <div class="logo">
           <h1 class="logo-title">Pritzio</h1>
-          <span class="logo-subtitle">Plataforma de Comparación</span>
+          <span class="logo-subtitle">{{ 'COMMON.COMPARE_AND_SAVE' | translate }}</span>
         </div>
       </div>
       
@@ -17,7 +17,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
               </svg>
-              Inicio
+              {{ 'COMMON.HOME' | translate }}
             </a>
           </li>
           
@@ -26,7 +26,7 @@
               <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
               </svg>
-              Productos
+              {{ 'PRODUCTS.TITLE' | translate }}
             </a>
           </li>
           
@@ -35,7 +35,7 @@
               <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
               </svg>
-              Tiendas
+              {{ 'STORES.TITLE' | translate }}
             </a>
           </li>
           
@@ -44,7 +44,7 @@
               <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
               </svg>
-              Comparar
+              {{ 'COMMON.COMPARE' | translate }}
             </a>
           </li>
           
@@ -53,7 +53,7 @@
               <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
-              Favoritos
+              {{ 'COMMON.FAVORITES' | translate }}
             </a>
           </li>
           
@@ -62,7 +62,7 @@
               <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
               </svg>
-              Admin
+              {{ 'ADMIN.TITLE' | translate }}
             </a>
           </li>
         </ul>
@@ -104,21 +104,21 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
-                Mi Perfil
+                {{ 'USER.PROFILE.TITLE' | translate }}
               </a>
               
               <a routerLink="/favorites" class="dropdown-item" (click)="closeUserDropdown()">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                 </svg>
-                Mis Favoritos
+                {{ 'USER.FAVORITES.TITLE' | translate }}
               </a>
               
               <a routerLink="/comparison" class="dropdown-item" (click)="closeUserDropdown()">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                 </svg>
-                Comparaciones
+                {{ 'USER.COMPARISON.TITLE' | translate }}
               </a>
               
               <a routerLink="/settings" class="dropdown-item" (click)="closeUserDropdown()">
@@ -126,7 +126,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
-                Configuración
+                {{ 'USER.SETTINGS.TITLE' | translate }}
               </a>
               
               <div class="dropdown-divider"></div>
@@ -135,7 +135,7 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                 </svg>
-                Cerrar Sesión
+                {{ 'AUTH.LOGOUT' | translate }}
               </button>
             </div>
           </div>
@@ -154,29 +154,29 @@
     <div class="footer-content">
       <div class="footer-section">
         <h3 class="footer-title">Pritzio</h3>
-        <p class="footer-description">La plataforma líder en comparación de precios y productos</p>
+        <p class="footer-description">{{ 'COMMON.FOOTER_DESCRIPTION' | translate }}</p>
       </div>
       
       <div class="footer-section">
-        <h4 class="footer-subtitle">Enlaces Útiles</h4>
+        <h4 class="footer-subtitle">{{ 'COMMON.FOOTER.USEFUL_LINKS' | translate }}</h4>
         <ul class="footer-links">
-          <li><a routerLink="/about">Acerca de</a></li>
-          <li><a routerLink="/help">Ayuda</a></li>
-          <li><a routerLink="/contact">Contacto</a></li>
+          <li><a routerLink="/about">{{ 'COMMON.FOOTER.ABOUT' | translate }}</a></li>
+          <li><a routerLink="/help">{{ 'COMMON.FOOTER.HELP' | translate }}</a></li>
+          <li><a routerLink="/contact">{{ 'COMMON.FOOTER.CONTACT' | translate }}</a></li>
         </ul>
       </div>
       
       <div class="footer-section">
-        <h4 class="footer-subtitle">Legal</h4>
+        <h4 class="footer-subtitle">{{ 'COMMON.FOOTER.LEGAL' | translate }}</h4>
         <ul class="footer-links">
-          <li><a routerLink="/privacy">Privacidad</a></li>
-          <li><a routerLink="/terms">Términos</a></li>
-          <li><a routerLink="/cookies">Cookies</a></li>
+          <li><a routerLink="/privacy">{{ 'COMMON.FOOTER.PRIVACY' | translate }}</a></li>
+          <li><a routerLink="/terms">{{ 'COMMON.FOOTER.TERMS' | translate }}</a></li>
+          <li><a routerLink="/cookies">{{ 'COMMON.FOOTER.COOKIES' | translate }}</a></li>
         </ul>
       </div>
       
       <div class="footer-section">
-        <h4 class="footer-subtitle">Síguenos</h4>
+        <h4 class="footer-subtitle">{{ 'COMMON.FOOTER.FOLLOW_US' | translate }}</h4>
         <div class="social-links">
           <a href="#" class="social-link">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -198,7 +198,7 @@
     </div>
     
     <div class="footer-bottom">
-      <p>&copy; 2024 Pritzio. Todos los derechos reservados.</p>
+      <p>&copy; 2024 Pritzio. {{ 'COMMON.FOOTER.ALL_RIGHTS_RESERVED' | translate }}</p>
     </div>
   </footer>
 </div>

@@ -54,7 +54,51 @@
     "POSTAL_CODE": "Postal Code",
     "LANGUAGE": "Language",
     "ENGLISH": "English",
-    "SPANISH": "Spanish"
+    "SPANISH": "Spanish",
+    "REMEMBER_ME": "Remember me",
+    "OR": "or",
+    "EMAIL_REQUIRED": "Email is required",
+    "EMAIL_INVALID": "Please enter a valid email",
+    "PASSWORD_REQUIRED": "Password is required",
+    "CONTINUE_WITH_GOOGLE": "Continue with Google",
+    "CONTINUE_WITH_FACEBOOK": "Continue with Facebook",
+    "COMPARE_AND_SAVE": "Compare and Save",
+    "COMPARE_DESCRIPTION": "Find the best prices across multiple stores",
+    "COMPARE": "Compare",
+    "FAVORITES": "Favorites",
+    "HOME": "Home",
+    "FOOTER_DESCRIPTION": "Your trusted platform for price comparison and savings",
+    "VIEW_ALL": "View all",
+    "PROGRESS": "Progress",
+    "FOOTER": {
+      "USEFUL_LINKS": "Useful Links",
+      "ABOUT": "About",
+      "HELP": "Help",
+      "CONTACT": "Contact",
+      "LEGAL": "Legal",
+      "PRIVACY": "Privacy",
+      "TERMS": "Terms",
+      "COOKIES": "Cookies",
+      "FOLLOW_US": "Follow Us",
+      "ALL_RIGHTS_RESERVED": "All rights reserved"
+    },
+    "CATEGORY": "Category",
+    "ALL_CATEGORIES": "All categories",
+    "CATEGORIES": {
+      "ELECTRONICS": "Electronics",
+      "CLOTHING": "Clothing",
+      "HOME_AND_GARDEN": "Home & Garden",
+      "SPORTS": "Sports",
+      "BEAUTY": "Beauty",
+      "BOOKS": "Books",
+      "AUTOMOTIVE": "Automotive",
+      "FOOD_AND_BEVERAGES": "Food & Beverages",
+      "HEALTH": "Health",
+      "TOYS": "Toys",
+      "OTHER": "Other"
+    },
+    "VERIFICATION": "Verification",
+    "CREATION_DATE": "Creation Date"
   },
   "AUTH": {
     "LOGIN_TITLE": "Welcome Back",
@@ -76,9 +120,12 @@
     "REGISTER_SUCCESS": "Account created successfully",
     "REGISTER_ERROR": "Registration failed",
     "LOGOUT_SUCCESS": "Logged out successfully",
-    "LOGOUT_ERROR": "Error during logout"
+    "LOGOUT_ERROR": "Error during logout",
+    "LOGOUT": "Logout"
   },
   "ADMIN": {
+    "TITLE": "Admin",
+    "SUBTITLE": "Manage users, stores, products and scraping of the platform",
     "DASHBOARD": {
       "TITLE": "Admin Dashboard",
       "SUBTITLE": "Manage users, stores, products and scraping of the platform",
@@ -96,7 +143,9 @@
       "TOTAL_PRODUCTS": "Total Products",
       "ACTIVE": "Active",
       "INACTIVE": "Inactive",
-      "SCRAPING_STATUS": "Scraping Status"
+      "SCRAPING_STATUS": "Scraping Status",
+      "STORES_ACTIVE": "Active Scraping Stores",
+      "PRODUCTS_UPDATED": "Products Updated Today"
     },
     "ACTIONS": {
       "MANAGE_USERS": "Manage Users",
@@ -109,6 +158,8 @@
       "SCRAPING_DESCRIPTION": "Control scraping processes and price monitoring"
     },
     "SCRAPING": {
+      "TITLE": "Scraping Control",
+      "CONTROL": "Scraping Control",
       "STATUS": "Status",
       "START": "Start",
       "PAUSE": "Pause",
@@ -127,12 +178,76 @@
       "ANALYTICS": "Analytics",
       "REPORTS": "Reports",
       "SETTINGS": "Settings"
+    },
+    "MAIN_MENU": "Main Menu",
+    "BACK_TO_USER_VIEW": "User View",
+    "REPORTS": {
+      "TITLE": "Reports"
+    },
+    "SETTINGS": {
+      "TITLE": "Settings"
+    },
+    "USERS": {
+      "TITLE": "User Management",
+      "DESCRIPTION": "Manage users, roles and system permissions",
+      "NEW_USER": "New User",
+      "SEARCH": "Search Users",
+      "SEARCH_PLACEHOLDER": "Search by name, email or username...",
+      "STATUS": "Status",
+      "ALL_STATUSES": "All Statuses",
+      "ROLES_LABEL": "Role",
+      "ALL_ROLES": "All Roles",
+      "CLEAR_FILTERS": "Clear Filters",
+      "LOADING": "Loading users...",
+      "USERS_FOUND": "users found",
+      "NO_USERS": "No users",
+      "NO_USERS_DESCRIPTION": "No users found with the applied filters",
+      "STATUSES": {
+        "ACTIVE": "Active",
+        "INACTIVE": "Inactive",
+        "SUSPENDED": "Suspended",
+        "PENDING": "Pending Verification",
+        "DELETED": "Deleted"
+      },
+      "ROLES": {
+        "ADMIN": "Administrator",
+        "USER": "User",
+        "MODERATOR": "Moderator",
+        "BUSINESS": "Business",
+        "INDIVIDUAL": "Individual"
+      },
+      "ACTIONS": {
+        "EDIT": "Edit",
+        "DELETE": "Delete",
+        "SUSPEND": "Suspend",
+        "ACTIVATE": "Activate",
+        "RESTORE": "Restore"
+      },
+      "FALLBACKS": {
+        "NO_NAME": "No Name",
+        "NO_USERNAME": "No Username",
+        "NO_EMAIL": "No Email",
+        "NO_STATUS": "No Status",
+        "NO_DATE": "No Date"
+      }
     }
   },
   "USER": {
     "DASHBOARD_TITLE": "Welcome to Pritzio",
     "DASHBOARD_SUBTITLE": "Price Intelligence Dashboard",
     "DASHBOARD_DESCRIPTION": "Track prices, compare products, and make informed decisions.",
+    "PROFILE": {
+      "TITLE": "My Profile"
+    },
+    "FAVORITES": {
+      "TITLE": "My Favorites"
+    },
+    "COMPARISON": {
+      "TITLE": "Comparisons"
+    },
+    "SETTINGS": {
+      "TITLE": "Settings"
+    },
     "FEATURES": {
       "SEARCH_PRODUCTS": {
         "TITLE": "Search Products",
@@ -158,11 +273,24 @@
   },
   "USERS": {
     "TITLE": "User Management",
+    "DESCRIPTION": "Manage users, roles and system permissions",
+    "NEW_USER": "New User",
     "CREATE_USER": "Create User",
     "EDIT_USER": "Edit User",
     "DELETE_USER": "Delete User",
     "USER_DETAILS": "User Details",
     "USER_LIST": "User List",
+    "SEARCH": "Search Users",
+    "SEARCH_PLACEHOLDER": "Search by name, email or username...",
+    "STATUS": "Status",
+    "ALL_STATUSES": "All Statuses",
+    "ROLES_LABEL": "Role",
+    "ALL_ROLES": "All Roles",
+    "CLEAR_FILTERS": "Clear Filters",
+    "LOADING": "Loading users...",
+    "USERS_FOUND": "users found",
+    "NO_USERS": "No users",
+    "NO_USERS_DESCRIPTION": "No users found with the applied filters",
     "USER_TYPES": {
       "INDIVIDUAL": "Individual",
       "BUSINESS": "Business",
@@ -173,6 +301,33 @@
       "INACTIVE": "Inactive",
       "SUSPENDED": "Suspended",
       "PENDING_VERIFICATION": "Pending Verification"
+    },
+    "STATUSES": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive",
+      "SUSPENDED": "Suspended",
+      "PENDING": "Pending Verification"
+    },
+    "ROLES": {
+      "ADMIN": "Administrator",
+      "USER": "User",
+      "MODERATOR": "Moderator",
+      "BUSINESS": "Business",
+      "INDIVIDUAL": "Individual"
+    },
+    "ACTIONS": {
+      "EDIT": "Edit",
+      "DELETE": "Delete",
+      "SUSPEND": "Suspend",
+      "ACTIVATE": "Activate",
+      "RESTORE": "Restore"
+    },
+    "FALLBACKS": {
+      "NO_NAME": "No Name",
+      "NO_USERNAME": "No Username",
+      "NO_EMAIL": "No Email",
+      "NO_STATUS": "No Status",
+      "NO_DATE": "No Date"
     },
     "FIELDS": {
       "ID": "ID",
@@ -191,11 +346,22 @@
   },
   "STORES": {
     "TITLE": "Store Management",
+    "STORE_DESCRIPTION": "Manage stores and their physical locations",
     "CREATE_STORE": "Create Store",
     "EDIT_STORE": "Edit Store",
     "DELETE_STORE": "Delete Store",
     "STORE_DETAILS": "Store Details",
     "STORE_LIST": "Store List",
+    "SEARCH_PLACEHOLDER": "Name, description or website...",
+    "ALL_STATUSES": "All statuses",
+    "STATUSES": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive",
+      "PENDING": "Pending"
+    },
+    "CLEAR_FILTERS": "Clear Filters",
+    "LOADING": "Loading stores...",
+    "STORES_FOUND": "stores found",
     "STORE_TYPES": {
       "ONLINE": "Online",
       "PHYSICAL": "Physical",
@@ -238,7 +404,10 @@
       "VERIFIED_BY": "Verified By",
       "CREATED_AT": "Created At",
       "UPDATED_AT": "Updated At"
-    }
+    },
+    "VERIFY_STORE": "Verify Store",
+    "EDIT_STORE": "Edit Store",
+    "DELETE_STORE": "Delete Store"
   },
   "PRODUCTS": {
     "TITLE": "Product Management",

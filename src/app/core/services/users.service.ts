@@ -15,44 +15,44 @@ export class UsersService {
   constructor(private _http: HttpClient) {}
 
   /**
-   * Obtener el perfil del usuario autenticado
+   * Get authenticated user profile
    */
   getProfile(): Observable<IApiResponse<IUser>> {
     return this._http.get<IApiResponse<IUser>>(`${this._apiUrl}/profile`);
   }
 
   /**
-   * Actualizar el perfil del usuario autenticado
+   * Update authenticated user profile
    */
   updateProfile(userData: Partial<IUser>): Observable<IApiResponse<IUser>> {
     return this._http.put<IApiResponse<IUser>>(`${this._apiUrl}/profile`, userData);
   }
 
   /**
-   * Obtener un usuario por ID
+   * Get user by ID
    */
   getUserById(id: string): Observable<IApiResponse<IUser>> {
     return this._http.get<IApiResponse<IUser>>(`${this._apiUrl}/${id}`);
   }
 
   /**
-   * Actualizar un usuario por ID
+   * Update user by ID
    */
   updateUser(id: string, userData: Partial<IUser>): Observable<IApiResponse<IUser>> {
     return this._http.put<IApiResponse<IUser>>(`${this._apiUrl}/${id}`, userData);
   }
 
   /**
-   * Eliminar un usuario por ID
+   * Delete user by ID (soft delete)
    */
   deleteUser(id: string): Observable<IApiResponse<void>> {
     return this._http.delete<IApiResponse<void>>(`${this._apiUrl}/${id}`);
   }
 
   /**
-   * Listar usuarios con filtros y paginación
+   * List users with filters and pagination (Admin)
    */
-  getUsers(filters: IApiFilters = {}): Observable<IApiResponse<IPaginatedResponse<IUser>>> {
+  getUsers(filters: IApiFilters = {}): Observable<any> {
     let params = new HttpParams();
     
     if (filters.page) params = params.set('page', filters.page.toString());
@@ -61,11 +61,11 @@ export class UsersService {
     if (filters.sortBy) params = params.set('sortBy', filters.sortBy);
     if (filters.sortOrder) params = params.set('sortOrder', filters.sortOrder);
 
-    return this._http.get<IApiResponse<IPaginatedResponse<IUser>>>(`${this._apiUrl}`, { params });
+    return this._http.get<any>(`${this._apiUrl}/admin/users`, { params });
   }
 
   /**
-   * Buscar usuarios por término de búsqueda
+   * Search users by search term
    */
   searchUsers(query: string, filters: IApiFilters = {}): Observable<IApiResponse<IPaginatedResponse<IUser>>> {
     let params = new HttpParams().set('q', query);
@@ -79,14 +79,14 @@ export class UsersService {
   }
 
   /**
-   * Verificar email del usuario
+   * Verify user email
    */
   verifyEmail(token: string): Observable<IApiResponse<{ message: string }>> {
     return this._http.post<IApiResponse<{ message: string }>>(`${this._apiUrl}/verify-email`, { token });
   }
 
   /**
-   * Cambiar contraseña del usuario autenticado
+   * Change authenticated user password
    */
   changePassword(currentPassword: string, newPassword: string): Observable<IApiResponse<{ message: string }>> {
     return this._http.post<IApiResponse<{ message: string }>>(`${this._apiUrl}/change-password`, {
@@ -96,19 +96,68 @@ export class UsersService {
   }
 
   /**
-   * Solicitar restablecimiento de contraseña
+   * Request password reset
    */
   forgotPassword(email: string): Observable<IApiResponse<{ message: string }>> {
     return this._http.post<IApiResponse<{ message: string }>>(`${this._apiUrl}/forgot-password`, { email });
   }
 
   /**
-   * Restablecer contraseña con token
+   * Reset password with token
    */
   resetPassword(token: string, newPassword: string): Observable<IApiResponse<{ message: string }>> {
     return this._http.post<IApiResponse<{ message: string }>>(`${this._apiUrl}/reset-password`, {
       token,
       newPassword
     });
+  }
+
+  /**
+   * Get user profile by ID
+   */
+  getUserProfileById(userId: string): Observable<IApiResponse<IUser>> {
+    return this._http.get<IApiResponse<IUser>>(`${this._apiUrl}/profile/${userId}`);
+  }
+
+  /**
+   * Get user activity
+   */
+  getUserActivity(): Observable<IApiResponse<any>> {
+    return this._http.get<IApiResponse<any>>(`${this._apiUrl}/activity`);
+  }
+
+  /**
+   * Get user statistics
+   */
+  getUserStats(): Observable<IApiResponse<any>> {
+    return this._http.get<IApiResponse<any>>(`${this._apiUrl}/stats`);
+  }
+
+  /**
+   * Update own profile for authenticated user
+   */
+  updateOwnProfile(userData: Partial<IUser>): Observable<IApiResponse<IUser>> {
+    return this._http.put<IApiResponse<IUser>>(`${this._apiUrl}/profile`, userData);
+  }
+
+  /**
+   * Delete own profile for authenticated user
+   */
+  deleteOwnProfile(): Observable<IApiResponse<void>> {
+    return this._http.delete<IApiResponse<void>>(`${this._apiUrl}/profile`);
+  }
+
+  /**
+   * Update user status (active, suspended, etc.)
+   */
+  updateUserStatus(id: string, status: string): Observable<IApiResponse<IUser>> {
+    return this._http.put<IApiResponse<IUser>>(`${this._apiUrl}/${id}/status`, { status });
+  }
+
+  /**
+   * Restore deleted user (soft delete)
+   */
+  restoreUser(id: string): Observable<IApiResponse<IUser>> {
+    return this._http.post<IApiResponse<IUser>>(`${this._apiUrl}/${id}/restore`, {});
   }
 }

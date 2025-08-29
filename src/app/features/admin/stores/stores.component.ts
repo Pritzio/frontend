@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
 import { AdminService, Store } from '../../../core/services/admin.service';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { I18nService } from '../../../core/services/i18n.service';
 
 @Component({
   selector: 'app-stores',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './stores.component.html',
   styleUrls: ['./stores.component.scss']
 })
@@ -21,7 +23,10 @@ export class StoresComponent implements OnInit, OnDestroy {
   public statusFilter = '';
   public categoryFilter = '';
 
-  constructor(private _adminService: AdminService) {}
+  constructor(
+    private _adminService: AdminService,
+    private _i18nService: I18nService
+  ) {}
 
   ngOnInit(): void {
     this._loadStores();
@@ -68,28 +73,30 @@ export class StoresComponent implements OnInit, OnDestroy {
   }
 
   public verifyStore(store: Store): void {
-    if (confirm(`¿Estás seguro de que quieres verificar la tienda "${store.name}"?`)) {
+    const message = this._i18nService.translate('STORES.CONFIRMATIONS.VERIFY', { name: store.name });
+    if (confirm(message)) {
       this._adminService.verifyStore(store.id).subscribe({
         next: () => {
           this._loadStores();
         },
         error: (error) => {
-          console.error('Error verifying store:', error);
-          alert('Error al verificar tienda');
+          const errorMessage = this._i18nService.translate('STORES.ERRORS.VERIFY');
+          alert(errorMessage);
         }
       });
     }
   }
 
   public deleteStore(store: Store): void {
-    if (confirm(`¿Estás seguro de que quieres eliminar la tienda "${store.name}"? Esta acción no se puede deshacer.`)) {
+    const message = this._i18nService.translate('STORES.CONFIRMATIONS.DELETE', { name: store.name });
+    if (confirm(message)) {
       this._adminService.deleteStore(store.id).subscribe({
         next: () => {
           this._loadStores();
         },
         error: (error) => {
-          console.error('Error deleting store:', error);
-          alert('Error al eliminar tienda');
+          const errorMessage = this._i18nService.translate('STORES.ERRORS.DELETE');
+          alert(errorMessage);
         }
       });
     }

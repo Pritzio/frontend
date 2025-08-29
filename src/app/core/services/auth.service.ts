@@ -32,7 +32,7 @@ export class AuthService {
     return this._http.post<IBackendAuthResponse>(`${this._apiUrl}/login`, credentials)
       .pipe(
         tap(response => {
-          console.log('Login response:', response);
+  
           this._handleSuccessfulAuth(response);
         })
       );

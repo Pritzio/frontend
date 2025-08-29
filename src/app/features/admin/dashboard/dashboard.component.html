@@ -3,7 +3,7 @@
   <div *ngIf="isLoading" class="flex items-center justify-center min-h-screen">
     <div class="text-center">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-      <p class="mt-4 text-gray-600">Cargando dashboard...</p>
+      <p class="mt-4 text-gray-600">{{ 'COMMON.LOADING' | translate }}</p>
     </div>
   </div>
 
@@ -13,8 +13,8 @@
     <div class="mb-8">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">Panel de Administración</h1>
-          <p class="text-gray-600 mt-2">Gestiona usuarios, tiendas, productos y scraping de la plataforma</p>
+                  <h1 class="text-3xl font-bold text-gray-900">{{ 'ADMIN.TITLE' | translate }}</h1>
+        <p class="text-gray-600 mt-2">{{ 'ADMIN.SUBTITLE' | translate }}</p>
         </div>
         <div class="flex items-center space-x-4">
           <button 
@@ -24,7 +24,7 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
             </svg>
-            <span>Actualizar</span>
+            <span>{{ 'COMMON.REFRESH' | translate }}</span>
           </button>
         </div>
       </div>
@@ -41,10 +41,10 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Total Usuarios</p>
+            <p class="text-sm font-medium text-gray-600">{{ 'ADMIN.STATS.TOTAL_USERS' | translate }}</p>
             <p class="text-2xl font-semibold text-gray-900">{{ dashboardStats?.totalUsers || 0 }}</p>
             <div class="flex items-center mt-1">
-              <span class="text-xs text-success-600">{{ dashboardStats?.activeUsers || 0 }} activos</span>
+              <span class="text-xs text-success-600">{{ dashboardStats?.activeUsers || 0 }} {{ 'ADMIN.STATS.ACTIVE' | translate }}</span>
             </div>
           </div>
         </div>
@@ -59,10 +59,10 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Total Tiendas</p>
+            <p class="text-sm font-medium text-gray-600">{{ 'ADMIN.STATS.TOTAL_STORES' | translate }}</p>
             <p class="text-2xl font-semibold text-gray-900">{{ dashboardStats?.totalStores || 0 }}</p>
             <div class="flex items-center mt-1">
-              <span class="text-xs text-success-600">{{ dashboardStats?.verifiedStores || 0 }} verificadas</span>
+              <span class="text-xs text-success-600">{{ dashboardStats?.verifiedStores || 0 }} {{ 'ADMIN.STATS.VERIFIED' | translate }}</span>
             </div>
           </div>
         </div>
@@ -77,10 +77,10 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Total Productos</p>
+            <p class="text-sm font-medium text-gray-600">{{ 'ADMIN.STATS.TOTAL_PRODUCTS' | translate }}</p>
             <p class="text-2xl font-semibold text-gray-900">{{ dashboardStats?.totalProducts || 0 }}</p>
             <div class="flex items-center mt-1">
-              <span class="text-xs text-success-600">{{ dashboardStats?.activeProducts || 0 }} activos</span>
+              <span class="text-xs text-success-600">{{ dashboardStats?.activeProducts || 0 }} {{ 'ADMIN.STATS.ACTIVE' | translate }}</span>
             </div>
           </div>
         </div>
@@ -95,10 +95,10 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Estado Scraping</p>
+            <p class="text-sm font-medium text-gray-600">{{ 'ADMIN.STATS.SCRAPING_STATUS' | translate }}</p>
             <p class="text-lg font-semibold text-gray-900">{{ scrapingStatus?.status || 'STOPPED' }}</p>
             <div class="flex items-center mt-1">
-              <span class="text-xs text-gray-600">{{ scrapingStatus?.activeStores || 0 }} tiendas activas</span>
+              <span class="text-xs text-gray-600">{{ scrapingStatus?.activeStores || 0 }} {{ 'ADMIN.STATS.STORES_ACTIVE' | translate }}</span>
             </div>
           </div>
         </div>
@@ -118,8 +118,8 @@
               </svg>
             </div>
             <div class="ml-4">
-              <h3 class="text-lg font-semibold text-gray-900">Gestionar Usuarios</h3>
-              <p class="text-sm text-gray-600">Administra usuarios, roles y permisos del sistema</p>
+                                          <h3 class="text-lg font-semibold text-gray-900">{{ 'ADMIN.ACTIONS.MANAGE_USERS' | translate }}</h3>
+            <p class="text-sm text-gray-600">{{ 'ADMIN.ACTIONS.USERS_DESCRIPTION' | translate }}</p>
             </div>
           </div>
           <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,8 +127,8 @@
           </svg>
         </div>
         <div class="mt-4 flex items-center justify-between text-sm text-gray-500">
-          <span>{{ dashboardStats?.pendingUsers || 0 }} pendientes de verificación</span>
-          <span>{{ dashboardStats?.suspendedUsers || 0 }} suspendidos</span>
+          <span>{{ dashboardStats?.pendingUsers || 0 }} {{ 'ADMIN.USERS.STATUSES.PENDING' | translate }}</span>
+          <span>{{ dashboardStats?.suspendedUsers || 0 }} {{ 'ADMIN.USERS.STATUSES.SUSPENDED' | translate }}</span>
         </div>
       </div>
 
@@ -142,8 +142,8 @@
               </svg>
             </div>
             <div class="ml-4">
-              <h3 class="text-lg font-semibold text-gray-900">Gestionar Tiendas</h3>
-              <p class="text-sm text-gray-600">Administra tiendas y sus ubicaciones físicas</p>
+                                          <h3 class="text-lg font-semibold text-gray-900">{{ 'ADMIN.ACTIONS.MANAGE_STORES' | translate }}</h3>
+            <p class="text-sm text-gray-600">{{ 'ADMIN.ACTIONS.STORES_DESCRIPTION' | translate }}</p>
             </div>
           </div>
           <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,8 +151,8 @@
           </svg>
         </div>
         <div class="mt-4 flex items-center justify-between text-sm text-gray-500">
-          <span>{{ dashboardStats?.pendingStores || 0 }} pendientes de verificación</span>
-          <span>{{ dashboardStats?.verifiedStores || 0 }} verificadas</span>
+          <span>{{ dashboardStats?.pendingStores || 0 }} {{ 'ADMIN.STATS.PENDING' | translate }}</span>
+          <span>{{ dashboardStats?.verifiedStores || 0 }} {{ 'ADMIN.STATS.VERIFIED' | translate }}</span>
         </div>
       </div>
     </div>
@@ -160,9 +160,9 @@
     <!-- Scraping Control Panel -->
     <div class="card p-6 mb-8">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">Control de Scraping</h2>
+        <h2 class="text-xl font-semibold text-gray-900">{{ 'ADMIN.SCRAPING.CONTROL' | translate }}</h2>
         <div class="flex items-center space-x-3">
-          <span class="text-sm text-gray-600">Estado:</span>
+          <span class="text-sm text-gray-600">{{ 'ADMIN.SCRAPING.STATUS' | translate }}:</span>
           <span 
             class="px-3 py-1 rounded-full text-sm font-medium"
             [class]="getScrapingStatusColor(scrapingStatus?.status || 'STOPPED')"
@@ -175,15 +175,15 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div class="text-center">
           <p class="text-2xl font-bold text-gray-900">{{ scrapingStatus?.activeStores || 0 }}</p>
-          <p class="text-sm text-gray-600">Tiendas Activas</p>
+          <p class="text-sm text-gray-600">{{ 'ADMIN.STATS.STORES_ACTIVE' | translate }}</p>
         </div>
         <div class="text-center">
           <p class="text-2xl font-bold text-gray-900">{{ scrapingStatus?.productsUpdated || 0 }}</p>
-          <p class="text-sm text-gray-600">Productos Actualizados</p>
+          <p class="text-sm text-gray-600">{{ 'ADMIN.SCRAPING.PRODUCTS_UPDATED' | translate }}</p>
         </div>
         <div class="text-center">
           <p class="text-2xl font-bold text-gray-900">{{ scrapingStatus?.errors || 0 }}</p>
-          <p class="text-sm text-gray-600">Errores</p>
+          <p class="text-sm text-gray-600">{{ 'COMMON.ERROR' | translate }}</p>
         </div>
       </div>
 
@@ -196,7 +196,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
-          <span>Iniciar Scraping</span>
+          <span>{{ 'ADMIN.SCRAPING.START' | translate }}</span>
         </button>
 
         <button 
@@ -207,7 +207,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
-          <span>Pausar</span>
+          <span>{{ 'ADMIN.SCRAPING.PAUSE' | translate }}</span>
         </button>
 
         <button 
@@ -219,7 +219,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path>
           </svg>
-          <span>Detener</span>
+          <span>{{ 'ADMIN.SCRAPING.STOP' | translate }}</span>
         </button>
 
         <button 
@@ -229,14 +229,14 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
-          <span>Ver Historial</span>
+          <span>{{ 'ADMIN.SCRAPING.HISTORY' | translate }}</span>
         </button>
       </div>
 
       <!-- Progress Bar -->
       <div *ngIf="scrapingStatus?.status === 'ACTIVE'" class="mt-6">
         <div class="flex justify-between text-sm text-gray-600 mb-2">
-          <span>Progreso</span>
+          <span>{{ 'COMMON.PROGRESS' | translate }}</span>
           <span>{{ scrapingStatus?.progress || 0 }}%</span>
         </div>
         <div class="w-full bg-gray-200 rounded-full h-2">
@@ -253,8 +253,8 @@
       <!-- Recent Users -->
       <div class="card p-6">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold text-gray-900">Usuarios Recientes</h3>
-          <button (click)="navigateToUsers()" class="text-sm text-primary-600 hover:text-primary-700">Ver todos</button>
+          <h3 class="text-lg font-semibold text-gray-900">{{ 'ADMIN.DASHBOARD.RECENT_ACTIVITY' | translate }} - {{ 'ADMIN.USERS.TITLE' | translate }}</h3>
+          <button (click)="navigateToUsers()" class="text-sm text-primary-600 hover:text-primary-700">{{ 'COMMON.VIEW_ALL' | translate }}</button>
         </div>
         <div class="space-y-3">
           <div *ngFor="let user of recentUsers" class="flex items-center space-x-3">
@@ -275,7 +275,7 @@
             </span>
           </div>
           <div *ngIf="recentUsers.length === 0" class="text-center py-4">
-            <p class="text-sm text-gray-500">No hay usuarios recientes</p>
+            <p class="text-sm text-gray-500">{{ 'ADMIN.USERS.NO_USERS_DESCRIPTION' | translate }}</p>
           </div>
         </div>
       </div>
@@ -283,8 +283,8 @@
       <!-- Recent Stores -->
       <div class="card p-6">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold text-gray-900">Tiendas Recientes</h3>
-          <button (click)="navigateToStores()" class="text-sm text-primary-600 hover:text-primary-700">Ver todas</button>
+          <h3 class="text-lg font-semibold text-gray-900">{{ 'ADMIN.DASHBOARD.RECENT_ACTIVITY' | translate }} - {{ 'STORES.TITLE' | translate }}</h3>
+          <button (click)="navigateToStores()" class="text-sm text-primary-600 hover:text-primary-700">{{ 'COMMON.VIEW_ALL' | translate }}</button>
         </div>
         <div class="space-y-3">
           <div *ngFor="let store of recentStores" class="flex items-center space-x-3">
@@ -315,8 +315,8 @@
       <!-- Recent Products -->
       <div class="card p-6">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold text-gray-900">Productos Recientes</h3>
-          <button (click)="navigateToProducts()" class="text-sm text-primary-600 hover:text-primary-700">Ver todos</button>
+          <h3 class="text-lg font-semibold text-gray-900">{{ 'ADMIN.DASHBOARD.RECENT_ACTIVITY' | translate }} - {{ 'PRODUCTS.TITLE' | translate }}</h3>
+          <button (click)="navigateToProducts()" class="text-sm text-primary-600 hover:text-primary-700">{{ 'COMMON.VIEW_ALL' | translate }}</button>
         </div>
         <div class="space-y-3">
           <div *ngFor="let product of recentProducts" class="flex items-center space-x-3">

@@ -14,10 +14,18 @@ export class TranslatePipe implements PipeTransform, OnDestroy {
   private _lastResult: string = '';
 
   constructor(private _i18nService: I18nService) {
-    // Subscribe to translation loading status
+    // Subscribe to translation loading status and language changes
     this._subscription = this._i18nService.isLoaded$.subscribe((loaded) => {
       if (loaded && this._lastKey) {
         // Re-evaluate translation when translations are loaded
+        this._lastResult = this._i18nService.translate(this._lastKey, this._lastParams);
+      }
+    });
+
+    // Subscribe to language changes
+    this._i18nService.currentLanguage$.subscribe((language) => {
+      if (this._lastKey) {
+        // Re-evaluate translation when language changes
         this._lastResult = this._i18nService.translate(this._lastKey, this._lastParams);
       }
     });
@@ -25,7 +33,6 @@ export class TranslatePipe implements PipeTransform, OnDestroy {
 
   transform(key: string, params?: { [key: string]: any }): string {
     if (!key) {
-      console.warn('TranslatePipe: Empty key provided');
       return '';
     }
 
@@ -36,12 +43,7 @@ export class TranslatePipe implements PipeTransform, OnDestroy {
     const result = this._i18nService.translate(key, params);
     this._lastResult = result;
 
-    // Debug logging
-    if (result === key) {
-      console.warn(`TranslatePipe: Translation not found for key "${key}"`);
-    } else {
-      console.log(`TranslatePipe: "${key}" -> "${result}"`);
-    }
+
 
     return result;
   }

@@ -5,7 +5,7 @@ import { map, tap } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 
-// Interfaces basadas en la documentación del backend
+// Interfaces based on backend documentation
 export interface DashboardStats {
   totalUsers: number;
   activeUsers: number;

@@ -4,11 +4,12 @@ import { RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
 import { AuthService } from '../../core/services/auth.service';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 
 import { AuthService } from './core/services/auth.service';
+import { TranslatePipe } from './shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
@@ -23,26 +24,21 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('AppComponent ngOnInit - Iniciando...');
-    
     this._authService.isAuthenticated$.subscribe(
       isAuth => {
-        console.log('AuthService isAuthenticated$:', isAuth);
         this.isAuthenticated = isAuth;
       }
     );
     
     this._authService.currentUser$.subscribe(
       user => {
-        console.log('AuthService currentUser$:', user);
         this.currentUser = user;
       }
     );
 
-    // Detectar si estamos en una ruta de admin
+    // Detect if we are on an admin route
     this._router.events.subscribe(() => {
       this.isAdminRoute = this._router.url.startsWith('/admin');
-      console.log('Router URL:', this._router.url, 'isAdminRoute:', this.isAdminRoute);
     });
 
     // Cerrar dropdown cuando se hace click fuera
@@ -55,7 +51,6 @@ export class AppComponent implements OnInit {
   }
 
   public toggleUserDropdown(): void {
-    console.log('toggleUserDropdown clicked, current state:', this.isUserDropdownOpen);
     this.isUserDropdownOpen = !this.isUserDropdownOpen;
   }
 
@@ -64,7 +59,6 @@ export class AppComponent implements OnInit {
   }
 
   public logout(): void {
-    console.log('Logout clicked');
     this._authService.logout();
     this.isUserDropdownOpen = false;
   }
@@ -74,13 +68,13 @@ export class AppComponent implements OnInit {
   }
 
   public getUserRole(): string {
-    if (!this.currentUser) return 'Usuario';
+    if (!this.currentUser) return 'User';
     
     switch (this.currentUser.type) {
-      case 'system': return 'Administrador';
-      case 'business': return 'Empresarial';
-      case 'individual': return 'Individual';
-      default: return 'Usuario';
+              case 'system': return 'Administrator';
+              case 'business': return 'Business';
+              case 'individual': return 'Individual';
+        default: return 'User';
     }
   }
 }

@@ -49,11 +49,11 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
     request = addToken(request, token);
   }
 
-  console.log('Making request to:', request.url, 'with token:', !!token);
+  
 
   return next(request).pipe(
     catchError((error: HttpErrorResponse) => {
-      console.error('HTTP Error:', error.status, error.url, error.error);
+
       if (error.status === 401 && !request.url.includes('auth/refresh')) {
         return handle401Error(request, next);
       }

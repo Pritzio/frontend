@@ -54,7 +54,51 @@
     "POSTAL_CODE": "Código Postal",
     "LANGUAGE": "Idioma",
     "ENGLISH": "Inglés",
-    "SPANISH": "Español"
+    "SPANISH": "Español",
+    "REMEMBER_ME": "Recordarme",
+    "OR": "o",
+    "EMAIL_REQUIRED": "El correo electrónico es requerido",
+    "EMAIL_INVALID": "Por favor ingresa un correo electrónico válido",
+    "PASSWORD_REQUIRED": "La contraseña es requerida",
+    "CONTINUE_WITH_GOOGLE": "Continuar con Google",
+    "CONTINUE_WITH_FACEBOOK": "Continuar con Facebook",
+    "COMPARE_AND_SAVE": "Compara y Ahorra",
+    "COMPARE_DESCRIPTION": "Encuentra los mejores precios en múltiples tiendas",
+    "COMPARE": "Comparar",
+    "FAVORITES": "Favoritos",
+    "HOME": "Inicio",
+    "FOOTER_DESCRIPTION": "Tu plataforma confiable para comparación de precios y ahorros",
+    "VIEW_ALL": "Ver todos",
+    "PROGRESS": "Progreso",
+    "FOOTER": {
+      "USEFUL_LINKS": "Enlaces Útiles",
+      "ABOUT": "Acerca de",
+      "HELP": "Ayuda",
+      "CONTACT": "Contacto",
+      "LEGAL": "Legal",
+      "PRIVACY": "Privacidad",
+      "TERMS": "Términos",
+      "COOKIES": "Cookies",
+      "FOLLOW_US": "Síguenos",
+      "ALL_RIGHTS_RESERVED": "Todos los derechos reservados"
+    },
+    "CATEGORY": "Categoría",
+    "ALL_CATEGORIES": "Todas las categorías",
+    "CATEGORIES": {
+      "ELECTRONICS": "Electrónicos",
+      "CLOTHING": "Ropa",
+      "HOME_AND_GARDEN": "Hogar y Jardín",
+      "SPORTS": "Deportes",
+      "BEAUTY": "Belleza",
+      "BOOKS": "Libros",
+      "AUTOMOTIVE": "Automotriz",
+      "FOOD_AND_BEVERAGES": "Alimentos y Bebidas",
+      "HEALTH": "Salud",
+      "TOYS": "Juguetes",
+      "OTHER": "Otros"
+    },
+    "VERIFICATION": "Verificación",
+    "CREATION_DATE": "Fecha de Creación"
   },
   "AUTH": {
     "LOGIN_TITLE": "Bienvenido de Vuelta",
@@ -76,9 +120,12 @@
     "REGISTER_SUCCESS": "Cuenta creada exitosamente",
     "REGISTER_ERROR": "Falló el registro",
     "LOGOUT_SUCCESS": "Sesión cerrada exitosamente",
-    "LOGOUT_ERROR": "Error durante el cierre de sesión"
+    "LOGOUT_ERROR": "Error durante el cierre de sesión",
+    "LOGOUT": "Cerrar Sesión"
   },
   "ADMIN": {
+    "TITLE": "Administrador",
+    "SUBTITLE": "Gestiona usuarios, tiendas, productos y scraping de la plataforma",
     "DASHBOARD": {
       "TITLE": "Panel de Administración",
       "SUBTITLE": "Gestiona usuarios, tiendas, productos y scraping de la plataforma",
@@ -96,7 +143,9 @@
       "TOTAL_PRODUCTS": "Total de Productos",
       "ACTIVE": "Activos",
       "INACTIVE": "Inactivos",
-      "SCRAPING_STATUS": "Estado del Scraping"
+      "SCRAPING_STATUS": "Estado del Scraping",
+      "STORES_ACTIVE": "Tiendas Activas en Scraping",
+      "PRODUCTS_UPDATED": "Productos Actualizados Hoy"
     },
     "ACTIONS": {
       "MANAGE_USERS": "Gestionar Usuarios",
@@ -109,6 +158,8 @@
       "SCRAPING_DESCRIPTION": "Controla procesos de scraping y monitoreo de precios"
     },
     "SCRAPING": {
+      "TITLE": "Control de Scraping",
+      "CONTROL": "Control de Scraping",
       "STATUS": "Estado",
       "START": "Iniciar",
       "PAUSE": "Pausar",
@@ -127,12 +178,76 @@
       "ANALYTICS": "Análisis",
       "REPORTS": "Reportes",
       "SETTINGS": "Configuración"
+    },
+    "MAIN_MENU": "Menú Principal",
+    "BACK_TO_USER_VIEW": "Vista de Usuario",
+    "REPORTS": {
+      "TITLE": "Reportes"
+    },
+    "SETTINGS": {
+      "TITLE": "Configuración"
+    },
+    "USERS": {
+      "TITLE": "Gestión de Usuarios",
+      "DESCRIPTION": "Administra usuarios, roles y permisos del sistema",
+      "NEW_USER": "Nuevo Usuario",
+      "SEARCH": "Buscar Usuarios",
+      "SEARCH_PLACEHOLDER": "Buscar por nombre, correo o usuario...",
+      "STATUS": "Estado",
+      "ALL_STATUSES": "Todos los Estados",
+      "ROLES_LABEL": "Rol",
+      "ALL_ROLES": "Todos los Roles",
+      "CLEAR_FILTERS": "Limpiar Filtros",
+      "LOADING": "Cargando usuarios...",
+      "USERS_FOUND": "usuarios encontrados",
+      "NO_USERS": "No hay usuarios",
+      "NO_USERS_DESCRIPTION": "No se encontraron usuarios con los filtros aplicados",
+      "STATUSES": {
+        "ACTIVE": "Activo",
+        "INACTIVE": "Inactivo",
+        "SUSPENDED": "Suspendido",
+        "PENDING": "Pendiente de Verificación",
+        "DELETED": "Eliminado"
+      },
+      "ROLES": {
+        "ADMIN": "Administrador",
+        "USER": "Usuario",
+        "MODERATOR": "Moderador",
+        "BUSINESS": "Empresa",
+        "INDIVIDUAL": "Individual"
+      },
+      "ACTIONS": {
+        "EDIT": "Editar",
+        "DELETE": "Eliminar",
+        "SUSPEND": "Suspender",
+        "ACTIVATE": "Activar",
+        "RESTORE": "Restaurar"
+      },
+      "FALLBACKS": {
+        "NO_NAME": "Sin Nombre",
+        "NO_USERNAME": "Sin Usuario",
+        "NO_EMAIL": "Sin Correo",
+        "NO_STATUS": "Sin Estado",
+        "NO_DATE": "Sin Fecha"
+      }
     }
   },
   "USER": {
     "DASHBOARD_TITLE": "Bienvenido a Pritzio",
     "DASHBOARD_SUBTITLE": "Panel de Inteligencia de Precios",
     "DASHBOARD_DESCRIPTION": "Rastrea precios, compara productos y toma decisiones informadas.",
+    "PROFILE": {
+      "TITLE": "Mi Perfil"
+    },
+    "FAVORITES": {
+      "TITLE": "Mis Favoritos"
+    },
+    "COMPARISON": {
+      "TITLE": "Comparaciones"
+    },
+    "SETTINGS": {
+      "TITLE": "Configuración"
+    },
     "FEATURES": {
       "SEARCH_PRODUCTS": {
         "TITLE": "Buscar Productos",
@@ -158,11 +273,24 @@
   },
   "USERS": {
     "TITLE": "Gestión de Usuarios",
+    "DESCRIPTION": "Administra usuarios, roles y permisos del sistema",
+    "NEW_USER": "Nuevo Usuario",
     "CREATE_USER": "Crear Usuario",
     "EDIT_USER": "Editar Usuario",
     "DELETE_USER": "Eliminar Usuario",
     "USER_DETAILS": "Detalles del Usuario",
     "USER_LIST": "Lista de Usuarios",
+    "SEARCH": "Buscar Usuarios",
+    "SEARCH_PLACEHOLDER": "Buscar por nombre, correo o usuario...",
+    "STATUS": "Estado",
+    "ALL_STATUSES": "Todos los Estados",
+    "ROLES_LABEL": "Rol",
+    "ALL_ROLES": "Todos los Roles",
+    "CLEAR_FILTERS": "Limpiar Filtros",
+    "LOADING": "Cargando usuarios...",
+    "USERS_FOUND": "usuarios encontrados",
+    "NO_USERS": "No hay usuarios",
+    "NO_USERS_DESCRIPTION": "No se encontraron usuarios con los filtros aplicados",
     "USER_TYPES": {
       "INDIVIDUAL": "Individual",
       "BUSINESS": "Empresarial",
@@ -173,6 +301,33 @@
       "INACTIVE": "Inactivo",
       "SUSPENDED": "Suspendido",
       "PENDING_VERIFICATION": "Pendiente de Verificación"
+    },
+    "STATUSES": {
+      "ACTIVE": "Activo",
+      "INACTIVE": "Inactivo",
+      "SUSPENDED": "Suspendido",
+      "PENDING": "Pendiente de Verificación"
+    },
+    "ROLES": {
+      "ADMIN": "Administrador",
+      "USER": "Usuario",
+      "MODERATOR": "Moderador",
+      "BUSINESS": "Empresa",
+      "INDIVIDUAL": "Individual"
+    },
+    "ACTIONS": {
+      "EDIT": "Editar",
+      "DELETE": "Eliminar",
+      "SUSPEND": "Suspender",
+      "ACTIVATE": "Activar",
+      "RESTORE": "Restaurar"
+    },
+    "FALLBACKS": {
+      "NO_NAME": "Sin Nombre",
+      "NO_USERNAME": "Sin Usuario",
+      "NO_EMAIL": "Sin Correo",
+      "NO_STATUS": "Sin Estado",
+      "NO_DATE": "Sin Fecha"
     },
     "FIELDS": {
       "ID": "ID",
@@ -191,11 +346,22 @@
   },
   "STORES": {
     "TITLE": "Gestión de Tiendas",
+    "STORE_DESCRIPTION": "Administra tiendas y sus ubicaciones físicas",
     "CREATE_STORE": "Crear Tienda",
     "EDIT_STORE": "Editar Tienda",
     "DELETE_STORE": "Eliminar Tienda",
     "STORE_DETAILS": "Detalles de la Tienda",
     "STORE_LIST": "Lista de Tiendas",
+    "SEARCH_PLACEHOLDER": "Nombre, descripción o website...",
+    "ALL_STATUSES": "Todos los estados",
+    "STATUSES": {
+      "ACTIVE": "Activa",
+      "INACTIVE": "Inactiva",
+      "PENDING": "Pendiente"
+    },
+    "CLEAR_FILTERS": "Limpiar Filtros",
+    "LOADING": "Cargando tiendas...",
+    "STORES_FOUND": "tiendas encontradas",
     "STORE_TYPES": {
       "ONLINE": "En Línea",
       "PHYSICAL": "Física",
@@ -238,7 +404,10 @@
       "VERIFIED_BY": "Verificada Por",
       "CREATED_AT": "Creada El",
       "UPDATED_AT": "Actualizada El"
-    }
+    },
+    "VERIFY_STORE": "Verificar Tienda",
+    "EDIT_STORE": "Editar Tienda",
+    "DELETE_STORE": "Eliminar Tienda"
   },
   "PRODUCTS": {
     "TITLE": "Gestión de Productos",

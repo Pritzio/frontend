@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { I18nService } from './i18n.service';
 
 export type Language = 'en' | 'es';
 
@@ -14,7 +13,7 @@ export class TranslationService {
   private readonly _defaultLanguage: Language = 'en';
   private readonly _supportedLanguages: Language[] = ['en', 'es'];
 
-  constructor(private _i18nService: I18nService) {
+  constructor() {
     this._initializeLanguage();
   }
 
@@ -50,16 +49,13 @@ export class TranslationService {
 
   setLanguage(language: Language): void {
     if (!this._supportedLanguages.includes(language)) {
-      console.warn(`Language '${language}' is not supported. Using default language.`);
+
       language = this._defaultLanguage;
     }
 
     this._currentLanguage.next(language);
     localStorage.setItem('language', language);
     
-    // Sync with I18nService
-    this._i18nService.setLanguage(language);
-
     // Update document direction for RTL languages if needed in the future
     document.documentElement.lang = language;
   }
