@@ -1,6 +1,6 @@
-/* Estilos específicos del dashboard de usuario */
 
-/* Welcome Section con grid personalizado */
+
+
 .welcome-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -15,7 +15,7 @@
   height: 300px;
 }
 
-/* Stat Cards con efectos hover */
+
 .stat-card {
   background-color: white;
   border-radius: 1rem;
@@ -45,7 +45,7 @@
   flex-shrink: 0;
 }
 
-/* Responsive Design para welcome section */
+
 @media (max-width: 1024px) {
   .welcome-section {
     grid-template-columns: 1fr;

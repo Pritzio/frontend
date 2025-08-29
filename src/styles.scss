@@ -1,4 +1,4 @@
-/* Estilos base globales */
+
 * {
   box-sizing: border-box;
 }
@@ -12,7 +12,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Componentes básicos que complementan Tailwind */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -82,7 +81,7 @@ body {
   border-color: transparent;
 }
 
-/* Estilos globales del footer */
+
 .main-footer {
   background-color: white;
   border-top: 1px solid #e5e7eb;

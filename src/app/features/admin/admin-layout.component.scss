@@ -1,4 +1,4 @@
-/* Estilos específicos del admin layout */
+
 .sidebar-toggle {
   display: flex;
   align-items: center;
@@ -117,7 +117,7 @@
   color: #dc2626;
 }
 
-/* Sidebar */
+
 .sidebar {
   width: 16rem;
   background-color: white;
@@ -161,7 +161,7 @@
   font-weight: 500;
 }
 
-/* Sidebar Overlay */
+
 .sidebar-overlay {
   position: fixed;
   top: 0;
@@ -172,7 +172,7 @@
   z-index: 30;
 }
 
-/* Responsive */
+
 @media (max-width: 1023px) {
   .sidebar {
     position: fixed;

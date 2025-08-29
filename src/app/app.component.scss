@@ -5,7 +5,6 @@
   background-color: #f9fafb;
 }
 
-/* Estilos específicos del navbar principal */
 .nav-link {
   display: flex;
   align-items: center;
@@ -45,7 +44,7 @@
   flex-shrink: 0;
 }
 
-/* Estilos específicos del menú de usuario */
+
 .user-menu {
   position: relative;
 }
@@ -118,7 +117,6 @@
   text-transform: capitalize;
 }
 
-/* User Dropdown */
 .user-dropdown {
   position: absolute;
   top: 100%;
@@ -238,7 +236,7 @@
   color: #b91c1c;
 }
 
-/* Main Content */
+
 .main-content {
   flex: 1;
   margin: 0 auto;
@@ -249,7 +247,6 @@
   padding-top: 2rem;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .user-details {
     display: none;
