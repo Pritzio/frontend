@@ -31,7 +31,7 @@
     </div>
 
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <!-- Users Stats -->
       <div class="card p-6">
         <div class="flex items-center">
@@ -86,23 +86,7 @@
         </div>
       </div>
 
-      <!-- Scraping Stats -->
-      <div class="card p-6">
-        <div class="flex items-center">
-          <div class="p-3 rounded-full bg-danger-100 text-danger-600">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-            </svg>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">{{ 'ADMIN.STATS.SCRAPING_STATUS' | translate }}</p>
-            <p class="text-lg font-semibold text-gray-900">{{ scrapingStatus?.status || 'STOPPED' }}</p>
-            <div class="flex items-center mt-1">
-              <span class="text-xs text-gray-600">{{ scrapingStatus?.activeStores || 0 }} {{ 'ADMIN.STATS.STORES_ACTIVE' | translate }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
 
     <!-- Quick Actions -->
@@ -157,96 +141,7 @@
       </div>
     </div>
 
-    <!-- Scraping Control Panel -->
-    <div class="card p-6 mb-8">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">{{ 'ADMIN.SCRAPING.CONTROL' | translate }}</h2>
-        <div class="flex items-center space-x-3">
-          <span class="text-sm text-gray-600">{{ 'ADMIN.SCRAPING.STATUS' | translate }}:</span>
-          <span 
-            class="px-3 py-1 rounded-full text-sm font-medium"
-            [class]="getScrapingStatusColor(scrapingStatus?.status || 'STOPPED')"
-          >
-            {{ scrapingStatus?.status || 'STOPPED' }}
-          </span>
-        </div>
-      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div class="text-center">
-          <p class="text-2xl font-bold text-gray-900">{{ scrapingStatus?.activeStores || 0 }}</p>
-          <p class="text-sm text-gray-600">{{ 'ADMIN.STATS.STORES_ACTIVE' | translate }}</p>
-        </div>
-        <div class="text-center">
-          <p class="text-2xl font-bold text-gray-900">{{ scrapingStatus?.productsUpdated || 0 }}</p>
-          <p class="text-sm text-gray-600">{{ 'ADMIN.SCRAPING.PRODUCTS_UPDATED' | translate }}</p>
-        </div>
-        <div class="text-center">
-          <p class="text-2xl font-bold text-gray-900">{{ scrapingStatus?.errors || 0 }}</p>
-          <p class="text-sm text-gray-600">{{ 'COMMON.ERROR' | translate }}</p>
-        </div>
-      </div>
-
-      <div class="flex flex-wrap gap-3">
-        <button 
-          (click)="startScraping()" 
-          [disabled]="scrapingStatus?.status === 'ACTIVE' || isScrapingActionLoading"
-          class="btn btn-success flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <span>{{ 'ADMIN.SCRAPING.START' | translate }}</span>
-        </button>
-
-        <button 
-          (click)="pauseScraping()" 
-          [disabled]="scrapingStatus?.status === 'PAUSED' || isScrapingActionLoading"
-          class="btn btn-warning flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <span>{{ 'ADMIN.SCRAPING.PAUSE' | translate }}</span>
-        </button>
-
-        <button 
-          (click)="stopScraping()" 
-          [disabled]="scrapingStatus?.status === 'STOPPED' || isScrapingActionLoading"
-          class="btn btn-danger flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path>
-          </svg>
-          <span>{{ 'ADMIN.SCRAPING.STOP' | translate }}</span>
-        </button>
-
-        <button 
-          (click)="navigateToScraping()" 
-          class="btn btn-secondary flex items-center space-x-2"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <span>{{ 'ADMIN.SCRAPING.HISTORY' | translate }}</span>
-        </button>
-      </div>
-
-      <!-- Progress Bar -->
-      <div *ngIf="scrapingStatus?.status === 'ACTIVE'" class="mt-6">
-        <div class="flex justify-between text-sm text-gray-600 mb-2">
-          <span>{{ 'COMMON.PROGRESS' | translate }}</span>
-          <span>{{ scrapingStatus?.progress || 0 }}%</span>
-        </div>
-        <div class="w-full bg-gray-200 rounded-full h-2">
-          <div 
-            class="bg-success-600 h-2 rounded-full transition-all duration-300" 
-            [style.width.%]="scrapingStatus?.progress || 0"
-          ></div>
-        </div>
-      </div>
-    </div>
 
     <!-- Recent Activity -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

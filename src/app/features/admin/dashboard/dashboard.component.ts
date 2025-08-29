@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subject, takeUntil, combineLatest } from 'rxjs';
 
-import { AdminService, DashboardStats, User, Store, Product, ScrapingStatus } from '../../../core/services/admin.service';
+import { AdminService, DashboardStats, User, Store, Product } from '../../../core/services/admin.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
@@ -22,11 +22,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   public recentUsers: User[] = [];
   public recentStores: Store[] = [];
   public recentProducts: Product[] = [];
-  public scrapingStatus: ScrapingStatus | null = null;
 
   // Loading states
   public isLoading = true;
-  public isScrapingActionLoading = false;
 
   // Current user
   public currentUser: any = null;
@@ -54,16 +52,14 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       this._adminService.dashboardStats$,
       this._adminService.users$,
       this._adminService.stores$,
-      this._adminService.products$,
-      this._adminService.scrapingStatus$
+      this._adminService.products$
     ]).pipe(
       takeUntil(this._destroy$)
-    ).subscribe(([stats, users, stores, products, scraping]) => {
+    ).subscribe(([stats, users, stores, products]) => {
       this.dashboardStats = stats;
-              this.recentUsers = users ? users.slice(0, 5) : []; // Added validation
-        this.recentStores = stores ? stores.slice(0, 5) : []; // Added validation
-        this.recentProducts = products ? products.slice(0, 5) : []; // Added validation
-      this.scrapingStatus = scraping;
+      this.recentUsers = users ? users.slice(0, 5) : [];
+      this.recentStores = stores ? stores.slice(0, 5) : [];
+      this.recentProducts = products ? products.slice(0, 5) : [];
       this.isLoading = false;
     });
 
@@ -92,55 +88,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this._router.navigate(['/admin/products']);
   }
 
-  public navigateToScraping(): void {
-    this._router.navigate(['/admin/scraping']);
-  }
 
-  // Scraping control methods
-  public startScraping(): void {
-    this.isScrapingActionLoading = true;
-    this._adminService.startScraping()
-      .pipe(takeUntil(this._destroy$))
-      .subscribe({
-        next: () => {
-          this.isScrapingActionLoading = false;
-        },
-        error: (error) => {
-  
-          this.isScrapingActionLoading = false;
-        }
-      });
-  }
-
-  public stopScraping(): void {
-    this.isScrapingActionLoading = true;
-    this._adminService.stopScraping()
-      .pipe(takeUntil(this._destroy$))
-      .subscribe({
-        next: () => {
-          this.isScrapingActionLoading = false;
-        },
-        error: (error) => {
-  
-          this.isScrapingActionLoading = false;
-        }
-      });
-  }
-
-  public pauseScraping(): void {
-    this.isScrapingActionLoading = true;
-    this._adminService.pauseScraping()
-      .pipe(takeUntil(this._destroy$))
-      .subscribe({
-        next: () => {
-          this.isScrapingActionLoading = false;
-        },
-        error: (error) => {
-  
-          this.isScrapingActionLoading = false;
-        }
-      });
-  }
 
   // Refresh data
   public refreshData(): void {
@@ -158,14 +106,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getScrapingStatusColor(status: string): string {
-    switch (status) {
-      case 'ACTIVE': return 'text-success-600 bg-success-50';
-      case 'PAUSED': return 'text-warning-600 bg-warning-50';
-      case 'STOPPED': return 'text-danger-600 bg-danger-50';
-      default: return 'text-gray-600 bg-gray-50';
-    }
-  }
+
 
   public formatDate(date: Date | string): string {
     if (!date) return 'N/A';

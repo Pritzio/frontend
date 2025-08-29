@@ -17,10 +17,6 @@ export interface DashboardStats {
   totalProducts: number;
   activeProducts: number;
   inactiveProducts: number;
-  scrapingStatus: 'ACTIVE' | 'PAUSED' | 'STOPPED';
-  lastScrapingRun: Date;
-  productsUpdatedToday: number;
-  activeScrapingStores: number;
 }
 
 export interface User {
@@ -84,26 +80,7 @@ export interface Product {
   updatedAt: Date;
 }
 
-export interface ScrapingStatus {
-  status: 'ACTIVE' | 'PAUSED' | 'STOPPED';
-  lastRun: Date;
-  nextRun?: Date;
-  activeStores: number;
-  productsUpdated: number;
-  errors: number;
-  progress: number;
-}
 
-export interface ScrapingHistory {
-  id: string;
-  status: 'SUCCESS' | 'FAILED' | 'PARTIAL';
-  startedAt: Date;
-  completedAt?: Date;
-  storesProcessed: number;
-  productsUpdated: number;
-  errors: number;
-  duration: number;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -115,13 +92,11 @@ export class AdminService {
   private _users = new BehaviorSubject<User[]>([]);
   private _stores = new BehaviorSubject<Store[]>([]);
   private _products = new BehaviorSubject<Product[]>([]);
-  private _scrapingStatus = new BehaviorSubject<ScrapingStatus | null>(null);
 
   public dashboardStats$ = this._dashboardStats.asObservable();
   public users$ = this._users.asObservable();
   public stores$ = this._stores.asObservable();
   public products$ = this._products.asObservable();
-  public scrapingStatus$ = this._scrapingStatus.asObservable();
 
   constructor(private _http: HttpClient) {}
 
@@ -256,40 +231,7 @@ export class AdminService {
     return this._http.delete<void>(`${this._apiUrl}/products/${id}`);
   }
 
-  // Scraping Control
-  getScrapingStatus(): Observable<ScrapingStatus> {
-    return this._http.get<{ success: boolean; data: ScrapingStatus }>(`${this._apiUrl}/scraping/status`)
-      .pipe(
-        map(response => response.data),
-        tap(status => this._scrapingStatus.next(status))
-      );
-  }
 
-  startScraping(): Observable<{ success: boolean; message: string }> {
-    return this._http.post<{ success: boolean; message: string }>(`${this._apiUrl}/scraping/start`, {})
-      .pipe(
-        tap(() => this.getScrapingStatus().subscribe())
-      );
-  }
-
-  stopScraping(): Observable<{ success: boolean; message: string }> {
-    return this._http.post<{ success: boolean; message: string }>(`${this._apiUrl}/scraping/stop`, {})
-      .pipe(
-        tap(() => this.getScrapingStatus().subscribe())
-      );
-  }
-
-  pauseScraping(): Observable<{ success: boolean; message: string }> {
-    return this._http.post<{ success: boolean; message: string }>(`${this._apiUrl}/scraping/pause`, {})
-      .pipe(
-        tap(() => this.getScrapingStatus().subscribe())
-      );
-  }
-
-  getScrapingHistory(): Observable<ScrapingHistory[]> {
-    return this._http.get<{ success: boolean; data: ScrapingHistory[] }>(`${this._apiUrl}/scraping/history`)
-      .pipe(map(response => response.data));
-  }
 
   // Refresh all data
   refreshAllData(): void {
@@ -297,6 +239,5 @@ export class AdminService {
     this.getUsers().subscribe();
     this.getStores().subscribe();
     this.getProducts().subscribe();
-    this.getScrapingStatus().subscribe();
   }
 }
