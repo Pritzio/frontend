@@ -5,12 +5,15 @@ import { Subject, takeUntil, combineLatest } from 'rxjs';
 
 import { AdminService, DashboardStats, User, Store, Product } from '../../../core/services/admin.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { StatisticsService, SystemStatistics, UsersByRole, StoresByStatus, ProductsByCategory } from '../../../core/services/statistics.service';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { StatCardComponent, StatCardData } from '../../../shared/components/stat-card/stat-card.component';
+import { DistributionChartComponent, DistributionData } from '../../../shared/components/distribution-chart/distribution-chart.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule, TranslatePipe, StatCardComponent, DistributionChartComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
@@ -23,8 +26,22 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   public recentStores: Store[] = [];
   public recentProducts: Product[] = [];
 
+  // New statistics data
+  public systemStatistics: SystemStatistics | null = null;
+  public usersByRole: UsersByRole | null = null;
+  public storesByStatus: StoresByStatus | null = null;
+  public productsByCategory: ProductsByCategory | null = null;
+
+  // Processed data for components
+  public statCards: StatCardData[] = [];
+  public usersDistribution: DistributionData[] = [];
+  public storesDistribution: DistributionData[] = [];
+  public productsDistribution: DistributionData[] = [];
+
   // Loading states
   public isLoading = true;
+  public statisticsLoading = false;
+  public statisticsError: string | null = null;
 
   // Current user
   public currentUser: any = null;
@@ -32,11 +49,13 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   constructor(
     private _adminService: AdminService,
     private _authService: AuthService,
+    private _statisticsService: StatisticsService,
     private _router: Router
   ) {}
 
   ngOnInit(): void {
     this._loadInitialData();
+    this._loadStatistics();
     this._getCurrentUser();
   }
 
@@ -49,22 +68,21 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     
     combineLatest([
-      this._adminService.dashboardStats$,
       this._adminService.users$,
-      this._adminService.stores$,
-      this._adminService.products$
+      this._adminService.stores$
     ]).pipe(
       takeUntil(this._destroy$)
-    ).subscribe(([stats, users, stores, products]) => {
-      this.dashboardStats = stats;
+    ).subscribe(([users, stores]) => {
       this.recentUsers = users ? users.slice(0, 5) : [];
       this.recentStores = stores ? stores.slice(0, 5) : [];
-      this.recentProducts = products ? products.slice(0, 5) : [];
+      this.recentProducts = []; // Empty until products endpoint is implemented
       this.isLoading = false;
     });
 
-    // Trigger initial data load
-    this._adminService.refreshAllData();
+    // Trigger initial data load without dashboard stats
+    this._adminService.getUsers().subscribe();
+    this._adminService.getStores().subscribe();
+    // this._adminService.getProducts().subscribe(); // Commented out until endpoint is ready
   }
 
   private _getCurrentUser(): void {
@@ -90,9 +108,140 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
 
 
+  // Load statistics from new endpoints
+  private _loadStatistics(): void {
+    this.statisticsLoading = true;
+    this.statisticsError = null;
+
+    combineLatest([
+      this._statisticsService.systemStatistics$,
+      this._statisticsService.usersByRole$,
+      this._statisticsService.storesByStatus$,
+      this._statisticsService.productsByCategory$,
+      this._statisticsService.isLoading$,
+      this._statisticsService.error$
+    ]).pipe(
+      takeUntil(this._destroy$)
+    ).subscribe(([systemStats, usersByRole, storesByStatus, productsByCategory, loading, error]) => {
+      this.systemStatistics = systemStats;
+      this.usersByRole = usersByRole;
+      this.storesByStatus = storesByStatus;
+      this.productsByCategory = productsByCategory;
+      this.statisticsLoading = loading;
+      this.statisticsError = error;
+
+      if (systemStats) {
+        this._processStatisticsData();
+      }
+    });
+
+    // Load initial statistics
+    this._statisticsService.loadAllStatistics().subscribe();
+  }
+
+  private _processStatisticsData(): void {
+    if (!this.systemStatistics) return;
+
+    // Process stat cards
+    this.statCards = [
+      {
+        title: 'ADMIN.STATS.TOTAL_USERS',
+        value: this.systemStatistics.users.total,
+        subtitle: 'ADMIN.STATS.ACTIVE',
+        subtitleValue: this.systemStatistics.users.active,
+        icon: 'users',
+        iconColor: 'primary'
+      },
+      {
+        title: 'ADMIN.STATS.TOTAL_STORES',
+        value: this.systemStatistics.stores.total,
+        subtitle: 'ADMIN.STATS.VERIFIED',
+        subtitleValue: this.systemStatistics.stores.verified,
+        icon: 'stores',
+        iconColor: 'success'
+      },
+      {
+        title: 'ADMIN.STATS.TOTAL_PRODUCTS',
+        value: this.systemStatistics.products.total,
+        subtitle: 'ADMIN.STATS.ACTIVE',
+        subtitleValue: this.systemStatistics.products.active,
+        icon: 'products',
+        iconColor: 'warning'
+      },
+      {
+        title: 'ADMIN.STATS.PENDING_VERIFICATION',
+        value: this.systemStatistics.users.pendingVerification + this.systemStatistics.stores.pendingVerification,
+        subtitle: 'ADMIN.STATS.USERS_AND_STORES',
+        subtitleValue: this.systemStatistics.users.pendingVerification,
+        icon: 'pending',
+        iconColor: 'info'
+      }
+    ];
+
+    // Process users distribution
+    this.usersDistribution = [
+      {
+        label: 'ADMIN.STATS.ACTIVE_USERS',
+        value: this.systemStatistics.users.active,
+        color: '#10b981'
+      },
+      {
+        label: 'ADMIN.STATS.INACTIVE_USERS',
+        value: this.systemStatistics.users.inactive,
+        color: '#6b7280'
+      },
+      {
+        label: 'ADMIN.STATS.PENDING_USERS',
+        value: this.systemStatistics.users.pendingVerification,
+        color: '#f59e0b'
+      },
+      {
+        label: 'ADMIN.STATS.SUSPENDED_USERS',
+        value: this.systemStatistics.users.suspended,
+        color: '#ef4444'
+      }
+    ];
+
+    // Process stores distribution
+    this.storesDistribution = [
+      {
+        label: 'ADMIN.STATS.VERIFIED_STORES',
+        value: this.systemStatistics.stores.verified,
+        color: '#10b981'
+      },
+      {
+        label: 'ADMIN.STATS.PENDING_STORES',
+        value: this.systemStatistics.stores.pendingVerification,
+        color: '#f59e0b'
+      },
+      {
+        label: 'ADMIN.STATS.SUSPENDED_STORES',
+        value: this.systemStatistics.stores.suspended,
+        color: '#ef4444'
+      }
+    ];
+
+    // Process products distribution
+    this.productsDistribution = [
+      {
+        label: 'ADMIN.STATS.ACTIVE_PRODUCTS',
+        value: this.systemStatistics.products.active,
+        color: '#10b981'
+      },
+      {
+        label: 'ADMIN.STATS.INACTIVE_PRODUCTS',
+        value: this.systemStatistics.products.inactive,
+        color: '#6b7280'
+      }
+    ];
+  }
+
   // Refresh data
   public refreshData(): void {
-    this._adminService.refreshAllData();
+    this._adminService.getUsers().subscribe();
+    this._adminService.getStores().subscribe();
+    // this._adminService.getProducts().subscribe(); // Commented out until endpoint is ready
+    this._statisticsService.refreshStatistics();
   }
 
   // Utility methods

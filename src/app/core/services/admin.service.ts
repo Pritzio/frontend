@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
@@ -100,13 +100,23 @@ export class AdminService {
 
   constructor(private _http: HttpClient) {}
 
-  // Dashboard Statistics
+  // Dashboard Statistics (deprecated - use StatisticsService instead)
   getDashboardStats(): Observable<DashboardStats> {
-    return this._http.get<{ success: boolean; data: DashboardStats }>(`${this._apiUrl}/admin/dashboard/stats`)
-      .pipe(
-        map(response => response.data),
-        tap(stats => this._dashboardStats.next(stats))
-      );
+    console.warn('getDashboardStats is deprecated. Use StatisticsService instead.');
+    const fallbackStats: DashboardStats = {
+      totalUsers: 0,
+      activeUsers: 0,
+      pendingUsers: 0,
+      suspendedUsers: 0,
+      totalStores: 0,
+      verifiedStores: 0,
+      pendingStores: 0,
+      totalProducts: 0,
+      activeProducts: 0,
+      inactiveProducts: 0
+    };
+    this._dashboardStats.next(fallbackStats);
+    return of(fallbackStats);
   }
 
   // Users Management
@@ -233,9 +243,9 @@ export class AdminService {
 
 
 
-  // Refresh all data
+  // Refresh all data (deprecated - dashboard stats removed)
   refreshAllData(): void {
-    this.getDashboardStats().subscribe();
+    console.warn('refreshAllData is deprecated. Call individual methods or use StatisticsService.');
     this.getUsers().subscribe();
     this.getStores().subscribe();
     this.getProducts().subscribe();
