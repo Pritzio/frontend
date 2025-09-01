@@ -1,0 +1,98 @@
+/* User Edit Modal Styles */
+.user-edit-modal {
+  /* Modal backdrop animation */
+  &-backdrop {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  /* Modal content animation */
+  &-content {
+    animation: slideInUp 0.3s ease-out;
+  }
+
+  /* Form field styles */
+  .input {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    
+    &:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    &-error {
+      border-color: #ef4444;
+      
+      &:focus {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+      }
+    }
+  }
+
+  /* Custom scrollbar for content area */
+  &-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f7fafc;
+    
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f7fafc;
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #cbd5e0;
+      border-radius: 3px;
+      
+      &:hover {
+        background: #a0aec0;
+      }
+    }
+  }
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .user-edit-modal {
+    &-content {
+      margin: 1rem;
+      max-width: calc(100vw - 2rem);
+    }
+    
+    /* Stack form fields on mobile */
+    .grid-cols-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+}

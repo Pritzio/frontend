@@ -104,6 +104,7 @@
     },
     "VERIFICATION": "Verificación",
     "CREATION_DATE": "Fecha de Creación",
+    "UPDATING": "Actualizando...",
     "CLEAR_FILTERS": "Limpiar Filtros"
   },
   "AUTH": {
@@ -341,11 +342,13 @@
       "PENDING": "Pendiente de Verificación"
     },
     "ROLES": {
+      "SUPER_ADMIN": "Super Administrador",
       "ADMIN": "Administrador",
-      "USER": "Usuario",
-      "MODERATOR": "Moderador",
-      "BUSINESS": "Empresa",
-      "INDIVIDUAL": "Individual"
+      "STORE_ADMIN": "Administrador de Tienda",
+      "STORE_MANAGER": "Gerente de Tienda",
+      "STORE_EMPLOYEE": "Empleado de Tienda",
+      "CUSTOMER": "Cliente",
+      "GUEST": "Invitado"
     },
     "ACTIONS": {
       "EDIT": "Editar",
@@ -373,8 +376,82 @@
       "EMAIL_VERIFIED": "Correo Verificado",
       "PHONE_VERIFIED": "Teléfono Verificado",
       "CREATED_AT": "Creado El",
-      "UPDATED_AT": "Actualizado El"
-    }
+      "UPDATED_AT": "Actualizado El",
+      "LAST_LOGIN": "Último Acceso",
+      "DATE_OF_BIRTH": "Fecha de Nacimiento",
+      "GENDER": "Género",
+      "ADDRESS": "Dirección",
+      "CITY": "Ciudad",
+      "STATE": "Estado/Provincia",
+      "ZIP_CODE": "Código Postal",
+      "COUNTRY": "País",
+      "WEBSITE": "Sitio Web",
+      "BIO": "Biografía",
+      "BIO_PLACEHOLDER": "Cuéntanos sobre ti...",
+      "AVATAR": "Avatar (URL)",
+      "PROFILE_VISIBILITY": "Visibilidad del Perfil"
+    },
+    "BASIC_INFO": "Información Básica",
+    "PROFILE_INFO": "Información del Perfil",
+    "ADDRESS_INFO": "Información de Dirección",
+    "ADDITIONAL_INFO": "Información Adicional",
+    "STATUS_AND_ROLES": "Estado y Roles",
+    "STATUS_AND_PERMISSIONS": "Estado y Permisos",
+    "VERIFICATION_STATUS": "Estado de Verificación",
+    "IMPORTANT_DATES": "Fechas Importantes",
+    "VIEW": "Ver",
+    "UPDATE_USER": "Actualizar Usuario",
+    "SELECT_STATUS": "Seleccionar Estado",
+    "EDIT_NOTE_TITLE": "Nota Importante",
+    "EDIT_NOTE_DESCRIPTION": "Los cambios en el estado del usuario tendrán efecto inmediato. Los cambios de rol pueden requerir que el usuario inicie sesión nuevamente.",
+    "FALLBACKS": {
+      "NO_NAME": "Sin Nombre",
+      "NO_USERNAME": "Sin Usuario",
+      "NO_EMAIL": "Sin Correo",
+      "NO_STATUS": "Sin Estado",
+      "NO_DATE": "Sin Fecha",
+      "NO_ROLES": "Sin Roles"
+    },
+    "STATUSES": {
+      "ACTIVE": "Activo",
+      "INACTIVE": "Inactivo",
+      "SUSPENDED": "Suspendido",
+      "PENDING": "Pendiente de Verificación",
+      "DELETED": "Eliminado"
+    },
+    "SELECT_GENDER": "Seleccionar Género",
+    "GENDERS": {
+      "MALE": "Masculino",
+      "FEMALE": "Femenino", 
+      "OTHER": "Otro",
+      "PREFER_NOT_TO_SAY": "Prefiero no decirlo"
+    },
+    "VISIBILITY": {
+      "PUBLIC": "Público",
+      "PRIVATE": "Privado",
+      "FRIENDS": "Solo Amigos"
+    },
+    "CONFIRMATIONS": {
+      "DELETE": "¿Está seguro de que desea eliminar al usuario {{name}}? Esta acción no se puede deshacer.",
+      "SUSPEND": "¿Está seguro de que desea suspender al usuario {{name}}?",
+      "ACTIVATE": "¿Está seguro de que desea activar al usuario {{name}}?",
+      "RESTORE": "¿Está seguro de que desea restaurar al usuario {{name}}?"
+    },
+    "ERRORS": {
+      "UPDATE_FAILED": "Error al actualizar usuario. Por favor, inténtelo de nuevo.",
+      "STATUS_UPDATE_FAILED": "Error al actualizar el estado del usuario. Por favor, inténtelo de nuevo.",
+      "ROLE_UPDATE_FAILED": "Error al actualizar los roles del usuario. Por favor, inténtelo de nuevo.",
+      "DELETE": "Error al eliminar usuario. Por favor, inténtelo de nuevo.",
+      "SUSPEND": "Error al suspender usuario. Por favor, inténtelo de nuevo.",
+      "ACTIVATE": "Error al activar usuario. Por favor, inténtelo de nuevo.",
+      "RESTORE": "Error al restaurar usuario. Por favor, inténtelo de nuevo.",
+      "INSUFFICIENT_PERMISSIONS": "No tienes permisos para realizar esta acción."
+    },
+    "NO_ASSIGNABLE_ROLES": "No hay roles disponibles para asignar",
+    "ROLE_SELECTION_HELP": "Selecciona los roles a asignar a este usuario. Los cambios se aplicarán al guardar.",
+    "ROLE_RESTRICTION_TITLE": "Edición de Roles Restringida",
+    "ROLE_RESTRICTION_MESSAGE": "No tienes permisos suficientes para modificar los roles de este usuario.",
+    "ROLE_UPDATE_NOTE": "Los cambios de roles se incluirán en la solicitud de actualización del usuario."
   },
   "STORES": {
     "TITLE": "Gestión de Tiendas",
@@ -523,7 +600,8 @@
     "PASSWORD_MIN": "La contraseña debe tener al menos 8 caracteres",
     "PASSWORD_MATCH": "Las contraseñas deben coincidir",
     "USERNAME_MIN": "El nombre de usuario debe tener al menos 3 caracteres",
-    "PHONE_INVALID": "Por favor ingresa un número de teléfono válido"
+    "PHONE_INVALID": "Por favor ingresa un número de teléfono válido",
+    "INVALID": "Valor inválido"
   },
   "MESSAGES": {
     "CREATE_SUCCESS": "{{item}} creado exitosamente",

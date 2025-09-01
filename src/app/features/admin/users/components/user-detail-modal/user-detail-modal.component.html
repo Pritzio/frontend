@@ -1,0 +1,217 @@
+<!-- Modal Backdrop -->
+<div 
+  *ngIf="isVisible" 
+  class="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4"
+  (click)="onBackdropClick($event)"
+>
+  <!-- Modal Container -->
+  <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+    
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50">
+      <div class="flex items-center space-x-4">
+        <!-- User Avatar -->
+        <div class="w-12 h-12 rounded-full bg-primary-600 flex items-center justify-center text-white font-semibold text-lg">
+          {{ getInitials() }}
+        </div>
+        <div>
+          <h2 class="text-xl font-semibold text-gray-900 m-0">
+            {{ 'USERS.USER_DETAILS' | translate }}
+          </h2>
+          <p class="text-sm text-gray-600 m-0">{{ getDisplayName() }}</p>
+        </div>
+      </div>
+      
+      <!-- Close Button -->
+      <button 
+        type="button"
+        class="text-gray-400 hover:text-gray-600 transition-colors"
+        (click)="onClose()"
+        [attr.aria-label]="'COMMON.CLOSE' | translate"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="p-6 overflow-y-auto max-h-[60vh]" *ngIf="user">
+      
+      <!-- Basic Information -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+          {{ 'USERS.BASIC_INFO' | translate }}
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Username -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              {{ 'USERS.FIELDS.USERNAME' | translate }}
+            </label>
+            <p class="text-sm text-gray-900 bg-gray-50 p-2 rounded">
+              {{ user.username || ('USERS.FALLBACKS.NO_USERNAME' | translate) }}
+            </p>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              {{ 'USERS.FIELDS.EMAIL' | translate }}
+            </label>
+            <p class="text-sm text-gray-900 bg-gray-50 p-2 rounded">
+              {{ user.email || ('USERS.FALLBACKS.NO_EMAIL' | translate) }}
+            </p>
+          </div>
+
+          <!-- First Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              {{ 'USERS.FIELDS.FIRST_NAME' | translate }}
+            </label>
+            <p class="text-sm text-gray-900 bg-gray-50 p-2 rounded">
+              {{ (user.profile && user.profile.firstName) || ('USERS.FALLBACKS.NO_NAME' | translate) }}
+            </p>
+          </div>
+
+          <!-- Last Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              {{ 'USERS.FIELDS.LAST_NAME' | translate }}
+            </label>
+            <p class="text-sm text-gray-900 bg-gray-50 p-2 rounded">
+              {{ (user.profile && user.profile.lastName) || ('USERS.FALLBACKS.NO_NAME' | translate) }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status and Roles -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+          {{ 'USERS.STATUS_AND_ROLES' | translate }}
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Status -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              {{ 'USERS.FIELDS.STATUS' | translate }}
+            </label>
+            <div class="flex items-center">
+              <span [class]="'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ' + getStatusColor()">
+                {{ getStatusText() }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Roles -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              {{ 'USERS.ROLES_LABEL' | translate }}
+            </label>
+            <p class="text-sm text-gray-900 bg-gray-50 p-2 rounded">
+              {{ getUserRoles() }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verification Status -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+          {{ 'USERS.VERIFICATION_STATUS' | translate }}
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Email Verified -->
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+            <span class="text-sm font-medium text-gray-700">
+              {{ 'USERS.FIELDS.EMAIL_VERIFIED' | translate }}
+            </span>
+            <span *ngIf="user.emailVerified" class="text-green-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </span>
+            <span *ngIf="!user.emailVerified" class="text-red-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </span>
+          </div>
+
+          <!-- Phone Verified -->
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+            <span class="text-sm font-medium text-gray-700">
+              {{ 'USERS.FIELDS.PHONE_VERIFIED' | translate }}
+            </span>
+            <span *ngIf="user.phoneVerified" class="text-green-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </span>
+            <span *ngIf="!user.phoneVerified" class="text-red-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dates -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+          {{ 'USERS.IMPORTANT_DATES' | translate }}
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Created At -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              {{ 'USERS.FIELDS.CREATED_AT' | translate }}
+            </label>
+            <p class="text-sm text-gray-900 bg-gray-50 p-2 rounded">
+              {{ formatDate(user.createdAt) }}
+            </p>
+          </div>
+
+          <!-- Last Login -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              {{ 'USERS.FIELDS.LAST_LOGIN' | translate }}
+            </label>
+            <p class="text-sm text-gray-900 bg-gray-50 p-2 rounded">
+              {{ formatDate(user.lastLoginAt) }}
+            </p>
+          </div>
+
+          <!-- Updated At -->
+          <div *ngIf="user.updatedAt">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              {{ 'USERS.FIELDS.UPDATED_AT' | translate }}
+            </label>
+            <p class="text-sm text-gray-900 bg-gray-50 p-2 rounded">
+              {{ formatDate(user.updatedAt) }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="flex items-center justify-end space-x-3 p-6 border-t border-gray-200 bg-gray-50">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="onClose()"
+      >
+        {{ 'COMMON.CLOSE' | translate }}
+      </button>
+    </div>
+
+  </div>
+</div>

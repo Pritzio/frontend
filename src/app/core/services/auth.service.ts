@@ -118,6 +118,10 @@ export class AuthService {
     }
   }
 
+  public getCurrentUser(): IUser | null {
+    return this._currentUser.value;
+  }
+
   private _clearAuthData(): void {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');

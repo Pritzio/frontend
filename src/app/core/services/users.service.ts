@@ -160,4 +160,33 @@ export class UsersService {
   restoreUser(id: string): Observable<IApiResponse<IUser>> {
     return this._http.post<IApiResponse<IUser>>(`${this._apiUrl}/${id}/restore`, {});
   }
+
+  /**
+   * Assign role to user
+   */
+  assignRoleToUser(userId: string, roleId: string): Observable<IApiResponse<any>> {
+    const payload = { userId, roleId };
+    
+    return this._http.post<IApiResponse<any>>(`${environment.apiUrl}/auth/assign-role`, payload);
+  }
+
+  /**
+   * Remove role from user
+   */
+  removeRoleFromUser(userId: string, roleId: string): Observable<IApiResponse<any>> {
+    const payload = { userId, roleId };
+    
+    return this._http.delete<IApiResponse<any>>(`${environment.apiUrl}/auth/remove-role`, {
+      body: payload
+    });
+  }
+
+  /**
+   * Get available roles (this might need to be implemented in the backend)
+   */
+  getAvailableRoles(): Observable<IApiResponse<any[]>> {
+    // This endpoint might not exist yet, we'll simulate it for now
+    return this._http.get<IApiResponse<any[]>>(`${environment.apiUrl}/roles`);
+  }
+
 }

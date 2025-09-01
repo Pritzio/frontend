@@ -104,6 +104,7 @@
     },
     "VERIFICATION": "Verification",
     "CREATION_DATE": "Creation Date",
+    "UPDATING": "Updating...",
     "CLEAR_FILTERS": "Clear Filters"
   },
   "AUTH": {
@@ -341,11 +342,13 @@
       "PENDING": "Pending Verification"
     },
     "ROLES": {
+      "SUPER_ADMIN": "Super Administrator",
       "ADMIN": "Administrator",
-      "USER": "User",
-      "MODERATOR": "Moderator",
-      "BUSINESS": "Business",
-      "INDIVIDUAL": "Individual"
+      "STORE_ADMIN": "Store Administrator",
+      "STORE_MANAGER": "Store Manager",
+      "STORE_EMPLOYEE": "Store Employee",
+      "CUSTOMER": "Customer",
+      "GUEST": "Guest"
     },
     "ACTIONS": {
       "EDIT": "Edit",
@@ -373,8 +376,82 @@
       "EMAIL_VERIFIED": "Email Verified",
       "PHONE_VERIFIED": "Phone Verified",
       "CREATED_AT": "Created At",
-      "UPDATED_AT": "Updated At"
-    }
+      "UPDATED_AT": "Updated At",
+      "LAST_LOGIN": "Last Login",
+      "DATE_OF_BIRTH": "Date of Birth",
+      "GENDER": "Gender",
+      "ADDRESS": "Address",
+      "CITY": "City",
+      "STATE": "State/Province",
+      "ZIP_CODE": "ZIP Code",
+      "COUNTRY": "Country",
+      "WEBSITE": "Website",
+      "BIO": "Biography",
+      "BIO_PLACEHOLDER": "Tell us about yourself...",
+      "AVATAR": "Avatar (URL)",
+      "PROFILE_VISIBILITY": "Profile Visibility"
+    },
+    "BASIC_INFO": "Basic Information",
+    "PROFILE_INFO": "Profile Information",
+    "ADDRESS_INFO": "Address Information",
+    "ADDITIONAL_INFO": "Additional Information",
+    "STATUS_AND_ROLES": "Status and Roles",
+    "STATUS_AND_PERMISSIONS": "Status and Permissions",
+    "VERIFICATION_STATUS": "Verification Status",
+    "IMPORTANT_DATES": "Important Dates",
+    "VIEW": "View",
+    "UPDATE_USER": "Update User",
+    "SELECT_STATUS": "Select Status",
+    "EDIT_NOTE_TITLE": "Important Note",
+    "EDIT_NOTE_DESCRIPTION": "Changes to user status will take effect immediately. Role changes may require the user to log in again.",
+    "FALLBACKS": {
+      "NO_NAME": "No Name",
+      "NO_USERNAME": "No Username",
+      "NO_EMAIL": "No Email",
+      "NO_STATUS": "No Status",
+      "NO_DATE": "No Date",
+      "NO_ROLES": "No Roles"
+    },
+    "STATUSES": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive",
+      "SUSPENDED": "Suspended",
+      "PENDING": "Pending Verification",
+      "DELETED": "Deleted"
+    },
+    "SELECT_GENDER": "Select Gender",
+    "GENDERS": {
+      "MALE": "Male",
+      "FEMALE": "Female", 
+      "OTHER": "Other",
+      "PREFER_NOT_TO_SAY": "Prefer not to say"
+    },
+    "VISIBILITY": {
+      "PUBLIC": "Public",
+      "PRIVATE": "Private",
+      "FRIENDS": "Friends Only"
+    },
+    "CONFIRMATIONS": {
+      "DELETE": "Are you sure you want to delete user {{name}}? This action cannot be undone.",
+      "SUSPEND": "Are you sure you want to suspend user {{name}}?",
+      "ACTIVATE": "Are you sure you want to activate user {{name}}?",
+      "RESTORE": "Are you sure you want to restore user {{name}}?"
+    },
+    "ERRORS": {
+      "UPDATE_FAILED": "Failed to update user. Please try again.",
+      "STATUS_UPDATE_FAILED": "Failed to update user status. Please try again.",
+      "ROLE_UPDATE_FAILED": "Failed to update user roles. Please try again.",
+      "DELETE": "Failed to delete user. Please try again.",
+      "SUSPEND": "Failed to suspend user. Please try again.",
+      "ACTIVATE": "Failed to activate user. Please try again.",
+      "RESTORE": "Failed to restore user. Please try again.",
+      "INSUFFICIENT_PERMISSIONS": "You don't have permission to perform this action."
+    },
+    "NO_ASSIGNABLE_ROLES": "No roles available to assign",
+    "ROLE_SELECTION_HELP": "Select the roles to assign to this user. Changes will be applied when you save.",
+    "ROLE_RESTRICTION_TITLE": "Role Editing Restricted",
+    "ROLE_RESTRICTION_MESSAGE": "You don't have sufficient permissions to modify roles for this user.",
+    "ROLE_UPDATE_NOTE": "Role changes will be included in the user update request."
   },
   "STORES": {
     "TITLE": "Store Management",
@@ -523,7 +600,8 @@
     "PASSWORD_MIN": "Password must be at least 8 characters long",
     "PASSWORD_MATCH": "Passwords must match",
     "USERNAME_MIN": "Username must be at least 3 characters long",
-    "PHONE_INVALID": "Please enter a valid phone number"
+    "PHONE_INVALID": "Please enter a valid phone number",
+    "INVALID": "Invalid value"
   },
   "MESSAGES": {
     "CREATE_SUCCESS": "{{item}} created successfully",

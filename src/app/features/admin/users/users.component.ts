@@ -10,11 +10,14 @@ import { ROLE_DISPLAY_NAMES } from './constants';
 import { IApiFilters } from '../../../models/api.model';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { I18nService } from '../../../core/services/i18n.service';
+import { RolePermissionService } from '../../../core/services/role-permission.service';
+import { UserDetailModalComponent } from './components/user-detail-modal/user-detail-modal.component';
+import { UserEditModalComponent } from './components/user-edit-modal/user-edit-modal.component';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, UserDetailModalComponent, UserEditModalComponent],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss']
 })
@@ -35,10 +38,16 @@ export class UsersComponent implements OnInit, OnDestroy {
   public UserStatus = UserStatus;
   public ProfileVisibility = ProfileVisibility;
 
+  // Modal states
+  public showDetailModal = false;
+  public showEditModal = false;
+  public selectedUser: IAdminUser | null = null;
+
   constructor(
     private _usersService: UsersService,
     private _formBuilder: FormBuilder,
-    private _i18nService: I18nService
+    private _i18nService: I18nService,
+    private _rolePermissionService: RolePermissionService
   ) {}
 
   ngOnInit(): void {
@@ -262,6 +271,43 @@ export class UsersComponent implements OnInit, OnDestroy {
     return displayRoles.join(', ');
   }
 
+  public getUserRolesArray(user: IAdminUser): IUserRole[] {
+    if (!user.roles || !Array.isArray(user.roles)) {
+      return [];
+    }
+    return user.roles;
+  }
+
+  public getRoleDisplayName(role: IUserRole): string {
+    const roleName = role.name || role.displayName || '';
+    return ROLE_DISPLAY_NAMES[roleName.toLowerCase()] || role.displayName || roleName;
+  }
+
+  public getRoleColor(role: IUserRole): string {
+    const roleName = (role.name || role.displayName || '').toLowerCase();
+    
+    if (roleName.includes('super_admin')) {
+      return 'text-purple-600 bg-purple-50';
+    }
+    if (roleName.includes('admin')) {
+      return 'text-primary-600 bg-primary-50';
+    }
+    if (roleName.includes('manager')) {
+      return 'text-blue-600 bg-blue-50';
+    }
+    if (roleName.includes('employee')) {
+      return 'text-green-600 bg-green-50';
+    }
+    if (roleName.includes('customer')) {
+      return 'text-orange-600 bg-orange-50';
+    }
+    if (roleName.includes('guest')) {
+      return 'text-gray-600 bg-gray-50';
+    }
+    
+    return 'text-success-600 bg-success-50';
+  }
+
   public getRolesColor(user: IAdminUser): string {
     if (!user.roles || !Array.isArray(user.roles) || user.roles.length === 0) {
       return 'text-gray-600 bg-gray-50';
@@ -321,12 +367,80 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   public viewUser(user: IAdminUser): void {
-    // TODO: Implement view user functionality
-    console.log('View user:', user);
+    this.selectedUser = user;
+    this.showDetailModal = true;
+  }
+
+
+
+  public onDetailModalClose(): void {
+    this.showDetailModal = false;
+    this.selectedUser = null;
+  }
+
+  public onEditModalClose(): void {
+    this.showEditModal = false;
+    this.selectedUser = null;
+  }
+
+  public onUserUpdated(updatedUser: IAdminUser): void {
+    // Update the user in the local array
+    const index = this.users.findIndex(u => u.id === updatedUser.id);
+    if (index !== -1) {
+      this.users[index] = { ...updatedUser }; // Create a new object to trigger change detection
+    } else {
+      console.warn('⚠️ User not found in local array for update');
+    }
+    
+    // Close the modal and reset state
+    this.showEditModal = false;
+    this.selectedUser = null;
+  }
+
+  public deleteUserWithConfirmation(user: IAdminUser): void {
+    // Check permissions first
+    if (!this._rolePermissionService.canDeleteUser(user)) {
+      const errorMessage = this._i18nService.translate('USERS.ERRORS.INSUFFICIENT_PERMISSIONS');
+      alert(errorMessage);
+      return;
+    }
+
+    const userName = this._getDisplayName(user);
+    const message = this._i18nService.translate('USERS.CONFIRMATIONS.DELETE', { name: userName });
+    
+    if (confirm(message)) {
+      this._usersService.deleteUser(user.id)
+        .pipe(takeUntil(this._destroy$))
+        .subscribe({
+          next: () => {
+            this._loadUsers();
+          },
+          error: (error) => {
+            const errorMessage = this._i18nService.translate('USERS.ERRORS.DELETE');
+            alert(errorMessage);
+          }
+        });
+    }
+  }
+
+  public canEditUser(user: IAdminUser): boolean {
+    return this._rolePermissionService.canEditUser(user);
+  }
+
+  public canDeleteUser(user: IAdminUser): boolean {
+    return this._rolePermissionService.canDeleteUser(user);
   }
 
   public editUser(user: IAdminUser): void {
-    // TODO: Implement edit user functionality
-    console.log('Edit user:', user);
+    // Check permissions first
+    if (!this.canEditUser(user)) {
+      const errorMessage = this._i18nService.translate('USERS.ERRORS.INSUFFICIENT_PERMISSIONS');
+      alert(errorMessage);
+      return;
+    }
+
+    // Create a deep copy to avoid reference issues
+    this.selectedUser = JSON.parse(JSON.stringify(user));
+    this.showEditModal = true;
   }
 }

@@ -120,11 +120,19 @@
               </div>
             </td>
             
-            <!-- Type -->
+            <!-- Roles -->
             <td class="p-4 border-b border-gray-200 align-middle min-w-[120px]">
-              <span class="inline-block py-1 px-3 rounded-full text-xs font-medium text-center" [class]="getRolesColor(user)">
-                {{ getUserRoles(user) }}
-              </span>
+              <div class="flex flex-wrap gap-1">
+                <span *ngFor="let role of getUserRolesArray(user)" 
+                      class="inline-block py-1 px-2 rounded-full text-xs font-medium text-center" 
+                      [class]="getRoleColor(role)">
+                  {{ getRoleDisplayName(role) }}
+                </span>
+                <span *ngIf="!user.roles || user.roles.length === 0" 
+                      class="inline-block py-1 px-2 rounded-full text-xs font-medium text-center text-gray-600 bg-gray-50">
+                  {{ 'ADMIN.USERS.FALLBACKS.NO_ROLES' | translate }}
+                </span>
+              </div>
             </td>
             
             <!-- Status -->
@@ -166,12 +174,26 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                   </svg>
                 </button>
-                <button class="btn btn-primary px-3 py-1.5 text-xs min-w-[2rem]" (click)="editUser(user)" [title]="'ADMIN.USERS.EDIT' | translate">
+                <button 
+                  class="btn px-3 py-1.5 text-xs min-w-[2rem]" 
+                  [class.btn-primary]="canEditUser(user)"
+                  [class.btn-secondary]="!canEditUser(user)"
+                  [disabled]="!canEditUser(user)"
+                  (click)="editUser(user)" 
+                  [title]="canEditUser(user) ? ('ADMIN.USERS.EDIT' | translate) : ('USERS.ERRORS.INSUFFICIENT_PERMISSIONS' | translate)"
+                >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                   </svg>
                 </button>
-                <button class="btn btn-danger px-3 py-1.5 text-xs min-w-[2rem]" (click)="deleteUser(user)" [title]="'ADMIN.USERS.DELETE' | translate">
+                <button 
+                  class="btn px-3 py-1.5 text-xs min-w-[2rem]" 
+                  [class.btn-danger]="canDeleteUser(user)"
+                  [class.btn-secondary]="!canDeleteUser(user)"
+                  [disabled]="!canDeleteUser(user)"
+                  (click)="deleteUserWithConfirmation(user)" 
+                  [title]="canDeleteUser(user) ? ('ADMIN.USERS.DELETE' | translate) : ('USERS.ERRORS.INSUFFICIENT_PERMISSIONS' | translate)"
+                >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                   </svg>
@@ -190,8 +212,23 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
         </svg>
       </div>
-      <h3 class="text-xl font-semibold text-gray-900 m-0 mb-2">{{ 'ADMIN.USERS.EMPTY.TITLE' | translate }}</h3>
-      <p class="text-gray-600 m-0">{{ 'ADMIN.USERS.EMPTY.DESCRIPTION' | translate }}</p>
+      <h3 class="text-xl font-semibold text-gray-900 m-0 mb-2">{{ 'USERS.NO_USERS' | translate }}</h3>
+      <p class="text-gray-600 m-0">{{ 'USERS.NO_USERS_DESCRIPTION' | translate }}</p>
     </div>
   </div>
 </div>
+
+<!-- User Detail Modal -->
+<app-user-detail-modal
+  [user]="selectedUser"
+  [isVisible]="showDetailModal"
+  (close)="onDetailModalClose()"
+></app-user-detail-modal>
+
+<!-- User Edit Modal -->
+<app-user-edit-modal
+  [user]="selectedUser"
+  [isVisible]="showEditModal"
+  (close)="onEditModalClose()"
+  (userUpdated)="onUserUpdated($event)"
+></app-user-edit-modal>
