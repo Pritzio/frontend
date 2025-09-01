@@ -54,6 +54,30 @@ ng e2e
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
+## 📚 Documentation
+
+### Development Documentation
+
+- **[`dev-docs/`](./dev-docs/)** - Technical development documentation
+  - Architecture guides and implementation details
+  - Development scripts and utilities
+  - Coding standards and best practices
+  - Troubleshooting guides
+
+### Service & Component Documentation
+
+- **[`docs/`](./docs/)** - Detailed service and component documentation
+  - API references for services
+  - Component usage examples
+  - Integration patterns and best practices
+
+### Key Documentation Files
+
+- **[Alert System](./dev-docs/architecture/ALERT_SYSTEM.md)** - SweetAlert2 implementation guide
+- **[AlertService API](./docs/alert-service.md)** - Complete AlertService documentation
+- **[Translation System](./dev-docs/architecture/TRANSLATION_SYSTEM.md)** - i18n implementation
+- **[Coding Standards](./dev-docs/standards/CODING_STANDARDS.md)** - Project coding guidelines
+
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
