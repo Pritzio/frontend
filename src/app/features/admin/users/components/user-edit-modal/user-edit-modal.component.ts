@@ -10,6 +10,7 @@ import { I18nService } from '../../../../../core/services/i18n.service';
 import { UsersService } from '../../../../../core/services/users.service';
 import { RolePermissionService } from '../../../../../core/services/role-permission.service';
 import { RolesService } from '../../../../../core/services/roles.service';
+import { AlertService } from '../../../../../core/services/alert.service';
 
 @Component({
   selector: 'app-user-edit-modal',
@@ -47,7 +48,8 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
     private _i18nService: I18nService,
     private _usersService: UsersService,
     private _rolePermissionService: RolePermissionService,
-    private _rolesService: RolesService
+    private _rolesService: RolesService,
+    private _alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -269,13 +271,17 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
             };
             
             this.userUpdated.emit(updatedAdminUser);
+            const successMessage = this._i18nService.translate('USERS.SUCCESS.UPDATED');
+            this._alertService.success(successMessage, 'Usuario Actualizado');
             this.onClose();
           }
         },
         error: (error) => {
           console.error('❌ Error updating user basic data:', error);
           this.isLoading = false;
-          this.error = this._i18nService.translate('USERS.ERRORS.UPDATE_FAILED');
+          const errorMessage = this._i18nService.translate('USERS.ERRORS.UPDATE_FAILED');
+          this._alertService.error(errorMessage, 'Error de Actualización');
+          this.error = errorMessage;
         }
       });
   }
@@ -312,11 +318,15 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
           };
           
           this.userUpdated.emit(updatedUser);
+          const successMessage = this._i18nService.translate('USERS.SUCCESS.UPDATED');
+          this._alertService.success(successMessage, 'Usuario Actualizado');
           this.onClose();
         },
         error: (error) => {
           this.isLoading = false;
-          this.error = this._i18nService.translate('USERS.ERRORS.STATUS_UPDATE_FAILED');
+          const errorMessage = this._i18nService.translate('USERS.ERRORS.STATUS_UPDATE_FAILED');
+          this._alertService.error(errorMessage, 'Error de Estado');
+          this.error = errorMessage;
         }
       });
   }
@@ -419,6 +429,8 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
     };
     
     this.userUpdated.emit(updatedUser);
+    const successMessage = this._i18nService.translate('USERS.SUCCESS.UPDATED');
+    this._alertService.success(successMessage, 'Usuario Actualizado');
     this.onClose();
   }
 

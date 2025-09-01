@@ -6,6 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { AdminService, Store } from '../../../core/services/admin.service';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { I18nService } from '../../../core/services/i18n.service';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-stores',
@@ -25,7 +26,8 @@ export class StoresComponent implements OnInit, OnDestroy {
 
   constructor(
     private _adminService: AdminService,
-    private _i18nService: I18nService
+    private _i18nService: I18nService,
+    private _alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -72,31 +74,49 @@ export class StoresComponent implements OnInit, OnDestroy {
     return filtered;
   }
 
-  public verifyStore(store: Store): void {
+  public async verifyStore(store: Store): Promise<void> {
     const message = this._i18nService.translate('STORES.CONFIRMATIONS.VERIFY', { name: store.name });
-    if (confirm(message)) {
+    
+    const confirmed = await this._alertService.confirm(
+      message,
+      '¿Verificar tienda?',
+      'Sí, verificar',
+      'Cancelar'
+    );
+
+    if (confirmed) {
       this._adminService.verifyStore(store.id).subscribe({
         next: () => {
           this._loadStores();
+          this._alertService.success('Tienda verificada exitosamente', 'Verificación Completada');
         },
         error: (error) => {
           const errorMessage = this._i18nService.translate('STORES.ERRORS.VERIFY');
-          alert(errorMessage);
+          this._alertService.error(errorMessage, 'Error');
         }
       });
     }
   }
 
-  public deleteStore(store: Store): void {
+  public async deleteStore(store: Store): Promise<void> {
     const message = this._i18nService.translate('STORES.CONFIRMATIONS.DELETE', { name: store.name });
-    if (confirm(message)) {
+    
+    const confirmed = await this._alertService.confirm(
+      message,
+      '¿Eliminar tienda?',
+      'Sí, eliminar',
+      'Cancelar'
+    );
+
+    if (confirmed) {
       this._adminService.deleteStore(store.id).subscribe({
         next: () => {
           this._loadStores();
+          this._alertService.success('Tienda eliminada exitosamente', 'Eliminación Completada');
         },
         error: (error) => {
           const errorMessage = this._i18nService.translate('STORES.ERRORS.DELETE');
-          alert(errorMessage);
+          this._alertService.error(errorMessage, 'Error');
         }
       });
     }

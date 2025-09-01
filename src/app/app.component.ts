@@ -5,6 +5,7 @@ import { RouterModule, Router } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
 import { TranslatePipe } from './shared/pipes/translate.pipe';
 
+
 @Component({
   selector: 'app-root',
   standalone: true,

@@ -11,6 +11,7 @@ import { IApiFilters } from '../../../models/api.model';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { I18nService } from '../../../core/services/i18n.service';
 import { RolePermissionService } from '../../../core/services/role-permission.service';
+import { AlertService } from '../../../core/services/alert.service';
 import { UserDetailModalComponent } from './components/user-detail-modal/user-detail-modal.component';
 import { UserEditModalComponent } from './components/user-edit-modal/user-edit-modal.component';
 
@@ -47,7 +48,8 @@ export class UsersComponent implements OnInit, OnDestroy {
     private _usersService: UsersService,
     private _formBuilder: FormBuilder,
     private _i18nService: I18nService,
-    private _rolePermissionService: RolePermissionService
+    private _rolePermissionService: RolePermissionService,
+    private _alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -146,69 +148,121 @@ export class UsersComponent implements OnInit, OnDestroy {
     return filtered;
   }
 
-  public suspendUser(user: IAdminUser): void {
+  public async suspendUser(user: IAdminUser): Promise<void> {
     const userName = this._getDisplayName(user);
     const message = this._i18nService.translate('ADMIN.USERS.CONFIRMATIONS.SUSPEND', { name: userName });
-    if (confirm(message)) {
-      this._usersService.updateUserStatus(user.id, UserStatus.SUSPENDED)
-        .subscribe({
-          next: () => {
-            this._loadUsers();
-          },
-          error: (error: any) => {
-            const errorMessage = this._i18nService.translate('ADMIN.USERS.ERRORS.SUSPEND');
-            alert(errorMessage);
-          }
-        });
+    
+    const confirmed = await this._alertService.confirm(
+      message,
+      '¿Suspender usuario?',
+      'Sí, suspender',
+      'Cancelar'
+    );
+
+    if (confirmed) {
+      this._executeSuspendUser(user);
     }
   }
 
-  public activateUser(user: IAdminUser): void {
+  private _executeSuspendUser(user: IAdminUser): void {
+    this._usersService.updateUserStatus(user.id, UserStatus.SUSPENDED)
+      .subscribe({
+        next: () => {
+          this._loadUsers();
+          const successMessage = this._i18nService.translate('USERS.SUCCESS.SUSPENDED');
+          this._alertService.success(successMessage, 'Usuario Suspendido');
+        },
+        error: (error: any) => {
+          const errorMessage = this._i18nService.translate('ADMIN.USERS.ERRORS.SUSPEND');
+          this._alertService.error(errorMessage, 'Error');
+        }
+      });
+  }
+
+  public async activateUser(user: IAdminUser): Promise<void> {
     const userName = this._getDisplayName(user);
     const message = this._i18nService.translate('ADMIN.USERS.CONFIRMATIONS.ACTIVATE', { name: userName });
-    if (confirm(message)) {
-      this._usersService.updateUserStatus(user.id, UserStatus.ACTIVE)
-        .subscribe({
-          next: () => {
-            this._loadUsers();
-          },
-          error: (error: any) => {
-            const errorMessage = this._i18nService.translate('ADMIN.USERS.ERRORS.ACTIVATE');
-            alert(errorMessage);
-          }
-        });
+    
+    const confirmed = await this._alertService.confirm(
+      message,
+      '¿Activar usuario?',
+      'Sí, activar',
+      'Cancelar'
+    );
+
+    if (confirmed) {
+      this._executeActivateUser(user);
     }
   }
 
-  public restoreUser(user: IAdminUser): void {
+  private _executeActivateUser(user: IAdminUser): void {
+    this._usersService.updateUserStatus(user.id, UserStatus.ACTIVE)
+      .subscribe({
+        next: () => {
+          this._loadUsers();
+          const successMessage = this._i18nService.translate('USERS.SUCCESS.ACTIVATED');
+          this._alertService.success(successMessage, 'Usuario Activado');
+        },
+        error: (error: any) => {
+          const errorMessage = this._i18nService.translate('ADMIN.USERS.ERRORS.ACTIVATE');
+          this._alertService.error(errorMessage, 'Error');
+        }
+      });
+  }
+
+  public async restoreUser(user: IAdminUser): Promise<void> {
     const userName = this._getDisplayName(user);
     const message = this._i18nService.translate('ADMIN.USERS.CONFIRMATIONS.RESTORE', { name: userName });
-    if (confirm(message)) {
-      this._usersService.restoreUser(user.id)
-        .subscribe({
-          next: () => {
-            this._loadUsers();
-          },
-          error: (error: any) => {
-            const errorMessage = this._i18nService.translate('ADMIN.USERS.ERRORS.RESTORE');
-            alert(errorMessage);
-          }
-        });
+    
+    const confirmed = await this._alertService.confirm(
+      message,
+      '¿Restaurar usuario?',
+      'Sí, restaurar',
+      'Cancelar'
+    );
+
+    if (confirmed) {
+      this._executeRestoreUser(user);
     }
   }
 
-  public deleteUser(user: IAdminUser): void {
+  private _executeRestoreUser(user: IAdminUser): void {
+    this._usersService.restoreUser(user.id)
+      .subscribe({
+        next: () => {
+          this._loadUsers();
+          const successMessage = this._i18nService.translate('USERS.SUCCESS.RESTORED');
+          this._alertService.success(successMessage, 'Usuario Restaurado');
+        },
+        error: (error: any) => {
+          const errorMessage = this._i18nService.translate('ADMIN.USERS.ERRORS.RESTORE');
+          this._alertService.error(errorMessage, 'Error');
+        }
+      });
+  }
+
+  public async deleteUser(user: IAdminUser): Promise<void> {
     const userName = this._getDisplayName(user);
     const message = this._i18nService.translate('ADMIN.USERS.CONFIRMATIONS.DELETE', { name: userName });
-    if (confirm(message)) {
+    
+    const confirmed = await this._alertService.confirm(
+      message,
+      '¿Eliminar usuario?',
+      'Sí, eliminar',
+      'Cancelar'
+    );
+
+    if (confirmed) {
       this._usersService.deleteUser(user.id)
         .subscribe({
           next: () => {
             this._loadUsers();
+            const successMessage = this._i18nService.translate('USERS.SUCCESS.DELETED');
+            this._alertService.success(successMessage, 'Usuario Eliminado');
           },
           error: (error: any) => {
             const errorMessage = this._i18nService.translate('ADMIN.USERS.ERRORS.DELETE');
-            alert(errorMessage);
+            this._alertService.error(errorMessage, 'Error');
           }
         });
     }
@@ -397,30 +451,43 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.selectedUser = null;
   }
 
-  public deleteUserWithConfirmation(user: IAdminUser): void {
+  public async deleteUserWithConfirmation(user: IAdminUser): Promise<void> {
     // Check permissions first
     if (!this._rolePermissionService.canDeleteUser(user)) {
       const errorMessage = this._i18nService.translate('USERS.ERRORS.INSUFFICIENT_PERMISSIONS');
-      alert(errorMessage);
+      this._alertService.warning(errorMessage, 'Permisos Insuficientes');
       return;
     }
 
     const userName = this._getDisplayName(user);
     const message = this._i18nService.translate('USERS.CONFIRMATIONS.DELETE', { name: userName });
     
-    if (confirm(message)) {
-      this._usersService.deleteUser(user.id)
-        .pipe(takeUntil(this._destroy$))
-        .subscribe({
-          next: () => {
-            this._loadUsers();
-          },
-          error: (error) => {
-            const errorMessage = this._i18nService.translate('USERS.ERRORS.DELETE');
-            alert(errorMessage);
-          }
-        });
+    const confirmed = await this._alertService.confirm(
+      message,
+      '¿Estás seguro?',
+      'Sí, eliminar',
+      'Cancelar'
+    );
+
+    if (confirmed) {
+      this._executeUserDeletion(user);
     }
+  }
+
+  private _executeUserDeletion(user: IAdminUser): void {
+    this._usersService.deleteUser(user.id)
+      .pipe(takeUntil(this._destroy$))
+      .subscribe({
+        next: () => {
+          this._loadUsers();
+          const successMessage = this._i18nService.translate('USERS.SUCCESS.DELETED');
+          this._alertService.success(successMessage, 'Usuario Eliminado');
+        },
+        error: (error) => {
+          const errorMessage = this._i18nService.translate('USERS.ERRORS.DELETE');
+          this._alertService.error(errorMessage, 'Error');
+        }
+      });
   }
 
   public canEditUser(user: IAdminUser): boolean {
@@ -435,7 +502,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     // Check permissions first
     if (!this.canEditUser(user)) {
       const errorMessage = this._i18nService.translate('USERS.ERRORS.INSUFFICIENT_PERMISSIONS');
-      alert(errorMessage);
+      this._alertService.warning(errorMessage, 'Permisos Insuficientes');
       return;
     }
 
@@ -443,4 +510,6 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.selectedUser = JSON.parse(JSON.stringify(user));
     this.showEditModal = true;
   }
+
+
 }

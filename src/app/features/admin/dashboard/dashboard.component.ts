@@ -10,6 +10,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { StatCardComponent, StatCardData } from '../../../shared/components/stat-card/stat-card.component';
 import { DistributionChartComponent, DistributionData } from '../../../shared/components/distribution-chart/distribution-chart.component';
 
+
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
@@ -45,6 +46,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   // Current user
   public currentUser: any = null;
+
+
 
   constructor(
     private _adminService: AdminService,
@@ -272,4 +275,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   public getInitials(firstName: string, lastName: string): string {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
   }
+
+
 } 

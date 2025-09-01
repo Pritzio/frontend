@@ -437,6 +437,13 @@
       "ACTIVATE": "¿Está seguro de que desea activar al usuario {{name}}?",
       "RESTORE": "¿Está seguro de que desea restaurar al usuario {{name}}?"
     },
+    "SUCCESS": {
+      "UPDATED": "Usuario actualizado exitosamente",
+      "SUSPENDED": "Usuario suspendido exitosamente",
+      "ACTIVATED": "Usuario activado exitosamente",
+      "RESTORED": "Usuario restaurado exitosamente",
+      "DELETED": "Usuario eliminado exitosamente"
+    },
     "ERRORS": {
       "UPDATE_FAILED": "Error al actualizar usuario. Por favor, inténtelo de nuevo.",
       "STATUS_UPDATE_FAILED": "Error al actualizar el estado del usuario. Por favor, inténtelo de nuevo.",
