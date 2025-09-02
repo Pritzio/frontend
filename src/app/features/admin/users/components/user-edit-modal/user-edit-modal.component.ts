@@ -164,16 +164,17 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
         .pipe(takeUntil(this._destroy$))
         .subscribe({
           next: (roles) => {
-            // Show all roles if user can edit roles (will use real UUIDs from backend)
-            if (this.canEditRoles && roles.length > 0) {
-              this.availableRolesList = roles;
-            } else {
-              // Filter roles based on what the user can assign
-              this.availableRolesList = roles.filter(role => 
-                this.availableRoles.some(availableRole => 
-                  availableRole === role.name
-                )
-              );
+            // Filter roles based on what the user can assign (this should already exclude SUPER_ADMIN if needed)
+            this.availableRolesList = roles.filter(role => 
+              this.availableRoles.some(availableRole => 
+                availableRole === role.name
+              )
+            );
+            
+            // Double-check: Remove SUPER_ADMIN if it somehow still appears
+            const superAdminIndex = this.availableRolesList.findIndex(role => role.name === 'super_admin');
+            if (superAdminIndex !== -1) {
+              this.availableRolesList.splice(superAdminIndex, 1);
             }
           },
           error: (error) => {
@@ -541,4 +542,6 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
     const currentRoles = this.editForm.get('roles')?.value || [];
     return currentRoles.includes(role);
   }
+
+
 }

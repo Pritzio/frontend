@@ -96,8 +96,19 @@ export class RolePermissionService {
 
     // Role assignment logic
     if (currentUserRole === UserRoles.SUPER_ADMIN) {
-      // Super admin can assign any role
-      availableRoles = Object.values(UserRoles);
+      // Super admin can assign any role EXCEPT super_admin unless transferring
+      availableRoles = Object.values(UserRoles).filter(role => {
+        if (role === UserRoles.SUPER_ADMIN) {
+          // Only allow super_admin assignment if target user is not already super_admin
+          // This allows for role transfer
+          if (targetUser) {
+            const targetUserHighestRole = this._getHighestRole(targetUser);
+            return targetUserHighestRole !== UserRoles.SUPER_ADMIN;
+          }
+          return false; // No target user, don't allow super_admin assignment
+        }
+        return true;
+      });
     } else if (currentUserRole === UserRoles.ADMIN) {
       // Admin can assign most roles but not super admin
       availableRoles = Object.values(UserRoles).filter(role => 
@@ -146,6 +157,13 @@ export class RolePermissionService {
    */
   public isSuperAdmin(user: IAdminUser): boolean {
     return this._getHighestRole(user) === UserRoles.SUPER_ADMIN;
+  }
+
+  /**
+   * Get current authenticated user
+   */
+  public getCurrentUser(): any {
+    return this._authService.getCurrentUser();
   }
 
   private _getCurrentUserRole(user: any): UserRoles {

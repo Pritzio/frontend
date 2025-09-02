@@ -43,10 +43,13 @@ export class UsersService {
   }
 
   /**
-   * Delete user by ID (soft delete)
+   * Delete user by ID (soft delete) - Admin endpoint
    */
-  deleteUser(id: string): Observable<IApiResponse<void>> {
-    return this._http.delete<IApiResponse<void>>(`${this._apiUrl}/${id}`);
+  deleteUser(id: string, reason: string = 'Deleted by admin', permanent: boolean = false): Observable<IApiResponse<void>> {
+    const payload = { reason, permanent };
+    return this._http.delete<IApiResponse<void>>(`${this._apiUrl}/admin/users/${id}`, {
+      body: payload
+    });
   }
 
   /**

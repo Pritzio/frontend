@@ -475,7 +475,8 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   private _executeUserDeletion(user: IAdminUser): void {
-    this._usersService.deleteUser(user.id)
+    const reason = `Usuario eliminado por administrador - ${new Date().toISOString()}`;
+    this._usersService.deleteUser(user.id, reason, false)
       .pipe(takeUntil(this._destroy$))
       .subscribe({
         next: () => {
