@@ -89,8 +89,8 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
       // Basic user info
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
+      firstName: ['', [Validators.required, Validators.minLength(2), this._nameValidator]],
+      lastName: ['', [Validators.required, Validators.minLength(2), this._nameValidator]],
       status: ['', [Validators.required]],
       roles: [[]],
       
@@ -125,23 +125,23 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
       // Basic user info
       username: this.user.username || '',
       email: this.user.email || '',
-      firstName: this.user.profile?.firstName || '',
-      lastName: this.user.profile?.lastName || '',
+      firstName: this.user.profile?.firstName || null,
+      lastName: this.user.profile?.lastName || null,
       status: this.user.status || '',
       roles: currentRoles,
       
       // Extended profile fields
-      dateOfBirth: this.user.profile?.dateOfBirth || '',
-      gender: this.user.profile?.gender || '',
-      phone: this.user.profile?.phone || '',
-      address: this.user.profile?.address || '',
-      city: this.user.profile?.city || '',
-      state: this.user.profile?.state || '',
-      zipCode: this.user.profile?.zipCode || '',
-      country: this.user.profile?.country || '',
-      website: this.user.profile?.website || '',
-      bio: this.user.profile?.bio || '',
-      avatar: this.user.profile?.avatar || '',
+      dateOfBirth: this.user.profile?.dateOfBirth || null,
+      gender: this.user.profile?.gender || null,
+      phone: this.user.profile?.phone || null,
+      address: this.user.profile?.address || null,
+      city: this.user.profile?.city || null,
+      state: this.user.profile?.state || null,
+      zipCode: this.user.profile?.zipCode || null,
+      country: this.user.profile?.country || null,
+      website: this.user.profile?.website || null,
+      bio: this.user.profile?.bio || null,
+      avatar: this.user.profile?.avatar || null,
       profileVisibility: this.user.profile?.profileVisibility || 'PUBLIC'
     });
   }
@@ -222,29 +222,55 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
     // Build update data according to UpdateUserProfileDto structure
     // Send all profile fields at root level as expected by backend
     const updateData: any = {
-      // Basic user info
-      username: formValue.username,
-      email: formValue.email,
-      firstName: formValue.firstName,
-      lastName: formValue.lastName,
-      
-      // Extended profile fields (only include if they have values)
-      ...(formValue.dateOfBirth && { dateOfBirth: formValue.dateOfBirth }),
-      ...(formValue.gender && { gender: formValue.gender }),
-      ...(formValue.phone && { phone: formValue.phone }),
-      ...(formValue.address && { address: formValue.address }),
-      ...(formValue.city && { city: formValue.city }),
-      ...(formValue.state && { state: formValue.state }),
-      ...(formValue.zipCode && { zipCode: formValue.zipCode }),
-      ...(formValue.country && { country: formValue.country }),
-      ...(formValue.website && { website: formValue.website }),
-      ...(formValue.bio && { bio: formValue.bio }),
-      ...(formValue.avatar && { avatar: formValue.avatar }),
-      
-      // Profile settings
-      profileVisibility: formValue.profileVisibility || 'PUBLIC',
-      isVerified: currentUser.profile?.isVerified || false
+      // Basic user info - only include if they have valid values
+      username: formValue.username?.trim() || currentUser.username,
+      email: formValue.email?.trim() || currentUser.email,
     };
+    
+    // Always include firstName and lastName with valid values or current values
+    updateData.firstName = formValue.firstName?.trim() || currentUser.profile?.firstName || '';
+    updateData.lastName = formValue.lastName?.trim() || currentUser.profile?.lastName || '';
+    
+    // Extended profile fields (only include if they have values)
+    if (formValue.dateOfBirth && formValue.dateOfBirth.trim()) {
+      updateData.dateOfBirth = formValue.dateOfBirth.trim();
+    }
+    if (formValue.gender && formValue.gender.trim()) {
+      updateData.gender = formValue.gender.trim();
+    }
+    if (formValue.phone && formValue.phone.trim()) {
+      updateData.phone = formValue.phone.trim();
+    }
+    if (formValue.address && formValue.address.trim()) {
+      updateData.address = formValue.address.trim();
+    }
+    if (formValue.city && formValue.city.trim()) {
+      updateData.city = formValue.city.trim();
+    }
+    if (formValue.state && formValue.state.trim()) {
+      updateData.state = formValue.state.trim();
+    }
+    if (formValue.zipCode && formValue.zipCode.trim()) {
+      updateData.zipCode = formValue.zipCode.trim();
+    }
+    if (formValue.country && formValue.country.trim()) {
+      updateData.country = formValue.country.trim();
+    }
+    if (formValue.website && formValue.website.trim()) {
+      updateData.website = formValue.website.trim();
+    }
+    if (formValue.bio && formValue.bio.trim()) {
+      updateData.bio = formValue.bio.trim();
+    }
+    if (formValue.avatar && formValue.avatar.trim()) {
+      updateData.avatar = formValue.avatar.trim();
+    }
+    
+    // Profile settings
+    updateData.profileVisibility = formValue.profileVisibility || 'PUBLIC';
+    updateData.isVerified = currentUser.profile?.isVerified || false;
+
+
 
     // Update user data first (basic info)
     this._usersService.updateUser(currentUser.id, updateData)
@@ -280,7 +306,22 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
         error: (error) => {
           console.error('❌ Error updating user basic data:', error);
           this.isLoading = false;
-          const errorMessage = this._i18nService.translate('USERS.ERRORS.UPDATE_FAILED');
+          
+          // Extract specific error messages from backend
+          let errorMessage = this._i18nService.translate('USERS.ERRORS.UPDATE_FAILED');
+          
+          if (error?.error?.message) {
+            if (Array.isArray(error.error.message)) {
+              // Multiple validation errors
+              errorMessage = error.error.message.join('. ');
+            } else {
+              // Single error message
+              errorMessage = error.error.message;
+            }
+          } else if (error?.message) {
+            errorMessage = error.message;
+          }
+          
           this._alertService.error(errorMessage, 'Error de Actualización');
           this.error = errorMessage;
         }
@@ -325,7 +366,20 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
         },
         error: (error) => {
           this.isLoading = false;
-          const errorMessage = this._i18nService.translate('USERS.ERRORS.STATUS_UPDATE_FAILED');
+          
+          // Extract specific error messages from backend
+          let errorMessage = this._i18nService.translate('USERS.ERRORS.STATUS_UPDATE_FAILED');
+          
+          if (error?.error?.message) {
+            if (Array.isArray(error.error.message)) {
+              errorMessage = error.error.message.join('. ');
+            } else {
+              errorMessage = error.error.message;
+            }
+          } else if (error?.message) {
+            errorMessage = error.message;
+          }
+          
           this._alertService.error(errorMessage, 'Error de Estado');
           this.error = errorMessage;
         }
@@ -386,7 +440,22 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 error: (error) => {
                   this.isLoading = false;
-                  this.error = this._i18nService.translate('USERS.ERRORS.ROLE_UPDATE_FAILED');
+                  
+                  // Extract specific error messages from backend
+                  let errorMessage = this._i18nService.translate('USERS.ERRORS.ROLE_UPDATE_FAILED');
+                  
+                  if (error?.error?.message) {
+                    if (Array.isArray(error.error.message)) {
+                      errorMessage = error.error.message.join('. ');
+                    } else {
+                      errorMessage = error.error.message;
+                    }
+                  } else if (error?.message) {
+                    errorMessage = error.message;
+                  }
+                  
+                  this.error = errorMessage;
+                  this._alertService.error(errorMessage, 'Error de Roles');
                   console.error('Error updating roles:', error);
                 }
               });
@@ -401,7 +470,22 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
         },
         error: (error) => {
           this.isLoading = false;
-          this.error = this._i18nService.translate('USERS.ERRORS.ROLE_UPDATE_FAILED');
+          
+          // Extract specific error messages from backend
+          let errorMessage = this._i18nService.translate('USERS.ERRORS.ROLE_UPDATE_FAILED');
+          
+          if (error?.error?.message) {
+            if (Array.isArray(error.error.message)) {
+              errorMessage = error.error.message.join('. ');
+            } else {
+              errorMessage = error.error.message;
+            }
+          } else if (error?.message) {
+            errorMessage = error.message;
+          }
+          
+          this.error = errorMessage;
+          this._alertService.error(errorMessage, 'Error de Roles');
           console.error('Error loading roles for update:', error);
         }
       });
@@ -466,6 +550,14 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
     if (errors['minlength']) {
       const requiredLength = errors['minlength'].requiredLength;
       return this._i18nService.translate('VALIDATION.MIN_LENGTH', { min: requiredLength });
+    }
+    
+    if (errors['hasNumbers']) {
+      return 'El nombre no puede contener números';
+    }
+    
+    if (errors['invalidCharacters']) {
+      return 'El nombre solo puede contener letras, espacios, guiones y apóstrofes';
     }
     
     return this._i18nService.translate('VALIDATION.INVALID');
@@ -543,5 +635,24 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
     return currentRoles.includes(role);
   }
 
+  /**
+   * Custom validator for names - only letters, spaces, hyphens, and apostrophes
+   */
+  private _nameValidator(control: any) {
+    if (!control.value) return null;
+    
+    const namePattern = /^[a-zA-ZÀ-ÿ\s\-']+$/;
+    const hasNumbers = /\d/.test(control.value);
+    
+    if (hasNumbers) {
+      return { hasNumbers: true };
+    }
+    
+    if (!namePattern.test(control.value)) {
+      return { invalidCharacters: true };
+    }
+    
+    return null;
+  }
 
 }

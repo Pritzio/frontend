@@ -39,7 +39,7 @@ export class UsersService {
    * Update user by ID
    */
   updateUser(id: string, userData: Partial<IUser>): Observable<IApiResponse<IUser>> {
-    return this._http.put<IApiResponse<IUser>>(`${this._apiUrl}/${id}`, userData);
+    return this._http.put<IApiResponse<IUser>>(`${this._apiUrl}/profile/${id}`, userData);
   }
 
   /**
