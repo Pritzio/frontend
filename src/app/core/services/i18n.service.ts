@@ -94,13 +94,8 @@ export class I18nService {
   }
 
   private _loadTranslationsSync(): void {
-    try {
-      // Load translations from JSON files
-      this._loadTranslationsFromFiles();
-    } catch (error) {
-      // Fallback to inline translations if files fail to load
-      this._loadFallbackTranslations();
-    }
+    // Load translations from JSON files asynchronously
+    this._loadTranslationsFromFiles();
   }
 
   private async _loadTranslationsFromFiles(): Promise<void> {
@@ -110,7 +105,7 @@ export class I18nService {
       if (enResponse.ok) {
         this._translations['en'] = await enResponse.json();
       } else {
-        this._loadFallbackTranslations();
+        console.error('Failed to load English translations');
         return;
       }
       
@@ -119,7 +114,7 @@ export class I18nService {
       if (esResponse.ok) {
         this._translations['es'] = await esResponse.json();
       } else {
-        this._loadFallbackTranslations();
+        console.error('Failed to load Spanish translations');
         return;
       }
       
@@ -127,266 +122,8 @@ export class I18nService {
       this._isLoaded.next(true);
       
     } catch (error) {
-      this._loadFallbackTranslations();
+      console.error('Error loading translations:', error);
     }
-  }
-
-  private _loadFallbackTranslations(): void {
-    // Fallback translations in case JSON files fail to load
-    this._translations['en'] = {
-      "COMMON": {
-        "LOADING": "Loading...",
-        "SAVE": "Save",
-        "CANCEL": "Cancel",
-        "DELETE": "Delete",
-        "EDIT": "Edit",
-        "CREATE": "Create",
-        "SEARCH": "Search",
-        "FILTER": "Filter",
-        "ACTIONS": "Actions",
-        "STATUS": "Status",
-        "ACTIVE": "Active",
-        "INACTIVE": "Inactive",
-        "YES": "Yes",
-        "NO": "No",
-        "SUCCESS": "Success",
-        "ERROR": "Error",
-        "WARNING": "Warning",
-        "INFO": "Information",
-        "CLOSE": "Close",
-        "BACK": "Back",
-        "NEXT": "Next",
-        "PREVIOUS": "Previous",
-        "SUBMIT": "Submit",
-        "RESET": "Reset",
-        "CONFIRM": "Confirm",
-        "DISCARD": "Discard",
-        "UPLOAD": "Upload",
-        "DOWNLOAD": "Download",
-        "EXPORT": "Export",
-        "IMPORT": "Import",
-        "REFRESH": "Refresh",
-        "UPDATE": "Update",
-        "VIEW": "View",
-        "DETAILS": "Details",
-        "SETTINGS": "Settings",
-        "PROFILE": "Profile",
-        "LOGOUT": "Logout",
-        "LOGIN": "Login",
-        "REGISTER": "Register",
-        "FORGOT_PASSWORD": "Forgot Password",
-        "RESET_PASSWORD": "Reset Password",
-        "CHANGE_PASSWORD": "Change Password",
-        "EMAIL": "Email",
-        "PASSWORD": "Password",
-        "USERNAME": "Username",
-        "FIRST_NAME": "First Name",
-        "LAST_NAME": "Last Name",
-        "PHONE": "Phone",
-        "ADDRESS": "Address",
-        "CITY": "City",
-        "COUNTRY": "Country",
-        "POSTAL_CODE": "Postal Code",
-        "LANGUAGE": "Language",
-        "ENGLISH": "English",
-        "SPANISH": "Spanish",
-        "REMEMBER_ME": "Remember me",
-        "COMPARE_AND_SAVE": "Compare and Save",
-        "COMPARE_DESCRIPTION": "Find the best prices across multiple stores"
-      },
-      "AUTH": {
-        "LOGIN_TITLE": "Welcome Back",
-        "LOGIN_SUBTITLE": "Sign in to your account to continue",
-        "LOGIN_IDENTIFIER": "Email or Username",
-        "LOGIN_PASSWORD": "Password",
-        "LOGIN_BUTTON": "Sign In",
-        "LOGIN_ERROR": "Login failed",
-        "LOGIN_INVALID_CREDENTIALS": "Invalid credentials. Please check your username/email and password.",
-        "LOGIN_AUTH_FAILED": "Authentication failed. Please check your credentials.",
-        "LOGIN_CONNECTION_ERROR": "Cannot connect to server. Please check your connection.",
-        "LOGIN_GENERAL_ERROR": "An error occurred during login. Please try again.",
-        "LOGIN_NO_ACCOUNT": "Don't have an account?",
-        "LOGIN_SIGN_UP": "Sign up",
-        "LOGIN_FORGOT_PASSWORD": "Forgot your password?",
-        "REGISTER_TITLE": "Create Account",
-        "REGISTER_SUBTITLE": "Sign up to get started",
-        "REGISTER_BUTTON": "Create Account",
-        "REGISTER_SUCCESS": "Account created successfully",
-        "REGISTER_ERROR": "Registration failed",
-        "REGISTER_INVALID_DATA": "Please check your information and try again.",
-        "REGISTER_EMAIL_EXISTS": "An account with this email already exists.",
-        "REGISTER_USERNAME_EXISTS": "This username is already taken.",
-        "REGISTER_PASSWORD_MISMATCH": "Passwords do not match.",
-        "REGISTER_TERMS": "I agree to the terms and conditions",
-        "REGISTER_PRIVACY": "I agree to the privacy policy",
-        "REGISTER_ALREADY_ACCOUNT": "Already have an account?",
-        "REGISTER_SIGN_IN": "Sign in",
-        "PASSWORD_RESET_TITLE": "Reset Password",
-        "PASSWORD_RESET_SUBTITLE": "Enter your email to receive a reset link",
-        "PASSWORD_RESET_BUTTON": "Send Reset Link",
-        "PASSWORD_RESET_SUCCESS": "Reset link sent to your email",
-        "PASSWORD_RESET_ERROR": "Failed to send reset link",
-        "PASSWORD_RESET_INVALID_EMAIL": "Please enter a valid email address.",
-        "PASSWORD_RESET_EMAIL_NOT_FOUND": "No account found with this email address.",
-        "PASSWORD_RESET_BACK_TO_LOGIN": "Back to login",
-        "PASSWORD_CHANGE_TITLE": "Change Password",
-        "PASSWORD_CHANGE_SUBTITLE": "Enter your current and new password",
-        "PASSWORD_CHANGE_CURRENT": "Current Password",
-        "PASSWORD_CHANGE_NEW": "New Password",
-        "PASSWORD_CHANGE_CONFIRM": "Confirm New Password",
-        "PASSWORD_CHANGE_BUTTON": "Change Password",
-        "PASSWORD_CHANGE_SUCCESS": "Password changed successfully",
-        "PASSWORD_CHANGE_ERROR": "Failed to change password",
-        "PASSWORD_CHANGE_INVALID_CURRENT": "Current password is incorrect.",
-        "PASSWORD_CHANGE_MISMATCH": "New passwords do not match.",
-        "PASSWORD_CHANGE_WEAK": "Password is too weak. Please use a stronger password.",
-        "PASSWORD_CHANGE_BACK_TO_PROFILE": "Back to profile",
-        "LOGOUT_SUCCESS": "Logged out successfully",
-        "LOGOUT_ERROR": "Failed to log out",
-        "SESSION_EXPIRED": "Your session has expired. Please log in again.",
-        "ACCESS_DENIED": "Access denied. You don't have permission to view this page.",
-        "NOT_FOUND": "Page not found",
-        "SERVER_ERROR": "Server error. Please try again later.",
-        "NETWORK_ERROR": "Network error. Please check your connection.",
-        "VALIDATION_ERRORS": "Please fix the following errors:",
-        "REQUIRED_FIELD": "This field is required",
-        "INVALID_EMAIL": "Please enter a valid email address",
-        "INVALID_USERNAME": "Username must be 3-20 characters and contain only letters, numbers, and underscores",
-        "INVALID_PASSWORD": "Password must be at least 8 characters and contain uppercase, lowercase, number, and special character",
-        "PASSWORDS_MUST_MATCH": "Passwords must match",
-        "TERMS_ACCEPTED": "You must accept the terms and conditions",
-        "PRIVACY_ACCEPTED": "You must accept the privacy policy"
-      }
-    };
-
-    this._translations['es'] = {
-      "COMMON": {
-        "LOADING": "Cargando...",
-        "SAVE": "Guardar",
-        "CANCEL": "Cancelar",
-        "DELETE": "Eliminar",
-        "EDIT": "Editar",
-        "CREATE": "Crear",
-        "SEARCH": "Buscar",
-        "FILTER": "Filtrar",
-        "ACTIONS": "Acciones",
-        "STATUS": "Estado",
-        "ACTIVE": "Activo",
-        "INACTIVE": "Inactivo",
-        "YES": "Sí",
-        "NO": "No",
-        "SUCCESS": "Éxito",
-        "ERROR": "Error",
-        "WARNING": "Advertencia",
-        "INFO": "Información",
-        "CLOSE": "Cerrar",
-        "BACK": "Atrás",
-        "NEXT": "Siguiente",
-        "PREVIOUS": "Anterior",
-        "SUBMIT": "Enviar",
-        "RESET": "Restablecer",
-        "CONFIRM": "Confirmar",
-        "DISCARD": "Descartar",
-        "UPLOAD": "Subir",
-        "DOWNLOAD": "Descargar",
-        "EXPORT": "Exportar",
-        "IMPORT": "Importar",
-        "REFRESH": "Actualizar",
-        "UPDATE": "Actualizar",
-        "VIEW": "Ver",
-        "DETAILS": "Detalles",
-        "SETTINGS": "Configuración",
-        "PROFILE": "Perfil",
-        "LOGOUT": "Cerrar Sesión",
-        "LOGIN": "Iniciar Sesión",
-        "REGISTER": "Registrarse",
-        "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
-        "RESET_PASSWORD": "Restablecer Contraseña",
-        "CHANGE_PASSWORD": "Cambiar Contraseña",
-        "EMAIL": "Correo Electrónico",
-        "PASSWORD": "Contraseña",
-        "USERNAME": "Nombre de Usuario",
-        "FIRST_NAME": "Nombre",
-        "LAST_NAME": "Apellido",
-        "PHONE": "Teléfono",
-        "ADDRESS": "Dirección",
-        "CITY": "Ciudad",
-        "COUNTRY": "País",
-        "POSTAL_CODE": "Código Postal",
-        "LANGUAGE": "Idioma",
-        "ENGLISH": "Inglés",
-        "SPANISH": "Español",
-        "REMEMBER_ME": "Recordarme",
-        "COMPARE_AND_SAVE": "Compara y Ahorra",
-        "COMPARE_DESCRIPTION": "Encuentra los mejores precios en múltiples tiendas"
-      },
-      "AUTH": {
-        "LOGIN_TITLE": "Bienvenido de Vuelta",
-        "LOGIN_SUBTITLE": "Inicia sesión en tu cuenta para continuar",
-        "LOGIN_IDENTIFIER": "Correo o Usuario",
-        "LOGIN_PASSWORD": "Contraseña",
-        "LOGIN_BUTTON": "Iniciar Sesión",
-        "LOGIN_ERROR": "Error al iniciar sesión",
-        "LOGIN_INVALID_CREDENTIALS": "Credenciales inválidas. Por favor verifica tu usuario/correo y contraseña.",
-        "LOGIN_AUTH_FAILED": "Autenticación fallida. Por favor verifica tus credenciales.",
-        "LOGIN_CONNECTION_ERROR": "No se puede conectar al servidor. Por favor verifica tu conexión.",
-        "LOGIN_GENERAL_ERROR": "Ocurrió un error durante el inicio de sesión. Por favor intenta de nuevo.",
-        "LOGIN_NO_ACCOUNT": "¿No tienes una cuenta?",
-        "LOGIN_SIGN_UP": "Regístrate",
-        "LOGIN_FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
-        "REGISTER_TITLE": "Crear Cuenta",
-        "REGISTER_SUBTITLE": "Regístrate para comenzar",
-        "REGISTER_BUTTON": "Crear Cuenta",
-        "REGISTER_SUCCESS": "Cuenta creada exitosamente",
-        "REGISTER_ERROR": "Registro fallido",
-        "REGISTER_INVALID_DATA": "Por favor verifica tu información e intenta de nuevo.",
-        "REGISTER_EMAIL_EXISTS": "Ya existe una cuenta con este correo.",
-        "REGISTER_USERNAME_EXISTS": "Este nombre de usuario ya está tomado.",
-        "REGISTER_PASSWORD_MISMATCH": "Las contraseñas no coinciden.",
-        "REGISTER_TERMS": "Acepto los términos y condiciones",
-        "REGISTER_PRIVACY": "Acepto la política de privacidad",
-        "REGISTER_ALREADY_ACCOUNT": "¿Ya tienes una cuenta?",
-        "REGISTER_SIGN_IN": "Iniciar Sesión",
-        "PASSWORD_RESET_TITLE": "Restablecer Contraseña",
-        "PASSWORD_RESET_SUBTITLE": "Ingresa tu correo para recibir un enlace de restablecimiento",
-        "PASSWORD_RESET_BUTTON": "Enviar Enlace de Restablecimiento",
-        "PASSWORD_RESET_SUCCESS": "Enlace de restablecimiento enviado a tu correo",
-        "PASSWORD_RESET_ERROR": "Error al enviar enlace de restablecimiento",
-        "PASSWORD_RESET_INVALID_EMAIL": "Por favor ingresa una dirección de correo válida.",
-        "PASSWORD_RESET_EMAIL_NOT_FOUND": "No se encontró cuenta con este correo.",
-        "PASSWORD_RESET_BACK_TO_LOGIN": "Volver al inicio de sesión",
-        "PASSWORD_CHANGE_TITLE": "Cambiar Contraseña",
-        "PASSWORD_CHANGE_SUBTITLE": "Ingresa tu contraseña actual y nueva",
-        "PASSWORD_CHANGE_CURRENT": "Contraseña Actual",
-        "PASSWORD_CHANGE_NEW": "Nueva Contraseña",
-        "PASSWORD_CHANGE_CONFIRM": "Confirmar Nueva Contraseña",
-        "PASSWORD_CHANGE_BUTTON": "Cambiar Contraseña",
-        "PASSWORD_CHANGE_SUCCESS": "Contraseña cambiada exitosamente",
-        "PASSWORD_CHANGE_ERROR": "Error al cambiar contraseña",
-        "PASSWORD_CHANGE_INVALID_CURRENT": "La contraseña actual es incorrecta.",
-        "PASSWORD_CHANGE_MISMATCH": "Las nuevas contraseñas no coinciden.",
-        "PASSWORD_CHANGE_WEAK": "La contraseña es muy débil. Por favor usa una contraseña más fuerte.",
-        "PASSWORD_CHANGE_BACK_TO_PROFILE": "Volver al perfil",
-        "LOGOUT_SUCCESS": "Sesión cerrada exitosamente",
-        "LOGOUT_ERROR": "Error al cerrar sesión",
-        "SESSION_EXPIRED": "Tu sesión ha expirado. Por favor inicia sesión de nuevo.",
-        "ACCESS_DENIED": "Acceso denegado. No tienes permiso para ver esta página.",
-        "NOT_FOUND": "Página no encontrada",
-        "SERVER_ERROR": "Error del servidor. Por favor intenta más tarde.",
-        "NETWORK_ERROR": "Error de red. Por favor verifica tu conexión.",
-        "VALIDATION_ERRORS": "Por favor corrige los siguientes errores:",
-        "REQUIRED_FIELD": "Este campo es requerido",
-        "INVALID_EMAIL": "Por favor ingresa una dirección de correo válida",
-        "INVALID_USERNAME": "El nombre de usuario debe tener 3-20 caracteres y contener solo letras, números y guiones bajos",
-        "INVALID_PASSWORD": "La contraseña debe tener al menos 8 caracteres y contener mayúsculas, minúsculas, número y carácter especial",
-        "PASSWORDS_MUST_MATCH": "Las contraseñas deben coincidir",
-        "TERMS_ACCEPTED": "Debes aceptar los términos y condiciones",
-        "PRIVACY_ACCEPTED": "Debes aceptar la política de privacidad"
-      }
-    };
-
-    // Mark as loaded
-    this._isLoaded.next(true);
   }
 
   setLanguage(language: string): void {
@@ -487,8 +224,6 @@ export class I18nService {
       });
     });
   }
-
-
 
   // Method to get all translation keys
   getAllTranslationKeys(): string[] {

@@ -1,0 +1,380 @@
+<div class="p-6 bg-white min-h-screen">
+  <!-- Header -->
+  <header class="mb-8">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div class="flex-1">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">
+          {{ isEditMode ? 'Editar Producto' : 'Crear Producto' }}
+        </h1>
+        <p class="text-gray-600">
+          {{ isEditMode ? 'Modifica la información del producto' : 'Completa la información del nuevo producto' }}
+        </p>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <a 
+          routerLink="/admin/store-products" 
+          class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          Cancelar
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Error Alert -->
+  <div class="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3 mb-6" *ngIf="errorMessage">
+    <i class="icon-error text-red-500"></i>
+    <p class="text-red-700">{{ errorMessage }}</p>
+  </div>
+
+  <!-- Success Alert -->
+  <div class="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3 mb-6" *ngIf="successMessage">
+    <i class="icon-check text-green-500"></i>
+    <p class="text-green-700">{{ successMessage }}</p>
+  </div>
+
+  <!-- Loading State -->
+  <div class="text-center py-12" *ngIf="isLoading">
+    <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    <p class="text-gray-600 mt-4">Cargando información del producto...</p>
+  </div>
+
+  <!-- Product Form -->
+  <form [formGroup]="storeProductForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+    <div class="bg-white border border-gray-200 rounded-lg p-8">
+      <div class="mb-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">Información del Producto</h2>
+        <p class="text-gray-600">Campos básicos del producto según la API v2.0</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Name (Required) -->
+        <div class="md:col-span-2">
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+            Nombre del Producto <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            [class.border-red-500]="storeProductForm.get('name')?.invalid && storeProductForm.get('name')?.touched"
+            placeholder="Ej: Salsa de Tomate Pomarola 200 g 6 un."
+          />
+          <div class="text-sm text-red-600 mt-1" *ngIf="storeProductForm.get('name')?.invalid && storeProductForm.get('name')?.touched">
+            Este campo es requerido
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="md:col-span-2">
+          <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+            Descripción
+          </label>
+          <textarea
+            id="description"
+            formControlName="description"
+            rows="4"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Descripción detallada del producto..."
+          ></textarea>
+        </div>
+
+        <!-- URL -->
+        <div class="md:col-span-2">
+          <label for="url" class="block text-sm font-medium text-gray-700 mb-2">
+            URL del Producto
+          </label>
+          <input
+            type="url"
+            id="url"
+            formControlName="url"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="https://jumbo.cl/producto..."
+          />
+        </div>
+
+        <!-- SKU -->
+        <div>
+          <label for="sku" class="block text-sm font-medium text-gray-700 mb-2">
+            SKU
+          </label>
+          <input
+            type="text"
+            id="sku"
+            formControlName="sku"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Código SKU del producto"
+          />
+        </div>
+
+        <!-- Store Product ID -->
+        <div>
+          <label for="storeProductId" class="block text-sm font-medium text-gray-700 mb-2">
+            ID del Producto en la Tienda
+          </label>
+          <input
+            type="text"
+            id="storeProductId"
+            formControlName="storeProductId"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="ID interno de la tienda"
+          />
+        </div>
+
+        <!-- Image URL -->
+        <div class="md:col-span-2">
+          <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
+            URL de la Imagen
+          </label>
+          <input
+            type="url"
+            id="image"
+            formControlName="image"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="https://ejemplo.com/imagen.jpg"
+          />
+        </div>
+
+        <!-- Notes -->
+        <div class="md:col-span-2">
+          <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">
+            Notas
+          </label>
+          <textarea
+            id="notes"
+            formControlName="notes"
+            rows="3"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Notas adicionales sobre el producto..."
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metadata Section -->
+    <div class="bg-white border border-gray-200 rounded-lg p-8 mt-6">
+      <div class="mb-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">Información Adicional (Metadata)</h2>
+        <p class="text-gray-600">Datos adicionales del producto como marca, categorías, etc.</p>
+      </div>
+
+      <form [formGroup]="storeProductForm">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Brand -->
+          <div>
+            <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">
+              Marca
+            </label>
+            <input
+              type="text"
+              id="brand"
+              formControlName="brand"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Ej: Cuisine & Co"
+            />
+          </div>
+
+          <!-- Rating -->
+          <div>
+            <label for="rating" class="block text-sm font-medium text-gray-700 mb-2">
+              Calificación (1-5)
+            </label>
+            <input
+              type="number"
+              id="rating"
+              formControlName="rating"
+              min="1"
+              max="5"
+              step="0.1"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="4.5"
+            />
+          </div>
+
+          <!-- Rating Text -->
+          <div>
+            <label for="ratingText" class="block text-sm font-medium text-gray-700 mb-2">
+              Calificación (Texto)
+            </label>
+            <input
+              type="text"
+              id="ratingText"
+              formControlName="ratingText"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="4.5"
+            />
+          </div>
+
+          <!-- Categories (v2.1 - New relationship) -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Categorías del Producto
+            </label>
+            <p class="text-sm text-gray-500 mb-3">Selecciona las categorías disponibles para este producto</p>
+            
+            <!-- Multi-select dropdown -->
+            <div class="relative categories-dropdown">
+              <button
+                type="button"
+                (click)="toggleCategoriesDropdown()"
+                class="w-full px-3 py-2 text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex items-center justify-between"
+                [class.border-blue-500]="isCategoriesDropdownOpen"
+              >
+                <span class="block truncate">
+                  <span *ngIf="selectedCategories.length === 0" class="text-gray-500">
+                    Seleccionar categorías...
+                  </span>
+                  <span *ngIf="selectedCategories.length === 1" class="text-gray-900">
+                    {{ getSelectedCategoryNames()[0] }}
+                  </span>
+                  <span *ngIf="selectedCategories.length > 1" class="text-gray-900">
+                    {{ selectedCategories.length }} categorías seleccionadas
+                  </span>
+                </span>
+                <svg 
+                  class="w-5 h-5 text-gray-400 transition-transform duration-200"
+                  [class.rotate-180]="isCategoriesDropdownOpen"
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </button>
+
+              <!-- Dropdown menu -->
+              <div 
+                *ngIf="isCategoriesDropdownOpen"
+                class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto"
+              >
+                <div class="py-1">
+                  <div 
+                    *ngFor="let category of availableCategories"
+                    class="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                    (click)="toggleCategory(category.id)"
+                  >
+                    <input
+                      type="checkbox"
+                      [checked]="isCategorySelected(category.id)"
+                      class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      readonly
+                    />
+                    <div class="ml-3 flex items-center">
+                      <span 
+                        *ngIf="category.color"
+                        class="w-3 h-3 rounded-full mr-2"
+                        [style.background-color]="category.color"
+                      ></span>
+                      <span class="text-sm text-gray-900">{{ category.name }}</span>
+                      <span *ngIf="category.productCount > 0" class="ml-2 text-xs text-gray-500">
+                        ({{ category.productCount }})
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div *ngIf="availableCategories.length === 0" class="px-3 py-2 text-sm text-gray-500">
+                    No hay categorías disponibles
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Selected categories display -->
+            <div *ngIf="selectedCategories.length > 0" class="mt-3">
+              <div class="flex flex-wrap gap-2">
+                <span 
+                  *ngFor="let categoryId of selectedCategories"
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                >
+                  <span 
+                    *ngIf="getCategoryById(categoryId)?.color"
+                    class="w-2 h-2 rounded-full mr-1"
+                    [style.background-color]="getCategoryById(categoryId)?.color"
+                  ></span>
+                  {{ getCategoryById(categoryId)?.name }}
+                  <button
+                    type="button"
+                    (click)="removeCategory(categoryId)"
+                    class="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full text-blue-400 hover:bg-blue-200 hover:text-blue-600"
+                  >
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+
+
+
+          <!-- High Resolution Image URL -->
+          <div class="md:col-span-2">
+            <label for="highResImageUrl" class="block text-sm font-medium text-gray-700 mb-2">
+              URL de Imagen en Alta Resolución
+            </label>
+            <input
+              type="url"
+              id="highResImageUrl"
+              formControlName="highResImageUrl"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="https://ejemplo.com/imagen-alta-resolucion.jpg"
+            />
+            <p class="text-sm text-gray-500 mt-1">URL de la imagen en alta resolución para mejor calidad de visualización</p>
+          </div>
+
+          <!-- PPUM (Price Per Unit of Measure) -->
+          <div class="md:col-span-2">
+            <label for="ppum" class="block text-sm font-medium text-gray-700 mb-2">
+              Precio por Unidad de Medida
+            </label>
+            <input
+              type="text"
+              id="ppum"
+              formControlName="ppum"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Ej: $2.786 x kg"
+            />
+            <p class="text-sm text-gray-500 mt-1">Información de precios por unidad de medida</p>
+          </div>
+
+
+        </div>
+      </form>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 mt-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="text-sm text-gray-600">
+          <p><span class="text-red-500">*</span> Campos requeridos</p>
+        </div>
+        
+        <div class="flex gap-3">
+          <button 
+            type="button"
+            routerLink="/admin/store-products"
+            class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            Cancelar
+          </button>
+          
+          <button 
+            type="submit"
+            [disabled]="storeProductForm.invalid || isSubmitting"
+            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          >
+            <div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white" *ngIf="isSubmitting"></div>
+            {{ isSubmitting ? (isEditMode ? 'Guardando...' : 'Creando...') : (isEditMode ? 'Guardar Producto' : 'Crear Producto') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+
+

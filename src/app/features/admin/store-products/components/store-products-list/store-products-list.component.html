@@ -1,0 +1,311 @@
+<div class="p-6 bg-white min-h-screen">
+
+  <!-- Header -->
+  <header class="mb-8">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div class="flex-1">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ 'PRODUCTS.TITLE' | translate }}</h1>
+        <p class="text-gray-600">{{ 'PRODUCTS.SUBTITLE' | translate }}</p>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <button 
+          type="button" 
+          class="inline-flex items-center gap-2 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+          (click)="toggleFilters()"
+        >
+          <i class="icon-filter"></i>
+          {{ 'PRODUCTS.FILTERS' | translate }}
+        </button>
+        
+        <a 
+          routerLink="/admin/store-products/create" 
+          class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <i class="icon-plus"></i>
+          {{ 'PRODUCTS.CREATE' | translate }}
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Filters Section -->
+  <section class="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6" *ngIf="showFilters">
+    <form [formGroup]="filtersForm">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <!-- Search -->
+        <div>
+          <label for="search" class="block text-sm font-medium text-gray-700 mb-2">{{ 'PRODUCTS.SEARCH' | translate }}</label>
+          <input
+            type="text"
+            id="search"
+            formControlName="search"
+            [placeholder]="'PRODUCTS.SEARCH_PLACEHOLDER' | translate"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        <!-- Created By -->
+        <div>
+          <label for="createdBy" class="block text-sm font-medium text-gray-700 mb-2">{{ 'PRODUCTS.CREATED_BY' | translate }}</label>
+          <input
+            type="text"
+            id="createdBy"
+            formControlName="createdBy"
+            [placeholder]="'PRODUCTS.CREATED_BY_PLACEHOLDER' | translate"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        <!-- Date From -->
+        <div>
+          <label for="dateFrom" class="block text-sm font-medium text-gray-700 mb-2">{{ 'PRODUCTS.DATE_FROM' | translate }}</label>
+          <input
+            type="date"
+            id="dateFrom"
+            formControlName="dateFrom"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        <!-- Date To -->
+        <div>
+          <label for="dateTo" class="block text-sm font-medium text-gray-700 mb-2">{{ 'PRODUCTS.DATE_TO' | translate }}</label>
+          <input
+            type="date"
+            id="dateTo"
+            formControlName="dateTo"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3">
+        <button 
+          type="button" 
+          class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          (click)="clearFilters()"
+        >
+          {{ 'PRODUCTS.CLEAR_FILTERS' | translate }}
+        </button>
+        
+        <button 
+          type="button" 
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          (click)="applyFilters()"
+        >
+          {{ 'PRODUCTS.APPLY_FILTERS' | translate }}
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+    <div class="flex items-center gap-3">
+      <i class="icon-alert-circle text-red-600 text-xl"></i>
+      <div>
+        <h3 class="text-red-800 font-medium">{{ 'PRODUCTS.ERROR_TITLE' | translate }}</h3>
+        <p class="text-red-600 mt-1">{{ error | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products List -->
+  <div *ngIf="!isLoading && !error" class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+    <!-- Table Header -->
+    <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <input
+            type="checkbox"
+            [checked]="selectedStoreProducts.length === storeProducts.length && storeProducts.length > 0"
+            [indeterminate]="selectedStoreProducts.length > 0 && selectedStoreProducts.length < storeProducts.length"
+            (change)="toggleSelectAll()"
+            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          />
+          <span class="text-sm font-medium text-gray-700">
+            {{ totalItems }} {{ 'PRODUCTS.TOTAL_ITEMS' | translate }}
+          </span>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-gray-500">{{ 'PRODUCTS.SHOWING' | translate }}</span>
+          <select 
+            [(ngModel)]="itemsPerPage" 
+            (change)="onItemsPerPageChange()"
+            class="px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Content -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {{ 'PRODUCTS.NAME' | translate }}
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {{ 'PRODUCTS.DESCRIPTION' | translate }}
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {{ 'PRODUCTS.SKU' | translate }}
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {{ 'PRODUCTS.CREATED_BY' | translate }}
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {{ 'PRODUCTS.CREATED_AT' | translate }}
+            </th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {{ 'PRODUCTS.ACTIONS' | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let storeProduct of storeProducts" class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  [checked]="selectedStoreProducts.includes(storeProduct.id)"
+                  (change)="toggleStoreProductSelection(storeProduct.id)"
+                  class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <div class="flex items-center gap-3">
+                  <img 
+                    *ngIf="storeProduct.image" 
+                    [src]="storeProduct.image" 
+                    [alt]="storeProduct.name"
+                    class="h-10 w-10 rounded-lg object-cover"
+                  />
+                  <div>
+                    <div class="text-sm font-medium text-gray-900">{{ storeProduct.name }}</div>
+                    <div *ngIf="storeProduct.storeProductId" class="text-sm text-gray-500">
+                      ID: {{ storeProduct.storeProductId }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="text-sm text-gray-900 max-w-xs truncate">
+                {{ storeProduct.description || '-' }}
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900">
+                {{ storeProduct.sku || '-' }}
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900">
+                {{ storeProduct.creatorName }}
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900">
+                {{ storeProduct.createdAt | date:'short' }}
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <div class="flex items-center justify-end gap-2">
+                <a 
+                  [routerLink]="['/admin/store-products', storeProduct.id]"
+                  class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded hover:bg-blue-100 transition-colors"
+                  [title]="'PRODUCTS.VIEW_DETAILS' | translate"
+                >
+                  Ver
+                </a>
+                <a 
+                  [routerLink]="['/admin/store-products', storeProduct.id, 'edit']"
+                  class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-600 bg-green-50 rounded hover:bg-green-100 transition-colors"
+                  [title]="'PRODUCTS.EDIT' | translate"
+                >
+                  Editar
+                </a>
+                <button 
+                  (click)="deleteStoreProduct(storeProduct.id)"
+                  class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-600 bg-red-50 rounded hover:bg-red-100 transition-colors"
+                  [title]="'PRODUCTS.DELETE' | translate"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="storeProducts.length === 0" class="text-center py-12">
+      <i class="icon-package text-gray-400 text-6xl mb-4"></i>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">{{ 'PRODUCTS.NO_PRODUCTS' | translate }}</h3>
+      <p class="text-gray-500 mb-6">{{ 'PRODUCTS.NO_PRODUCTS_DESCRIPTION' | translate }}</p>
+      <a 
+        routerLink="/admin/store-products/create"
+        class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+      >
+        <i class="icon-plus"></i>
+        {{ 'PRODUCTS.CREATE_FIRST' | translate }}
+      </a>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoading && !error && storeProducts.length > 0" class="mt-6 flex items-center justify-between">
+    <div class="text-sm text-gray-700">
+      {{ 'PRODUCTS.SHOWING_RESULTS' | translate: { 
+        start: ((currentPage - 1) * itemsPerPage) + 1, 
+        end: Math.min(currentPage * itemsPerPage, totalItems), 
+        total: totalItems 
+      } }}
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <button 
+        (click)="goToPage(currentPage - 1)"
+        [disabled]="!hasPrev"
+        class="px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      >
+        {{ 'PRODUCTS.PREVIOUS' | translate }}
+      </button>
+      
+      <div class="flex items-center gap-1">
+        <button 
+          *ngFor="let page of getPageNumbers()"
+          (click)="goToPage(page)"
+          [class]="page === currentPage 
+            ? 'px-3 py-2 bg-blue-600 text-white rounded-lg' 
+            : 'px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors'"
+        >
+          {{ page }}
+        </button>
+      </div>
+      
+      <button 
+        (click)="goToPage(currentPage + 1)"
+        [disabled]="!hasNext"
+        class="px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      >
+        {{ 'PRODUCTS.NEXT' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+

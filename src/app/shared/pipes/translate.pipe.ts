@@ -43,8 +43,6 @@ export class TranslatePipe implements PipeTransform, OnDestroy {
     const result = this._i18nService.translate(key, params);
     this._lastResult = result;
 
-
-
     return result;
   }
 

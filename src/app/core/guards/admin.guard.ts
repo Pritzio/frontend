@@ -14,12 +14,15 @@ export class AdminGuard implements CanActivate {
   ) {}
 
   canActivate(): Observable<boolean | UrlTree> {
+
     return this._authService.isAdmin$.pipe(
       take(1),
       map(isAdmin => {
+
         if (isAdmin) {
           return true;
         } else {
+
           this._router.navigate(['/dashboard']);
           return false;
         }
@@ -27,3 +30,5 @@ export class AdminGuard implements CanActivate {
     );
   }
 }
+
+

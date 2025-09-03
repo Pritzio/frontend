@@ -5,7 +5,7 @@ import { Subject, takeUntil, combineLatest } from 'rxjs';
 
 import { AdminService, DashboardStats, User, Store, Product } from '../../../core/services/admin.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { StatisticsService, SystemStatistics, UsersByRole, StoresByStatus, ProductsByCategory } from '../../../core/services/statistics.service';
+import { StatisticsService, SystemStatistics, UsersByRole, StoresByStatus, ProductsByCategory, StoreProductsByCategory, CategoriesByStatus } from '../../../core/services/statistics.service';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { StatCardComponent, StatCardData } from '../../../shared/components/stat-card/stat-card.component';
 import { DistributionChartComponent, DistributionData } from '../../../shared/components/distribution-chart/distribution-chart.component';
@@ -32,12 +32,16 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   public usersByRole: UsersByRole | null = null;
   public storesByStatus: StoresByStatus | null = null;
   public productsByCategory: ProductsByCategory | null = null;
+  public storeProductsByCategory: StoreProductsByCategory | null = null;
+  public categoriesByStatus: CategoriesByStatus | null = null;
 
   // Processed data for components
   public statCards: StatCardData[] = [];
   public usersDistribution: DistributionData[] = [];
   public storesDistribution: DistributionData[] = [];
   public productsDistribution: DistributionData[] = [];
+  public storeProductsDistribution: DistributionData[] = [];
+  public categoriesDistribution: DistributionData[] = [];
 
   // Loading states
   public isLoading = true;
@@ -106,7 +110,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   public navigateToProducts(): void {
-    this._router.navigate(['/admin/products']);
+    this._router.navigate(['/admin/store-products']);
   }
 
 
@@ -121,15 +125,19 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       this._statisticsService.usersByRole$,
       this._statisticsService.storesByStatus$,
       this._statisticsService.productsByCategory$,
+      this._statisticsService.storeProductsByCategory$,
+      this._statisticsService.categoriesByStatus$,
       this._statisticsService.isLoading$,
       this._statisticsService.error$
     ]).pipe(
       takeUntil(this._destroy$)
-    ).subscribe(([systemStats, usersByRole, storesByStatus, productsByCategory, loading, error]) => {
+    ).subscribe(([systemStats, usersByRole, storesByStatus, productsByCategory, storeProductsByCategory, categoriesByStatus, loading, error]) => {
       this.systemStatistics = systemStats;
       this.usersByRole = usersByRole;
       this.storesByStatus = storesByStatus;
       this.productsByCategory = productsByCategory;
+      this.storeProductsByCategory = storeProductsByCategory;
+      this.categoriesByStatus = categoriesByStatus;
       this.statisticsLoading = loading;
       this.statisticsError = error;
 
@@ -164,19 +172,19 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         iconColor: 'success'
       },
       {
-        title: 'ADMIN.STATS.TOTAL_PRODUCTS',
-        value: this.systemStatistics.products.total,
-        subtitle: 'ADMIN.STATS.ACTIVE',
-        subtitleValue: this.systemStatistics.products.active,
+        title: 'ADMIN.STATS.TOTAL_STORE_PRODUCTS',
+        value: this.systemStatistics.storeProducts.total,
+        subtitle: 'ADMIN.STATS.WITH_CATEGORIES',
+        subtitleValue: this.systemStatistics.storeProducts.withCategories,
         icon: 'products',
         iconColor: 'warning'
       },
       {
-        title: 'ADMIN.STATS.PENDING_VERIFICATION',
-        value: this.systemStatistics.users.pendingVerification + this.systemStatistics.stores.pendingVerification,
-        subtitle: 'ADMIN.STATS.USERS_AND_STORES',
-        subtitleValue: this.systemStatistics.users.pendingVerification,
-        icon: 'pending',
+        title: 'ADMIN.STATS.TOTAL_CATEGORIES',
+        value: this.systemStatistics.categories.total,
+        subtitle: 'ADMIN.STATS.ACTIVE',
+        subtitleValue: this.systemStatistics.categories.active,
+        icon: 'categories',
         iconColor: 'info'
       }
     ];
@@ -237,6 +245,49 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         color: '#6b7280'
       }
     ];
+
+    // Process store products distribution
+    this.storeProductsDistribution = [
+      {
+        label: 'ADMIN.STATS.WITH_CATEGORIES',
+        value: this.systemStatistics.storeProducts.withCategories,
+        color: '#10b981'
+      },
+      {
+        label: 'ADMIN.STATS.WITHOUT_CATEGORIES',
+        value: this.systemStatistics.storeProducts.withoutCategories,
+        color: '#f59e0b'
+      },
+      {
+        label: 'ADMIN.STATS.LAST_SCRAPED',
+        value: this.systemStatistics.storeProducts.lastScraped,
+        color: '#3b82f6'
+      }
+    ];
+
+    // Process categories distribution
+    this.categoriesDistribution = [
+      {
+        label: 'ADMIN.STATS.ACTIVE_CATEGORIES',
+        value: this.systemStatistics.categories.active,
+        color: '#10b981'
+      },
+      {
+        label: 'ADMIN.STATS.INACTIVE_CATEGORIES',
+        value: this.systemStatistics.categories.inactive,
+        color: '#6b7280'
+      },
+      {
+        label: 'ADMIN.STATS.WITH_PRODUCTS',
+        value: this.systemStatistics.categories.withProducts,
+        color: '#3b82f6'
+      },
+      {
+        label: 'ADMIN.STATS.WITHOUT_PRODUCTS',
+        value: this.systemStatistics.categories.withoutProducts,
+        color: '#f59e0b'
+      }
+    ];
   }
 
   // Refresh data
@@ -278,3 +329,4 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
 
 } 
+

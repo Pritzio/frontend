@@ -1,0 +1,147 @@
+<div class="p-6 bg-white min-h-screen">
+  <!-- Header -->
+  <header class="mb-8">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div class="flex-1">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-2 text-sm mb-2">
+          <a routerLink="/admin/store-products" class="text-blue-600 hover:underline">Productos Storage</a>
+          <span class="text-gray-400">/</span>
+          <span class="text-gray-600">Detalles del Producto</span>
+        </nav>
+        
+        <h1 class="text-3xl font-bold text-gray-900 mb-2" *ngIf="storeProduct">{{ storeProduct.name }}</h1>
+        <p class="text-gray-600 font-mono" *ngIf="storeProduct">ID: {{ storeProduct.id }}</p>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <a 
+          [routerLink]="['/admin/store-products', storeProduct?.id, 'edit']"
+          class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Editar Producto
+        </a>
+        <button 
+          (click)="deleteStoreProduct()"
+          class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+        >
+          Eliminar Producto
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+    <div class="flex items-center gap-3">
+      <div class="text-red-600 text-xl">⚠️</div>
+      <div>
+        <h3 class="text-red-800 font-medium">Error</h3>
+        <p class="text-red-600 mt-1">{{ error }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Details -->
+  <div *ngIf="storeProduct && !isLoading" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    
+    <!-- Información Básica -->
+    <div class="bg-white border border-gray-200 rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Información Básica</h2>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Producto</label>
+          <p class="text-gray-900">{{ storeProduct.name }}</p>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+          <p class="text-gray-900">{{ storeProduct.description || 'Sin descripción' }}</p>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+          <p class="text-gray-900">{{ storeProduct.sku || 'No disponible' }}</p>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">URL</label>
+          <p class="text-gray-900">
+            <a *ngIf="storeProduct.url" [href]="storeProduct.url" target="_blank" class="text-blue-600 hover:underline">
+              {{ storeProduct.url }}
+            </a>
+            <span *ngIf="!storeProduct.url">No disponible</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información del Sistema -->
+    <div class="bg-white border border-gray-200 rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Información del Sistema</h2>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Creado por</label>
+          <p class="text-gray-900">{{ storeProduct.creatorName }}</p>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Creación</label>
+          <p class="text-gray-900">{{ storeProduct.createdAt | date:'medium' }}</p>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Última Actualización</label>
+          <p class="text-gray-900">{{ storeProduct.updatedAt | date:'medium' }}</p>
+        </div>
+        
+        <div *ngIf="storeProduct.lastScraped">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Último Scraping</label>
+          <p class="text-gray-900">{{ storeProduct.lastScraped | date:'medium' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Imagen del Producto -->
+    <div *ngIf="getProductImage()" class="bg-white border border-gray-200 rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Imagen del Producto</h2>
+      <div class="flex justify-center">
+        <img 
+          [src]="getProductImage()" 
+          [alt]="storeProduct.name"
+          class="w-full max-w-4xl h-auto object-contain rounded-lg shadow-lg"
+          (error)="onImageError($event)"
+        />
+      </div>
+    </div>
+
+    <!-- Metadatos -->
+    <div *ngIf="hasSpecifications()" class="bg-white border border-gray-200 rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Información Adicional</h2>
+      
+      <div class="space-y-3">
+        <div *ngFor="let spec of getSpecificationsArray()" class="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
+          <span class="text-sm font-medium text-gray-700 capitalize">{{ spec.key }}</span>
+          <span class="text-sm text-gray-900">{{ spec.value }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notas -->
+    <div *ngIf="storeProduct.notes" class="bg-white border border-gray-200 rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Notas</h2>
+      <p class="text-gray-900">{{ storeProduct.notes }}</p>
+    </div>
+  </div>
+</div>
+
+
+
+

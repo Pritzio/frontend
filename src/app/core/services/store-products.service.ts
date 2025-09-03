@@ -1,150 +1,228 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { map, catchError, tap, finalize } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
-import { IStoreProduct } from '../../models/store-product.model';
-import { IApiResponse, IPaginatedResponse, IApiFilters } from '../../models/api.model';
+import { 
+  IStoreProduct,
+  ICreateStoreProductRequest,
+  IUpdateStoreProductRequest,
+  IStoreProductFilters,
+  IStoreProductsResponse,
+  IStoreProductResponse
+} from '../../models/store-product.model';
+import { IApiResponse, IPaginatedResponse } from '../../models/api.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StoreProductsService {
-  private readonly _apiUrl = `${environment.apiUrl}/store-products`;
+  
+  private readonly _baseUrl = `${environment.apiUrl}/store-products`;
+  
+  // State management
+  private _storeProducts = new BehaviorSubject<IStoreProduct[]>([]);
+  private _currentStoreProduct = new BehaviorSubject<IStoreProduct | null>(null);
+  private _isLoading = new BehaviorSubject<boolean>(false);
+  private _error = new BehaviorSubject<string | null>(null);
+  
+  // Public observables
+  public storeProducts$ = this._storeProducts.asObservable();
+  public currentStoreProduct$ = this._currentStoreProduct.asObservable();
+  public isLoading$ = this._isLoading.asObservable();
+  public error$ = this._error.asObservable();
 
   constructor(private _http: HttpClient) {}
 
   /**
-   * Listar productos de tienda con filtros y paginación
+   * Get all store products with optional filters
    */
-  getStoreProducts(filters: IApiFilters = {}): Observable<IApiResponse<IPaginatedResponse<IStoreProduct>>> {
+  getAll(filters?: IStoreProductFilters): Observable<IStoreProductsResponse> {
+    this._setLoading(true);
+    this._clearError();
+    
     let params = new HttpParams();
     
+    if (filters) {
     if (filters.page) params = params.set('page', filters.page.toString());
     if (filters.limit) params = params.set('limit', filters.limit.toString());
     if (filters.search) params = params.set('search', filters.search);
-    if (filters.sortBy) params = params.set('sortBy', filters.sortBy);
-    if (filters.sortOrder) params = params.set('sortOrder', filters.sortOrder);
-
-    return this._http.get<IApiResponse<IPaginatedResponse<IStoreProduct>>>(`${this._apiUrl}`, { params });
-  }
-
-  /**
-   * Crear un nuevo producto de tienda
-   */
-  createStoreProduct(productData: Partial<IStoreProduct>): Observable<IApiResponse<IStoreProduct>> {
-    return this._http.post<IApiResponse<IStoreProduct>>(`${this._apiUrl}`, productData);
-  }
-
-  /**
-   * Obtener un producto de tienda por ID
-   */
-  getStoreProductById(id: string): Observable<IApiResponse<IStoreProduct>> {
-    return this._http.get<IApiResponse<IStoreProduct>>(`${this._apiUrl}/${id}`);
-  }
-
-  /**
-   * Actualizar un producto de tienda por ID
-   */
-  updateStoreProduct(id: string, productData: Partial<IStoreProduct>): Observable<IApiResponse<IStoreProduct>> {
-    return this._http.put<IApiResponse<IStoreProduct>>(`${this._apiUrl}/${id}`, productData);
-  }
-
-  /**
-   * Eliminar un producto de tienda por ID
-   */
-  deleteStoreProduct(id: string): Observable<IApiResponse<void>> {
-    return this._http.delete<IApiResponse<void>>(`${this._apiUrl}/${id}`);
-  }
-
-  /**
-   * Buscar productos de tienda por término de búsqueda
-   */
-  searchStoreProducts(query: string, filters: IApiFilters = {}): Observable<IApiResponse<IPaginatedResponse<IStoreProduct>>> {
-    let params = new HttpParams().set('q', query);
+      if (filters.createdBy) params = params.set('createdBy', filters.createdBy);
+      if (filters.dateFrom) params = params.set('dateFrom', filters.dateFrom.toISOString());
+      if (filters.dateTo) params = params.set('dateTo', filters.dateTo.toISOString());
+    }
     
-    if (filters.page) params = params.set('page', filters.page.toString());
-    if (filters.limit) params = params.set('limit', filters.limit.toString());
-    if (filters.sortBy) params = params.set('sortBy', filters.sortBy);
-    if (filters.sortOrder) params = params.set('sortOrder', filters.sortOrder);
 
-    return this._http.get<IApiResponse<IPaginatedResponse<IStoreProduct>>>(`${this._apiUrl}/search`, { params });
+    
+    return this._http.get<IStoreProductsResponse>(this._baseUrl, { params }).pipe(
+      tap(response => {
+
+        if (response && response.data) {
+          this._storeProducts.next(response.data);
+        } else {
+          console.warn('StoreProductsService - No data in response:', response);
+          this._storeProducts.next([]);
+        }
+      }),
+      catchError(error => this._handleError(error)),
+      finalize(() => this._setLoading(false))
+    );
   }
 
   /**
-   * Obtener productos de tienda por tienda específica
+   * Get store product by ID
    */
-  getStoreProductsByStore(storeId: string, filters: IApiFilters = {}): Observable<IApiResponse<IPaginatedResponse<IStoreProduct>>> {
-    let params = new HttpParams().set('storeId', storeId);
+  getById(id: string): Observable<IStoreProduct> {
+    this._setLoading(true);
+    this._clearError();
     
+    return this._http.get<IStoreProduct>(`${this._baseUrl}/${id}`).pipe(
+      tap(storeProduct => {
+        this._currentStoreProduct.next(storeProduct);
+      }),
+      catchError(error => this._handleError(error)),
+      finalize(() => this._setLoading(false))
+    );
+  }
+
+  /**
+   * Create new store product
+   */
+  create(storeProductData: ICreateStoreProductRequest): Observable<IStoreProduct> {
+    this._setLoading(true);
+    this._clearError();
+    
+    return this._http.post<IStoreProduct>(this._baseUrl, storeProductData).pipe(
+      tap(newStoreProduct => {
+        // Add to current list
+        const currentStoreProducts = this._storeProducts.value;
+        this._storeProducts.next([newStoreProduct, ...currentStoreProducts]);
+        this._currentStoreProduct.next(newStoreProduct);
+      }),
+      catchError(error => this._handleError(error)),
+      finalize(() => this._setLoading(false))
+    );
+  }
+
+  /**
+   * Update store product
+   */
+  update(id: string, storeProductData: IUpdateStoreProductRequest): Observable<IStoreProduct> {
+    this._setLoading(true);
+    this._clearError();
+    
+    return this._http.put<IStoreProduct>(`${this._baseUrl}/${id}`, storeProductData).pipe(
+      tap(updatedStoreProduct => {
+        // Update in current list
+        const currentStoreProducts = this._storeProducts.value;
+        const index = currentStoreProducts.findIndex(sp => sp.id === id);
+        if (index !== -1) {
+          currentStoreProducts[index] = updatedStoreProduct;
+          this._storeProducts.next([...currentStoreProducts]);
+        }
+        this._currentStoreProduct.next(updatedStoreProduct);
+      }),
+      catchError(error => this._handleError(error)),
+      finalize(() => this._setLoading(false))
+    );
+  }
+
+  /**
+   * Delete store product
+   */
+  delete(id: string): Observable<{ message: string }> {
+    this._setLoading(true);
+    this._clearError();
+    
+    return this._http.delete<{ message: string }>(`${this._baseUrl}/${id}`).pipe(
+      tap(() => {
+        // Remove from current list
+        const currentStoreProducts = this._storeProducts.value;
+        const filteredStoreProducts = currentStoreProducts.filter(sp => sp.id !== id);
+        this._storeProducts.next(filteredStoreProducts);
+        
+        // Clear current store product if it was deleted
+        const currentStoreProduct = this._currentStoreProduct.value;
+        if (currentStoreProduct && currentStoreProduct.id === id) {
+          this._currentStoreProduct.next(null);
+        }
+      }),
+      catchError(error => this._handleError(error)),
+      finalize(() => this._setLoading(false))
+    );
+  }
+
+  /**
+   * Get admin store products (with admin-level information)
+   */
+  getAdminStoreProducts(filters?: IStoreProductFilters): Observable<IStoreProductsResponse> {
+    this._setLoading(true);
+    this._clearError();
+    
+    let params = new HttpParams();
+    
+    if (filters) {
     if (filters.page) params = params.set('page', filters.page.toString());
     if (filters.limit) params = params.set('limit', filters.limit.toString());
     if (filters.search) params = params.set('search', filters.search);
-    if (filters.sortBy) params = params.set('sortBy', filters.sortBy);
-    if (filters.sortOrder) params = params.set('sortOrder', filters.sortOrder);
-
-    return this._http.get<IApiResponse<IPaginatedResponse<IStoreProduct>>>(`${this._apiUrl}/store/${storeId}`, { params });
+      if (filters.createdBy) params = params.set('createdBy', filters.createdBy);
+      if (filters.dateFrom) params = params.set('dateFrom', filters.dateFrom.toISOString());
+      if (filters.dateTo) params = params.set('dateTo', filters.dateTo.toISOString());
+    }
+    
+    return this._http.get<IStoreProductsResponse>(`${this._baseUrl}/admin`, { params }).pipe(
+      tap(response => {
+        this._storeProducts.next(response.data);
+      }),
+      catchError(error => this._handleError(error)),
+      finalize(() => this._setLoading(false))
+    );
   }
 
   /**
-   * Obtener productos de tienda por producto maestro
+   * Refresh store products list
    */
-  getStoreProductsByProduct(productId: string, filters: IApiFilters = {}): Observable<IApiResponse<IPaginatedResponse<IStoreProduct>>> {
-    let params = new HttpParams().set('productId', productId);
-    
-    if (filters.page) params = params.set('page', filters.page.toString());
-    if (filters.limit) params = params.set('limit', filters.limit.toString());
-    if (filters.sortBy) params = params.set('sortBy', filters.sortBy);
-    if (filters.sortOrder) params = params.set('sortOrder', filters.sortOrder);
-
-    return this._http.get<IApiResponse<IPaginatedResponse<IStoreProduct>>>(`${this._apiUrl}/product/${productId}`, { params });
+  refresh(): void {
+    this.getAll();
   }
 
   /**
-   * Obtener productos de tienda por disponibilidad
+   * Clear current store product
    */
-  getStoreProductsByAvailability(availability: string, filters: IApiFilters = {}): Observable<IApiResponse<IPaginatedResponse<IStoreProduct>>> {
-    let params = new HttpParams().set('availability', availability);
-    
-    if (filters.page) params = params.set('page', filters.page.toString());
-    if (filters.limit) params = params.set('limit', filters.limit.toString());
-    if (filters.search) params = params.set('search', filters.search);
-    if (filters.sortBy) params = params.set('sortBy', filters.sortBy);
-    if (filters.sortOrder) params = params.set('sortOrder', filters.sortOrder);
-
-    return this._http.get<IApiResponse<IPaginatedResponse<IStoreProduct>>>(`${this._apiUrl}/availability/${availability}`, { params });
+  clearCurrentStoreProduct(): void {
+    this._currentStoreProduct.next(null);
   }
 
   /**
-   * Obtener productos de tienda por rango de precios
+   * Clear error state
    */
-  getStoreProductsByPriceRange(minPrice: number, maxPrice: number, currency: string = 'USD', filters: IApiFilters = {}): Observable<IApiResponse<IPaginatedResponse<IStoreProduct>>> {
-    let params = new HttpParams()
-      .set('minPrice', minPrice.toString())
-      .set('maxPrice', maxPrice.toString())
-      .set('currency', currency);
-    
-    if (filters.page) params = params.set('page', filters.page.toString());
-    if (filters.limit) params = params.set('limit', filters.limit.toString());
-    if (filters.search) params = params.set('search', filters.search);
-    if (filters.sortBy) params = params.set('sortBy', filters.sortBy);
-    if (filters.sortOrder) params = params.set('sortOrder', filters.sortOrder);
-
-    return this._http.get<IApiResponse<IPaginatedResponse<IStoreProduct>>>(`${this._apiUrl}/price-range`, { params });
+  clearError(): void {
+    this._clearError();
   }
 
-  /**
-   * Obtener productos de tienda con stock disponible
-   */
-  getStoreProductsInStock(filters: IApiFilters = {}): Observable<IApiResponse<IPaginatedResponse<IStoreProduct>>> {
-    let params = new HttpParams().set('inStock', 'true');
-    
-    if (filters.page) params = params.set('page', filters.page.toString());
-    if (filters.limit) params = params.set('limit', filters.limit.toString());
-    if (filters.search) params = params.set('search', filters.search);
-    if (filters.sortBy) params = params.set('sortBy', filters.sortBy);
-    if (filters.sortOrder) params = params.set('sortOrder', filters.sortOrder);
+  // Private methods
+  private _setLoading(loading: boolean): void {
+    this._isLoading.next(loading);
+  }
 
-    return this._http.get<IApiResponse<IPaginatedResponse<IStoreProduct>>>(`${this._apiUrl}/in-stock`, { params });
+  private _clearError(): void {
+    this._error.next(null);
+  }
+
+  private _handleError(error: any): Observable<never> {
+    let errorMessage = 'An error occurred';
+    
+    if (error.error?.message) {
+      errorMessage = error.error.message;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+    
+    this._error.next(errorMessage);
+    console.error('StoreProductsService Error:', error);
+    
+    return throwError(() => error);
   }
 }
+
