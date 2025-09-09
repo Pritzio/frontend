@@ -123,8 +123,30 @@
           />
         </div>
 
+        <!-- Price -->
+        <div>
+          <label for="price" class="block text-sm font-medium text-gray-700 mb-2">
+            Precio
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="text-gray-500 sm:text-sm">$</span>
+            </div>
+            <input
+              type="number"
+              id="price"
+              formControlName="price"
+              min="0"
+              step="1"
+              class="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="1390"
+            />
+          </div>
+          <p class="text-sm text-gray-500 mt-1">Precio como entero (ej: 1390 para $13.90)</p>
+        </div>
+
         <!-- Image URL -->
-        <div class="md:col-span-2">
+        <div>
           <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
             URL de la Imagen
           </label>
@@ -149,6 +171,46 @@
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Notas adicionales sobre el producto..."
           ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Store Information Section -->
+    <div class="bg-white border border-gray-200 rounded-lg p-8 mt-6">
+      <div class="mb-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">Información de la Tienda</h2>
+        <p class="text-gray-600">Asociar el producto con una tienda existente o crear una nueva</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Store Name -->
+        <div>
+          <label for="storeName" class="block text-sm font-medium text-gray-700 mb-2">
+            Nombre de la Tienda
+          </label>
+          <input
+            type="text"
+            id="storeName"
+            formControlName="storeName"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Ej: Jumbo, Líder, etc."
+          />
+          <p class="text-sm text-gray-500 mt-1">Si la tienda no existe, se creará automáticamente</p>
+        </div>
+
+        <!-- Store Website -->
+        <div>
+          <label for="storeWebsite" class="block text-sm font-medium text-gray-700 mb-2">
+            Sitio Web de la Tienda
+          </label>
+          <input
+            type="url"
+            id="storeWebsite"
+            formControlName="storeWebsite"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="https://jumbo.cl"
+          />
+          <p class="text-sm text-gray-500 mt-1">Opcional: URL del sitio web de la tienda</p>
         </div>
       </div>
     </div>

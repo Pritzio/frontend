@@ -79,6 +79,64 @@
             <span *ngIf="!storeProduct.url">No disponible</span>
           </p>
         </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Precio</label>
+          <p class="text-gray-900">
+            <span *ngIf="storeProduct.price; else noPrice" class="text-2xl font-bold text-green-600">
+              ${{ storeProduct.price | priceFormat }}
+            </span>
+            <ng-template #noPrice>
+              <span class="text-gray-400">No disponible</span>
+            </ng-template>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información de la Tienda -->
+    <div *ngIf="storeProduct.store" class="bg-white border border-gray-200 rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Información de la Tienda</h2>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la Tienda</label>
+          <p class="text-gray-900">{{ storeProduct.store.displayName || storeProduct.store.name }}</p>
+        </div>
+        
+        <div *ngIf="storeProduct.store.website">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Sitio Web</label>
+          <p class="text-gray-900">
+            <a [href]="storeProduct.store.website" target="_blank" class="text-blue-600 hover:underline">
+              {{ storeProduct.store.website }}
+            </a>
+          </p>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Tienda</label>
+          <p class="text-gray-900">{{ storeProduct.store.type }}</p>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+          <p class="text-gray-900">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                  [class]="storeProduct.store.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+              {{ storeProduct.store.status }}
+            </span>
+          </p>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Verificación</label>
+          <p class="text-gray-900">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                  [class]="storeProduct.store.isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
+              {{ storeProduct.store.isVerified ? 'Verificado' : 'No verificado' }}
+            </span>
+          </p>
+        </div>
       </div>
     </div>
 
@@ -94,17 +152,17 @@
         
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Creación</label>
-          <p class="text-gray-900">{{ storeProduct.createdAt | date:'medium' }}</p>
+          <p class="text-gray-900">{{ storeProduct.createdAt | dateFormat:'medium' }}</p>
         </div>
         
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Última Actualización</label>
-          <p class="text-gray-900">{{ storeProduct.updatedAt | date:'medium' }}</p>
+          <p class="text-gray-900">{{ storeProduct.updatedAt | dateFormat:'medium' }}</p>
         </div>
         
         <div *ngIf="storeProduct.lastScraped">
           <label class="block text-sm font-medium text-gray-700 mb-1">Último Scraping</label>
-          <p class="text-gray-900">{{ storeProduct.lastScraped | date:'medium' }}</p>
+          <p class="text-gray-900">{{ storeProduct.lastScraped | dateFormat:'medium' }}</p>
         </div>
       </div>
     </div>

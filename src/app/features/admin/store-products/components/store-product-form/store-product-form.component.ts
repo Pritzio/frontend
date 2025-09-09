@@ -144,16 +144,21 @@ export class StoreProductFormComponent implements OnInit, OnDestroy {
   
   private _createForm(): FormGroup {
     return this._formBuilder.group({
-      // API v2.1 - Core fields
+      // API v2.2 - Core fields
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(500)]],
       description: ['', [Validators.maxLength(2000)]],
       url: ['', [Validators.maxLength(500)]],
       sku: ['', [Validators.maxLength(100)]],
       storeProductId: ['', [Validators.maxLength(100)]],
       image: ['', [Validators.maxLength(500)]],
+      price: [null, [Validators.min(0)]],
       notes: ['', [Validators.maxLength(500)]],
       
-      // Metadata fields (from API v2.1 documentation)
+      // Store information (v2.2)
+      storeName: [''],
+      storeWebsite: ['', [Validators.maxLength(500)]],
+      
+      // Metadata fields (from API v2.2 documentation)
       brand: [''],
       rating: [null, [Validators.min(1), Validators.max(5)]],
       ratingText: [''],
@@ -205,7 +210,7 @@ export class StoreProductFormComponent implements OnInit, OnDestroy {
   }
   
   private _populateForm(product: IStoreProduct): void {
-    // API v2.1 - Core fields
+    // API v2.2 - Core fields
     this.storeProductForm.patchValue({
       name: product.name,
       description: product.description || '',
@@ -213,8 +218,17 @@ export class StoreProductFormComponent implements OnInit, OnDestroy {
       sku: product.sku || '',
       storeProductId: product.storeProductId || '',
       image: product.image || '',
+      price: product.price || null,
       notes: product.notes || ''
     });
+    
+    // Store information (v2.2)
+    if (product.store) {
+      this.storeProductForm.patchValue({
+        storeName: product.store.name || '',
+        storeWebsite: product.store.website || ''
+      });
+    }
     
     // Metadata fields
     if (product.metadata) {
@@ -227,7 +241,7 @@ export class StoreProductFormComponent implements OnInit, OnDestroy {
       });
     }
 
-    // Categories (v2.1 - New relationship)
+    // Categories (v2.2 - New relationship)
     if (product.categories && product.categories.length > 0) {
       this.selectedCategories = product.categories.map(cat => cat.id);
     }
@@ -236,7 +250,7 @@ export class StoreProductFormComponent implements OnInit, OnDestroy {
   private _prepareFormData(): ICreateStoreProductRequest | IUpdateStoreProductRequest {
     const formValue = this.storeProductForm.value;
     
-    // API v2.1 - Core fields
+    // API v2.2 - Core fields
     const data: any = {
       name: formValue.name
     };
@@ -261,8 +275,21 @@ export class StoreProductFormComponent implements OnInit, OnDestroy {
       data.image = formValue.image.trim();
     }
     
+    if (formValue.price !== null && formValue.price !== undefined && formValue.price !== '') {
+      data.price = Number(formValue.price);
+    }
+    
     if (formValue.notes?.trim()) {
       data.notes = formValue.notes.trim();
+    }
+    
+    // Store information (v2.2)
+    if (formValue.storeName?.trim()) {
+      data.storeName = formValue.storeName.trim();
+    }
+    
+    if (formValue.storeWebsite?.trim()) {
+      data.storeWebsite = formValue.storeWebsite.trim();
     }
     
     // Metadata fields

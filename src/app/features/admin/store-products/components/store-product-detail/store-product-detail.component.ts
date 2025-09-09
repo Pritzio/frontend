@@ -4,6 +4,8 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
 import { StoreProductsService } from '../../../../../core/services/store-products.service';
+import { PriceFormatPipe } from '../../../../../shared/pipes/price-format.pipe';
+import { DateFormatPipe } from '../../../../../shared/pipes/date-format.pipe';
 
 import { 
   IStoreProduct
@@ -12,7 +14,7 @@ import {
 @Component({
   selector: 'app-store-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, PriceFormatPipe, DateFormatPipe],
   templateUrl: './store-product-detail.component.html',
   styleUrls: []
 })

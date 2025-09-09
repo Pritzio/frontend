@@ -658,7 +658,22 @@
     "PRODUCTS_BY_TYPE": "Productos por Tipo",
     "PRODUCTS_BY_STATUS": "Productos por Estado",
     "PRODUCTS_BY_CATEGORY": "Productos por Categoría",
-    "PRODUCTS": "productos"
+    "PRODUCTS": "productos",
+    "AVERAGE_PER_DAY": "Promedio por día",
+    "BY_CATEGORY": "Por Categoría",
+    "BY_STATUS": "Por Estado",
+    "BY_TYPE": "Por Tipo",
+    "DELETED_THIS_MONTH": "Eliminados Este Mes",
+    "EMPTY": {
+      "DESCRIPTION": "Ningún producto coincide con los filtros actuales. Intenta ajustar tus criterios de búsqueda."
+    },
+    "PRICE": "Precio",
+    "REFRESH": "Actualizar",
+    "RETRY": "Reintentar",
+    "STORE": "Tienda",
+    "STORE_NAME": "Nombre de Tienda",
+    "STORE_NAME_PLACEHOLDER": "Filtrar por nombre de tienda",
+    "UPDATED_THIS_MONTH": "Actualizados Este Mes"
   },
   "PRODUCT_FORM": {
     "CREATE_TITLE": "Crear Nuevo Producto",

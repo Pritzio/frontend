@@ -1,4 +1,16 @@
-// Store Products API v2.1 - Updated Models
+// Store Products API v2.2 - Updated Models
+
+// Store Interface (from Store API)
+export interface IStoreResponse {
+  id: string;
+  name: string;
+  website?: string;
+  type: string; // ONLINE, PHYSICAL, HYBRID
+  status: string; // ACTIVE, INACTIVE, SUSPENDED
+  category: string; // Store category
+  isVerified: boolean;
+  displayName: string;
+}
 
 // Category Interface (from Categories API)
 export interface ICategoryResponse {
@@ -14,7 +26,7 @@ export interface ICategoryResponse {
   displayName: string;
 }
 
-// Core Store Product Interface (v2.1 - With Categories)
+// Core Store Product Interface (v2.2 - With Store and Price)
 export interface IStoreProduct {
   id: string;
   name: string;
@@ -23,6 +35,7 @@ export interface IStoreProduct {
   sku?: string;
   storeProductId?: string;
   image?: string;
+  price?: number; // New in v2.2 - Price as integer (no decimals)
   metadata?: Record<string, any>;
   lastScraped?: Date;
   notes?: string;
@@ -30,12 +43,14 @@ export interface IStoreProduct {
   createdBy: string;
   creatorId: string;
   creatorName: string;
+  storeId?: string; // New in v2.2
+  store?: IStoreResponse; // New in v2.2
   createdAt: Date;
   updatedAt: Date;
-  categories?: ICategoryResponse[]; // New in v2.1
+  categories?: ICategoryResponse[];
 }
 
-// Create Store Product DTO
+// Create Store Product DTO (v2.2)
 export interface ICreateStoreProductRequest {
   name: string;
   description?: string;
@@ -43,11 +58,15 @@ export interface ICreateStoreProductRequest {
   sku?: string;
   storeProductId?: string;
   image?: string;
+  price?: number; // New in v2.2 - Price as integer
   metadata?: Record<string, any>;
   notes?: string;
+  // Store association (optional)
+  storeName?: string; // For auto-creation
+  storeWebsite?: string; // For auto-creation
 }
 
-// Update Store Product DTO
+// Update Store Product DTO (v2.2)
 export interface IUpdateStoreProductRequest {
   name?: string;
   description?: string;
@@ -55,21 +74,24 @@ export interface IUpdateStoreProductRequest {
   sku?: string;
   storeProductId?: string;
   image?: string;
+  price?: number; // New in v2.2 - Price as integer
   metadata?: Record<string, any>;
   notes?: string;
 }
 
-// Store Product Filters
+// Store Product Filters (v2.2)
 export interface IStoreProductFilters {
   page?: number;
   limit?: number;
   search?: string;
   createdBy?: string;
+  storeId?: string; // New in v2.2
+  storeName?: string; // New in v2.2
   dateFrom?: Date;
   dateTo?: Date;
 }
 
-// Store Product Summary (for lists)
+// Store Product Summary (for lists) - v2.2
 export interface IStoreProductSummary {
   id: string;
   name: string;
@@ -78,13 +100,16 @@ export interface IStoreProductSummary {
   sku?: string;
   storeProductId?: string;
   image?: string;
+  price?: number; // New in v2.2
   lastScraped?: Date;
   createdAt: Date;
   creatorName: string;
-  categories?: ICategoryResponse[]; // New in v2.1
+  storeId?: string; // New in v2.2
+  store?: IStoreResponse; // New in v2.2
+  categories?: ICategoryResponse[];
 }
 
-// Store Product Response (full details)
+// Store Product Response (full details) - v2.2
 export interface IStoreProductResponse {
   id: string;
   name: string;
@@ -93,6 +118,7 @@ export interface IStoreProductResponse {
   sku?: string;
   storeProductId?: string;
   image?: string;
+  price?: number; // New in v2.2
   metadata?: Record<string, any>;
   lastScraped?: Date;
   notes?: string;
@@ -100,9 +126,11 @@ export interface IStoreProductResponse {
   createdBy: string;
   creatorId: string;
   creatorName: string;
+  storeId?: string; // New in v2.2
+  store?: IStoreResponse; // New in v2.2
   createdAt: Date;
   updatedAt: Date;
-  categories?: ICategoryResponse[]; // New in v2.1
+  categories?: ICategoryResponse[];
 }
 
 // Paginated Response
@@ -123,7 +151,58 @@ export interface IStoreProductMetadata {
   categories?: string[];
   scrapedAt?: string;
   source?: string;
+  originalPrice?: number; // New in v2.2
+  originalData?: Record<string, any>; // New in v2.2
   [key: string]: any;
+}
+
+// Scraped Product Interface (for bulk import)
+export interface IScrapedProduct {
+  id: string; // Store product ID from scraping
+  name: string;
+  description?: string;
+  url?: string;
+  sku?: string;
+  imageUrl?: string;
+  brand?: string;
+  rating?: number;
+  ratingText?: string;
+  ppum?: string;
+  highResImageUrl?: string;
+  categories?: string[];
+  price?: number;
+  storeName?: string;
+  storeWebsite?: string;
+}
+
+// Bulk Scraping Response
+export interface IBulkScrapingResponse {
+  message: string;
+  total: number;
+  successful: number;
+  failed: number;
+  duplicates: number;
+  errors: number;
+  results: IScrapingResult[];
+  logs: {
+    endpoint: string;
+    timestamp: string;
+    user: string;
+  };
+}
+
+// Individual Scraping Result
+export interface IScrapingResult {
+  success: boolean;
+  originalId: string;
+  createdProduct?: IStoreProduct;
+  error?: string;
+  errorDetails?: {
+    reason: string;
+    existingProductId?: string;
+    duplicateBy?: string;
+    duplicateValue?: string;
+  };
 }
 
 // Legacy enums (kept for backward compatibility if needed)

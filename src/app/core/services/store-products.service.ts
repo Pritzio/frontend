@@ -10,7 +10,9 @@ import {
   IUpdateStoreProductRequest,
   IStoreProductFilters,
   IStoreProductsResponse,
-  IStoreProductResponse
+  IStoreProductResponse,
+  IScrapedProduct,
+  IBulkScrapingResponse
 } from '../../models/store-product.model';
 import { IApiResponse, IPaginatedResponse } from '../../models/api.model';
 
@@ -45,10 +47,12 @@ export class StoreProductsService {
     let params = new HttpParams();
     
     if (filters) {
-    if (filters.page) params = params.set('page', filters.page.toString());
-    if (filters.limit) params = params.set('limit', filters.limit.toString());
-    if (filters.search) params = params.set('search', filters.search);
+      if (filters.page) params = params.set('page', filters.page.toString());
+      if (filters.limit) params = params.set('limit', filters.limit.toString());
+      if (filters.search) params = params.set('search', filters.search);
       if (filters.createdBy) params = params.set('createdBy', filters.createdBy);
+      if (filters.storeId) params = params.set('storeId', filters.storeId);
+      if (filters.storeName) params = params.set('storeName', filters.storeName);
       if (filters.dateFrom) params = params.set('dateFrom', filters.dateFrom.toISOString());
       if (filters.dateTo) params = params.set('dateTo', filters.dateTo.toISOString());
     }
@@ -163,10 +167,12 @@ export class StoreProductsService {
     let params = new HttpParams();
     
     if (filters) {
-    if (filters.page) params = params.set('page', filters.page.toString());
-    if (filters.limit) params = params.set('limit', filters.limit.toString());
-    if (filters.search) params = params.set('search', filters.search);
+      if (filters.page) params = params.set('page', filters.page.toString());
+      if (filters.limit) params = params.set('limit', filters.limit.toString());
+      if (filters.search) params = params.set('search', filters.search);
       if (filters.createdBy) params = params.set('createdBy', filters.createdBy);
+      if (filters.storeId) params = params.set('storeId', filters.storeId);
+      if (filters.storeName) params = params.set('storeName', filters.storeName);
       if (filters.dateFrom) params = params.set('dateFrom', filters.dateFrom.toISOString());
       if (filters.dateTo) params = params.set('dateTo', filters.dateTo.toISOString());
     }
@@ -199,6 +205,23 @@ export class StoreProductsService {
    */
   clearError(): void {
     this._clearError();
+  }
+
+  /**
+   * Add scraped products (bulk import with duplicate detection)
+   */
+  addScrapedProducts(products: IScrapedProduct[]): Observable<IBulkScrapingResponse> {
+    this._setLoading(true);
+    this._clearError();
+    
+    return this._http.post<IBulkScrapingResponse>(`${this._baseUrl}/scraping/add-products`, products).pipe(
+      tap(response => {
+        // Refresh the list to show new products
+        this.refresh();
+      }),
+      catchError(error => this._handleError(error)),
+      finalize(() => this._setLoading(false))
+    );
   }
 
   // Private methods

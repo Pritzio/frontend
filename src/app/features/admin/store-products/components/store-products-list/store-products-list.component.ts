@@ -7,6 +7,7 @@ import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
 import { StoreProductsService } from '../../../../../core/services/store-products.service';
 import { AlertService } from '../../../../../core/services/alert.service';
 import { TranslatePipe } from '../../../../../shared/pipes/translate.pipe';
+import { PriceFormatPipe } from '../../../../../shared/pipes/price-format.pipe';
 import { 
   IStoreProduct, 
   IStoreProductFilters
@@ -16,7 +17,7 @@ import { IPaginatedResponse } from '../../../../../models/api.model';
 @Component({
   selector: 'app-store-products-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, TranslatePipe, PriceFormatPipe],
   templateUrl: './store-products-list.component.html',
   styleUrls: []
 })
@@ -230,6 +231,7 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
   private _createFiltersForm(): FormGroup {
     return this._formBuilder.group({
       search: [''],
+      storeName: [''],
       createdBy: [''],
       dateFrom: [''],
       dateTo: ['']

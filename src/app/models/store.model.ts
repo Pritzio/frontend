@@ -42,6 +42,7 @@ export interface IStore {
   verifiedAt?: Date;
   verifiedBy?: string;
   metadata?: Record<string, any>;
+  displayName: string; // New in v2.2
   createdAt: Date;
   updatedAt: Date;
 }
