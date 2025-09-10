@@ -48,154 +48,442 @@
   </div>
 
   <!-- Product Details -->
-  <div *ngIf="storeProduct && !isLoading" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div *ngIf="storeProduct && !isLoading" class="space-y-6">
     
-    <!-- Información Básica -->
-    <div class="bg-white border border-gray-200 rounded-lg p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-4">Información Básica</h2>
-      
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Producto</label>
-          <p class="text-gray-900">{{ storeProduct.name }}</p>
+    <!-- Primera fila: Imagen e Información principal -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <!-- Imagen del Producto -->
+      <div *ngIf="getProductImage()" class="bg-white border border-gray-200 rounded-lg p-4">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Imagen del Producto</h2>
+        <div class="flex justify-center">
+          <img 
+            [src]="getProductImage()" 
+            [alt]="storeProduct.name"
+            class="w-full max-w-48 h-48 object-contain rounded-lg shadow-sm border border-gray-100"
+            (error)="onImageError($event)"
+          />
         </div>
+      </div>
+
+      <!-- Información Básica -->
+      <div class="bg-white border border-gray-200 rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Información Básica</h2>
         
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-          <p class="text-gray-900">{{ storeProduct.description || 'Sin descripción' }}</p>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Producto</label>
+            <p class="text-gray-900">{{ storeProduct.name }}</p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+            <p class="text-gray-900">{{ storeProduct.description || 'Sin descripción' }}</p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+            <p class="text-gray-900">{{ storeProduct.sku || 'No disponible' }}</p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">URL</label>
+            <p class="text-gray-900">
+              <a *ngIf="storeProduct.url" [href]="storeProduct.url" target="_blank" class="text-blue-600 hover:underline">
+                {{ storeProduct.url }}
+              </a>
+              <span *ngIf="!storeProduct.url">No disponible</span>
+            </p>
+          </div>
         </div>
+      </div>
+
+      <!-- Precio destacado -->
+      <div class="bg-white border border-gray-200 rounded-lg p-4">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Precio</h2>
         
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">SKU</label>
-          <p class="text-gray-900">{{ storeProduct.sku || 'No disponible' }}</p>
-        </div>
-        
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">URL</label>
-          <p class="text-gray-900">
-            <a *ngIf="storeProduct.url" [href]="storeProduct.url" target="_blank" class="text-blue-600 hover:underline">
-              {{ storeProduct.url }}
-            </a>
-            <span *ngIf="!storeProduct.url">No disponible</span>
-          </p>
-        </div>
-        
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Precio</label>
-          <p class="text-gray-900">
-            <span *ngIf="storeProduct.price; else noPrice" class="text-2xl font-bold text-green-600">
+        <div class="text-center">
+          <div *ngIf="storeProduct.price; else noPrice" class="space-y-2">
+            <div class="text-2xl font-bold text-green-600">
               ${{ storeProduct.price | priceFormat }}
-            </span>
-            <ng-template #noPrice>
-              <span class="text-gray-400">No disponible</span>
-            </ng-template>
-          </p>
+            </div>
+            <div *ngIf="storeProduct.metadata?.['originalPrice']" class="text-xs text-gray-500">
+              Precio original: ${{ storeProduct.metadata?.['originalPrice'] | number }}
+            </div>
+          </div>
+          <ng-template #noPrice>
+            <div class="text-gray-400">No disponible</div>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Información de la Tienda -->
+      <div *ngIf="storeProduct.store" class="bg-white border border-gray-200 rounded-lg p-4">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Información de la Tienda</h2>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la Tienda</label>
+            <p class="text-gray-900">{{ storeProduct.store.displayName || storeProduct.store.name }}</p>
+          </div>
+          
+          <div *ngIf="storeProduct.store.website">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Sitio Web</label>
+            <p class="text-gray-900">
+              <a [href]="storeProduct.store.website" target="_blank" class="text-blue-600 hover:underline">
+                {{ storeProduct.store.website }}
+              </a>
+            </p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Tienda</label>
+            <p class="text-gray-900">{{ storeProduct.store.type }}</p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+            <p class="text-gray-900">
+              <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                    [class]="storeProduct.store.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                {{ storeProduct.store.status }}
+              </span>
+            </p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Verificación</label>
+            <p class="text-gray-900">
+              <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                    [class]="storeProduct.store.isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
+                {{ storeProduct.store.isVerified ? 'Verificado' : 'No verificado' }}
+              </span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Información de la Tienda -->
-    <div *ngIf="storeProduct.store" class="bg-white border border-gray-200 rounded-lg p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-4">Información de la Tienda</h2>
-      
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la Tienda</label>
-          <p class="text-gray-900">{{ storeProduct.store.displayName || storeProduct.store.name }}</p>
-        </div>
-        
-        <div *ngIf="storeProduct.store.website">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Sitio Web</label>
-          <p class="text-gray-900">
-            <a [href]="storeProduct.store.website" target="_blank" class="text-blue-600 hover:underline">
-              {{ storeProduct.store.website }}
-            </a>
-          </p>
-        </div>
-        
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Tienda</label>
-          <p class="text-gray-900">{{ storeProduct.store.type }}</p>
-        </div>
-        
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-          <p class="text-gray-900">
-            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
-                  [class]="storeProduct.store.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
-              {{ storeProduct.store.status }}
-            </span>
-          </p>
-        </div>
-        
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Verificación</label>
-          <p class="text-gray-900">
-            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
-                  [class]="storeProduct.store.isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
-              {{ storeProduct.store.isVerified ? 'Verificado' : 'No verificado' }}
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Información del Sistema -->
+    <!-- Segunda fila: Producto Base Asociado -->
     <div class="bg-white border border-gray-200 rounded-lg p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-4">Información del Sistema</h2>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold text-gray-900">Producto Base Asociado</h2>
+        <button 
+          (click)="openBaseProductModal()"
+          class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <i class="icon-edit mr-2"></i>
+          {{ associatedBaseProduct ? 'Cambiar Producto Base' : 'Asociar Producto Base' }}
+        </button>
+      </div>
       
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Creado por</label>
-          <p class="text-gray-900">{{ storeProduct.creatorName }}</p>
-        </div>
-        
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Creación</label>
-          <p class="text-gray-900">{{ storeProduct.createdAt | dateFormat:'medium' }}</p>
-        </div>
-        
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Última Actualización</label>
-          <p class="text-gray-900">{{ storeProduct.updatedAt | dateFormat:'medium' }}</p>
-        </div>
-        
-        <div *ngIf="storeProduct.lastScraped">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Último Scraping</label>
-          <p class="text-gray-900">{{ storeProduct.lastScraped | dateFormat:'medium' }}</p>
+      <div *ngIf="associatedBaseProduct" class="border border-gray-200 rounded-lg p-4">
+        <div class="flex items-start gap-4">
+          <img 
+            *ngIf="getBaseProductImage(associatedBaseProduct)" 
+            [src]="getBaseProductImage(associatedBaseProduct)" 
+            [alt]="associatedBaseProduct.name"
+            class="w-16 h-16 rounded-lg object-cover"
+          />
+          <div class="w-16 h-16 rounded-lg bg-gray-200 flex items-center justify-center" *ngIf="!getBaseProductImage(associatedBaseProduct)">
+            <i class="icon-package text-gray-400 text-xl"></i>
+          </div>
+          
+          <div class="flex-1">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ associatedBaseProduct.name }}</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="text-gray-600">ID:</span>
+                <span class="ml-2 font-mono text-gray-900">{{ associatedBaseProduct.id }}</span>
+              </div>
+              <div>
+                <span class="text-gray-600">Marca:</span>
+                <span class="ml-2 text-gray-900">{{ associatedBaseProduct.brand || 'No especificada' }}</span>
+              </div>
+              <div>
+                <span class="text-gray-600">Estado:</span>
+                <span class="ml-2">
+                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                        [class]="associatedBaseProduct.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                    {{ associatedBaseProduct.isActive ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </span>
+              </div>
+              <div>
+                <span class="text-gray-600">Creado:</span>
+                <span class="ml-2 text-gray-900">{{ associatedBaseProduct.createdAt | dateFormat:'short' }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex flex-col gap-2">
+            <button 
+              (click)="openBaseProductModal()"
+              class="inline-flex items-center px-3 py-1 text-sm text-blue-600 bg-blue-100 rounded hover:bg-blue-200 transition-colors"
+            >
+              <i class="icon-edit mr-1"></i>
+              Cambiar
+            </button>
+            <button 
+              (click)="disassociateBaseProduct()"
+              class="inline-flex items-center px-3 py-1 text-sm text-red-600 bg-red-100 rounded hover:bg-red-200 transition-colors"
+            >
+              <i class="icon-trash mr-1"></i>
+              Desasociar
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- Imagen del Producto -->
-    <div *ngIf="getProductImage()" class="bg-white border border-gray-200 rounded-lg p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-4">Imagen del Producto</h2>
-      <div class="flex justify-center">
-        <img 
-          [src]="getProductImage()" 
-          [alt]="storeProduct.name"
-          class="w-full max-w-4xl h-auto object-contain rounded-lg shadow-lg"
-          (error)="onImageError($event)"
-        />
-      </div>
-    </div>
-
-    <!-- Metadatos -->
-    <div *ngIf="hasSpecifications()" class="bg-white border border-gray-200 rounded-lg p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-4">Información Adicional</h2>
       
-      <div class="space-y-3">
-        <div *ngFor="let spec of getSpecificationsArray()" class="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
-          <span class="text-sm font-medium text-gray-700 capitalize">{{ spec.key }}</span>
-          <span class="text-sm text-gray-900">{{ spec.value }}</span>
+      <div *ngIf="!associatedBaseProduct" class="text-center py-8">
+        <i class="icon-package text-gray-400 text-4xl mb-3"></i>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Sin Producto Base Asociado</h3>
+        <p class="text-gray-600 mb-4">Este producto de tienda no está asociado a ningún producto base</p>
+        <button 
+          (click)="openBaseProductModal()"
+          class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <i class="icon-plus mr-2"></i>
+          Asociar Producto Base
+        </button>
+      </div>
+    </div>
+
+    <!-- Tercera fila: Información adicional -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Información del Sistema -->
+      <div class="bg-white border border-gray-200 rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Información del Sistema</h2>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Creado por</label>
+            <p class="text-gray-900">{{ storeProduct.creatorName }}</p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Creación</label>
+            <p class="text-gray-900">{{ storeProduct.createdAt | dateFormat:'medium' }}</p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Última Actualización</label>
+            <p class="text-gray-900">{{ storeProduct.updatedAt | dateFormat:'medium' }}</p>
+          </div>
+          
+          <div *ngIf="storeProduct.lastScraped">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Último Scraping</label>
+            <p class="text-gray-900">{{ storeProduct.lastScraped | dateFormat:'medium' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información Adicional -->
+      <div *ngIf="hasSpecifications()" class="bg-white border border-gray-200 rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Información Adicional</h2>
+        
+        <div class="space-y-3">
+          <div *ngFor="let spec of getSpecificationsArray()" class="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
+            <span class="text-sm font-medium text-gray-700 capitalize">{{ spec.key }}</span>
+            <span class="text-sm text-gray-900">{{ spec.value }}</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Notas -->
+    <!-- Tercera fila: Notas -->
     <div *ngIf="storeProduct.notes" class="bg-white border border-gray-200 rounded-lg p-6">
       <h2 class="text-xl font-semibold text-gray-900 mb-4">Notas</h2>
       <p class="text-gray-900">{{ storeProduct.notes }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para seleccionar producto base -->
+<div *ngIf="showBaseProductModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-semibold text-gray-900">Seleccionar Producto Base</h3>
+        <button 
+          (click)="closeBaseProductModal()"
+          class="text-gray-400 hover:text-gray-600"
+        >
+          <i class="icon-x text-xl"></i>
+        </button>
+      </div>
+      
+      <!-- Producto de Tienda de Referencia -->
+      <div *ngIf="storeProduct" class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div class="flex items-center gap-3">
+          <img 
+            *ngIf="storeProduct.image" 
+            [src]="storeProduct.image" 
+            [alt]="storeProduct.name"
+            class="h-12 w-12 rounded-lg object-cover"
+          />
+          <div class="w-12 h-12 rounded-lg bg-gray-200 flex items-center justify-center" *ngIf="!storeProduct.image">
+            <i class="icon-package text-gray-400"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h4 class="text-sm font-medium text-gray-900">{{ storeProduct.name }}</h4>
+            <div class="flex items-center gap-4 text-xs text-gray-500 mt-1">
+              <span *ngIf="storeProduct.store?.displayName || storeProduct.store?.name">
+                <i class="icon-store mr-1"></i>
+                {{ storeProduct.store?.displayName || storeProduct.store?.name }}
+              </span>
+              <span *ngIf="storeProduct.price">
+                <i class="icon-dollar mr-1"></i>
+                ${{ storeProduct.price | priceFormat }}
+              </span>
+              <span *ngIf="storeProduct.storeProductId">
+                <i class="icon-hash mr-1"></i>
+                ID: {{ storeProduct.storeProductId }}
+              </span>
+            </div>
+          </div>
+          <div class="flex-shrink-0">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              <i class="icon-link mr-1"></i>
+              Producto de Tienda
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="p-6">
+      <!-- Sugerencias Automáticas -->
+      <div *ngIf="suggestedBaseProducts.length > 0 || isLoadingSuggestion" class="mb-6">
+        <div class="rounded-lg p-4 bg-blue-50 border border-blue-200">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-sm font-medium text-blue-900">
+              <i class="mr-2 icon-lightbulb text-blue-600"></i>
+              Sugerencias Automáticas ({{ suggestedBaseProducts.length }})
+            </h4>
+            <div *ngIf="isLoadingSuggestion" class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+          </div>
+          
+          <div *ngIf="!isLoadingSuggestion && suggestedBaseProducts.length > 0" class="space-y-3">
+            <div *ngFor="let suggestion of suggestedBaseProducts; let i = index" 
+                 class="flex items-start gap-3 p-3 rounded-lg border"
+                 [class]="suggestion.similarity >= 0.95 
+                   ? 'bg-green-50 border-green-200' 
+                   : 'bg-white border-gray-200'">
+              <img 
+                *ngIf="suggestion.image" 
+                [src]="suggestion.image" 
+                [alt]="suggestion.name"
+                class="h-12 w-12 rounded-lg object-cover"
+              />
+              <div class="w-12 h-12 rounded-lg bg-gray-200 flex items-center justify-center" *ngIf="!suggestion.image">
+                <i class="icon-package text-gray-400"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h5 class="text-sm font-medium text-gray-900">{{ suggestion.name }}</h5>
+                <p class="text-xs text-gray-500">{{ suggestion.brand || 'Sin marca' }}</p>
+                <p class="text-xs text-gray-400 mt-1">ID: {{ suggestion.id }}</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                      [class]="getSimilarityBadgeClass(suggestion.confidence || 'medium')">
+                  <i class="mr-1" [class]="getSimilarityIcon(suggestion.confidence || 'medium')"></i>
+                  {{ formatSimilarityPercentage(suggestion.similarity) }}
+                </span>
+                <button 
+                  (click)="useSuggestedBaseProduct(suggestion)"
+                  class="inline-flex items-center px-3 py-1 text-xs font-medium rounded transition-colors"
+                  [class]="suggestion.similarity >= 0.95 
+                    ? 'text-white bg-green-600 hover:bg-green-700' 
+                    : 'text-blue-600 bg-blue-100 hover:bg-blue-200'"
+                >
+                  <i class="mr-1 icon-check"></i>
+                  {{ suggestion.similarity >= 0.95 ? 'Asociar Ahora' : 'Usar' }}
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div *ngIf="!isLoadingSuggestion && suggestedBaseProducts.length === 0" class="text-center py-4">
+            <i class="icon-info text-gray-400 text-xl mb-2"></i>
+            <p class="text-sm text-gray-600">No se encontraron productos base similares</p>
+            <p class="text-xs text-gray-500 mt-1">Puedes buscar manualmente en la lista de abajo</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Búsqueda -->
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Buscar Producto Base</label>
+        <input
+          type="text"
+          [(ngModel)]="baseProductSearchQuery"
+          (input)="onBaseProductSearch()"
+          placeholder="Buscar por nombre, marca o SKU..."
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+      
+      <!-- Lista de productos base -->
+      <div class="max-h-96 overflow-y-auto">
+        <div *ngIf="isLoadingBaseProducts" class="flex justify-center items-center py-8">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+        
+        <div *ngIf="!isLoadingBaseProducts && availableBaseProducts.length === 0" class="text-center py-8">
+          <i class="icon-package text-gray-400 text-4xl mb-3"></i>
+          <p class="text-gray-600">No se encontraron productos base</p>
+        </div>
+        
+        <div *ngIf="!isLoadingBaseProducts && availableBaseProducts.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div 
+            *ngFor="let baseProduct of availableBaseProducts"
+            (click)="selectBaseProduct(baseProduct)"
+            class="border border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:shadow-md transition-all cursor-pointer"
+            [class.border-blue-500]="selectedBaseProduct?.id === baseProduct.id"
+          >
+            <div class="flex items-start gap-3">
+              <img 
+                *ngIf="getBaseProductImage(baseProduct)" 
+                [src]="getBaseProductImage(baseProduct)" 
+                [alt]="baseProduct.name"
+                class="h-12 w-12 rounded-lg object-cover"
+              />
+              <div class="w-12 h-12 rounded-lg bg-gray-200 flex items-center justify-center" *ngIf="!getBaseProductImage(baseProduct)">
+                <i class="icon-package text-gray-400"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-sm font-medium text-gray-900 truncate">{{ baseProduct.name }}</h4>
+                <p class="text-xs text-gray-500">{{ baseProduct.brand || 'Sin marca' }}</p>
+                <p class="text-xs text-gray-400 mt-1">ID: {{ baseProduct.id }}</p>
+                <p class="text-xs text-gray-400" *ngIf="baseProduct.sku">SKU: {{ baseProduct.sku }}</p>
+              </div>
+              <div class="flex items-center">
+                <input
+                  type="radio"
+                  [checked]="selectedBaseProduct?.id === baseProduct.id"
+                  class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+      <button 
+        (click)="closeBaseProductModal()"
+        class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+      >
+        Cancelar
+      </button>
+      <button 
+        (click)="associateBaseProduct()"
+        [disabled]="!selectedBaseProduct"
+        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      >
+        {{ associatedBaseProduct ? 'Cambiar Asociación' : 'Asociar Producto' }}
+      </button>
     </div>
   </div>
 </div>

@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { StoreProductsService } from '../../../../../core/services/store-products.service';
+import { BaseProductsService } from '../../../../../core/services/base-products.service';
+import { ProductSimilarityService, SimilarityResult } from '../../../../../core/services/product-similarity.service';
 import { AlertService } from '../../../../../core/services/alert.service';
 import { TranslatePipe } from '../../../../../shared/pipes/translate.pipe';
 import { PriceFormatPipe } from '../../../../../shared/pipes/price-format.pipe';
@@ -12,6 +14,7 @@ import {
   IStoreProduct, 
   IStoreProductFilters
 } from '../../../../../models/store-product.model';
+import { IBaseProduct } from '../../../../../models/base-product.model';
 import { IPaginatedResponse } from '../../../../../models/api.model';
 
 @Component({
@@ -29,6 +32,17 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
   public error: string | null = null;
   public selectedStoreProducts: string[] = [];
   public showFilters = false;
+  
+  // Association modal properties
+  public showAssociationModal = false;
+  public selectedStoreProduct: IStoreProduct | null = null;
+  public availableBaseProducts: IBaseProduct[] = [];
+  public selectedBaseProduct: IBaseProduct | null = null;
+  public baseProductSearchQuery = '';
+  public isLoadingBaseProducts = false;
+  public suggestedBaseProduct: SimilarityResult | null = null;
+  public suggestedBaseProducts: SimilarityResult[] = [];
+  public isLoadingSuggestion = false;
   
   // Pagination
   public currentPage = 1;
@@ -54,6 +68,8 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
   
   constructor(
     private _storeProductsService: StoreProductsService,
+    private _baseProductsService: BaseProductsService,
+    private _productSimilarityService: ProductSimilarityService,
     private _alertService: AlertService,
     private _formBuilder: FormBuilder
   ) {
@@ -180,8 +196,215 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
       });
     }
   }
-  
 
+  /**
+   * Open association modal
+   */
+  public openAssociationModal(storeProduct: IStoreProduct): void {
+    this.selectedStoreProduct = storeProduct;
+    this.showAssociationModal = true;
+    this.selectedBaseProduct = null;
+    this.baseProductSearchQuery = '';
+    this.suggestedBaseProduct = null;
+    this._loadSuggestedBaseProduct();
+    this._loadAvailableBaseProducts();
+  }
+
+  /**
+   * Close association modal
+   */
+  public closeAssociationModal(): void {
+    this.showAssociationModal = false;
+    this.selectedStoreProduct = null;
+    this.selectedBaseProduct = null;
+    this.availableBaseProducts = [];
+    this.baseProductSearchQuery = '';
+    this.suggestedBaseProduct = null;
+    this.suggestedBaseProducts = [];
+  }
+
+  /**
+   * Load suggested base product
+   */
+  private _loadSuggestedBaseProduct(): void {
+    if (!this.selectedStoreProduct) return;
+
+    this.isLoadingSuggestion = true;
+    
+    this._productSimilarityService.getSuggestedBaseProducts(this.selectedStoreProduct).subscribe({
+      next: (suggestions) => {
+        this.suggestedBaseProducts = suggestions;
+        this.suggestedBaseProduct = suggestions.length > 0 ? suggestions[0] : null;
+        this.isLoadingSuggestion = false;
+      },
+      error: (error) => {
+        console.error('Error loading suggested base products:', error);
+        this.isLoadingSuggestion = false;
+      }
+    });
+  }
+
+  /**
+   * Load available base products
+   */
+  private _loadAvailableBaseProducts(): void {
+    this.isLoadingBaseProducts = true;
+    const filters: any = { 
+      limit: 50, 
+      isActive: true 
+    };
+    
+    if (this.baseProductSearchQuery) {
+      filters.search = this.baseProductSearchQuery;
+    }
+    
+    this._baseProductsService.getAll(filters).subscribe({
+      next: (response) => {
+        this.availableBaseProducts = response.data || [];
+        this.isLoadingBaseProducts = false;
+      },
+      error: (error) => {
+        console.error('Error loading base products:', error);
+        this._alertService.error('Error al cargar productos base disponibles');
+        this.isLoadingBaseProducts = false;
+      }
+    });
+  }
+
+  /**
+   * Search base products
+   */
+  public onBaseProductSearch(): void {
+    this._loadAvailableBaseProducts();
+  }
+
+  /**
+   * Select base product
+   */
+  public selectBaseProduct(baseProduct: IBaseProduct): void {
+    this.selectedBaseProduct = baseProduct;
+  }
+
+  /**
+   * Associate store product to base product
+   */
+  public associateToBaseProduct(): void {
+    if (!this.selectedStoreProduct || !this.selectedBaseProduct) return;
+
+    this._baseProductsService.associateStoreProduct(this.selectedStoreProduct.id, this.selectedBaseProduct.id).subscribe({
+      next: () => {
+        this._alertService.success('Producto asociado exitosamente');
+        this._loadProducts(); // Refresh the list to update association status
+        this.closeAssociationModal();
+      },
+      error: (error) => {
+        console.error('Error associating store product:', error);
+        this._alertService.error('Error al asociar el producto');
+      }
+    });
+  }
+
+  /**
+   * Use suggested base product
+   */
+  public useSuggestedBaseProduct(suggestion?: SimilarityResult): void {
+    const selectedSuggestion = suggestion || this.suggestedBaseProduct;
+    if (selectedSuggestion) {
+      // Convert SimilarityResult to IBaseProduct format
+      this.selectedBaseProduct = {
+        id: selectedSuggestion.id,
+        name: selectedSuggestion.name,
+        brand: selectedSuggestion.brand,
+        image: selectedSuggestion.image,
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      } as IBaseProduct;
+    }
+  }
+
+  /**
+   * Get similarity badge class
+   */
+  public getSimilarityBadgeClass(confidence: 'high' | 'medium' | 'low'): string {
+    return this._productSimilarityService.getSimilarityBadgeClass(confidence);
+  }
+
+  /**
+   * Get similarity icon
+   */
+  public getSimilarityIcon(confidence: 'high' | 'medium' | 'low'): string {
+    return this._productSimilarityService.getSimilarityIcon(confidence);
+  }
+
+  /**
+   * Format similarity percentage
+   */
+  public formatSimilarityPercentage(similarity: number): string {
+    return this._productSimilarityService.formatSimilarityPercentage(similarity);
+  }
+
+  /**
+   * Get suggested base product image
+   */
+  public getSuggestedBaseProductImage(): string | null {
+    return this.suggestedBaseProduct?.image || null;
+  }
+
+  /**
+   * Get suggested base product brand
+   */
+  public getSuggestedBaseProductBrand(): string {
+    return this.suggestedBaseProduct?.brand || 'Sin marca';
+  }
+
+  /**
+   * Get base product image
+   */
+  public getBaseProductImage(baseProduct: IBaseProduct): string | null {
+    if (baseProduct.specifications?.originalData?.highResImageUrl) {
+      return baseProduct.specifications.originalData.highResImageUrl;
+    }
+    
+    if (baseProduct.image) {
+      return baseProduct.image;
+    }
+    
+    return null;
+  }
+
+  /**
+   * Get association status class
+   */
+  public getAssociationStatusClass(storeProduct: IStoreProduct): string {
+    if (storeProduct.baseProductId) {
+      return 'bg-green-100 text-green-800';
+    } else {
+      return 'bg-gray-100 text-gray-800';
+    }
+  }
+
+  /**
+   * Get association status icon
+   */
+  public getAssociationStatusIcon(storeProduct: IStoreProduct): string {
+    if (storeProduct.baseProductId) {
+      return 'icon-link';
+    } else {
+      return 'icon-unlink';
+    }
+  }
+
+  /**
+   * Get association status text
+   */
+  public getAssociationStatusText(storeProduct: IStoreProduct): string {
+    if (storeProduct.baseProductId) {
+      return 'Asociado';
+    } else {
+      return 'Sin asociar';
+    }
+  }
   
   /**
    * Track by function for ngFor
@@ -234,7 +457,8 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
       storeName: [''],
       createdBy: [''],
       dateFrom: [''],
-      dateTo: ['']
+      dateTo: [''],
+      unassociated: [false]
     });
   }
   
@@ -282,7 +506,12 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
       ...this._getFormFilters()
     };
     
-    this._storeProductsService.getAll(filters).subscribe({
+    // Remove unassociated from backend filters since we'll handle it client-side
+    const backendFilters = { ...filters };
+    const isUnassociatedFilter = backendFilters.unassociated;
+    delete backendFilters.unassociated;
+    
+    this._storeProductsService.getAll(backendFilters).subscribe({
       next: (response) => {
 
         
@@ -329,6 +558,14 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
           this.hasPrev = false;
         }
         
+        // Apply client-side filtering for unassociated products
+        if (isUnassociatedFilter) {
+          this.storeProducts = this.storeProducts.filter(product => !product.baseProductId);
+          this.totalItems = this.storeProducts.length;
+          this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+          this.hasNext = this.currentPage < this.totalPages;
+          this.hasPrev = this.currentPage > 1;
+        }
 
       },
       error: (error: any) => {
@@ -357,8 +594,6 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
     const formValue = this.filtersForm.value;
     const filters: Partial<IStoreProductFilters> = {};
     
-
-    
     // Only include non-empty values
     Object.keys(formValue).forEach(key => {
       const value = formValue[key];
@@ -372,6 +607,10 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
       }
     });
     
+    // Special handling for boolean filters (like unassociated)
+    if (formValue.unassociated === true) {
+      filters.unassociated = true;
+    }
 
     return filters;
   }

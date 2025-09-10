@@ -1,0 +1,49 @@
+<div class="product-comparison" *ngIf="comparison && comparison.product">
+  <div class="product-header">
+    <div class="product-image-section">
+      <img
+        *ngIf="getProductImage()"
+        [src]="getProductImage()"
+        [alt]="comparison.product.name"
+        class="product-image"
+        (error)="$event.target.src='assets/images/no-image.svg'"
+      />
+      <div
+        *ngIf="!getProductImage()"
+        class="css-placeholder"
+        [style.background-color]="getBrandColor(comparison.product.brand)"
+      >
+        <div class="placeholder-content">
+          <div class="placeholder-icon">📦</div>
+          <div class="placeholder-text">{{ comparison.product.brand }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="product-info">
+      <h1 class="product-title">{{ comparison.product.name || 'Producto' }}</h1>
+      <p class="product-brand">{{ comparison.product.brand || 'Marca' }}</p>
+    </div>
+  </div>
+  
+  <div class="price-summary" *ngIf="comparison.priceRange">
+    <div class="price-range">
+      <span class="price-text">{{ getPriceRangeText() }}</span>
+    </div>
+    <div class="price-average">
+      {{ getAveragePriceText() }}
+    </div>
+  </div>
+  
+  <div class="stores-comparison" *ngIf="comparison.stores">
+    <h3 class="stores-title">
+      Disponible en {{ getStoresCountText() }}
+    </h3>
+    
+    <div class="stores-list">
+      <app-store-card
+        *ngFor="let store of comparison.stores; trackBy: trackByStoreId"
+        [store]="store"
+      ></app-store-card>
+    </div>
+  </div>
+</div>

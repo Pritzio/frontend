@@ -55,6 +55,7 @@ export class StoreProductsService {
       if (filters.storeName) params = params.set('storeName', filters.storeName);
       if (filters.dateFrom) params = params.set('dateFrom', filters.dateFrom.toISOString());
       if (filters.dateTo) params = params.set('dateTo', filters.dateTo.toISOString());
+      if (filters.unassociated !== undefined) params = params.set('unassociated', filters.unassociated.toString());
     }
     
 

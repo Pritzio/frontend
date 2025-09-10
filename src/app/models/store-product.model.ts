@@ -45,6 +45,7 @@ export interface IStoreProduct {
   creatorName: string;
   storeId?: string; // New in v2.2
   store?: IStoreResponse; // New in v2.2
+  baseProductId?: string | null; // Base product association
   createdAt: Date;
   updatedAt: Date;
   categories?: ICategoryResponse[];
@@ -77,6 +78,7 @@ export interface IUpdateStoreProductRequest {
   price?: number; // New in v2.2 - Price as integer
   metadata?: Record<string, any>;
   notes?: string;
+  baseProductId?: string | null; // Base product association
 }
 
 // Store Product Filters (v2.2)
@@ -89,6 +91,7 @@ export interface IStoreProductFilters {
   storeName?: string; // New in v2.2
   dateFrom?: Date;
   dateTo?: Date;
+  unassociated?: boolean; // Filter for products without base product association
 }
 
 // Store Product Summary (for lists) - v2.2

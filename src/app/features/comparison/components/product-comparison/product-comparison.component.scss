@@ -1,0 +1,212 @@
+.product-comparison {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.product-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.product-image-section {
+  flex-shrink: 0;
+  width: 200px;
+  height: 200px;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.css-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
+
+  .placeholder-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    z-index: 2;
+
+    .placeholder-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.9;
+    }
+
+    .placeholder-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      letter-spacing: 0.5px;
+    }
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.1) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.1) 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    opacity: 0.3;
+  }
+}
+
+.product-info {
+  flex: 1;
+  text-align: left;
+}
+
+.product-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.product-brand {
+  font-size: 1.125rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  margin: 0;
+}
+
+.price-summary {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 2rem;
+  border-radius: 1rem;
+  margin: 2rem 0;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+}
+
+.price-range {
+  margin-bottom: 1rem;
+}
+
+.price-text {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #059669;
+  margin: 0;
+}
+
+.price-average {
+  color: #6b7280;
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.stores-comparison {
+  margin-top: 3rem;
+}
+
+.stores-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 2rem 0;
+  text-align: center;
+}
+
+.stores-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .product-comparison {
+    padding: 1rem;
+  }
+
+  .product-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .product-image-section {
+    width: 150px;
+    height: 150px;
+  }
+
+  .product-info {
+    text-align: center;
+  }
+
+  .product-title {
+    font-size: 1.875rem;
+  }
+
+  .price-summary {
+    padding: 1.5rem;
+  }
+
+  .price-text {
+    font-size: 2rem;
+  }
+
+  .stores-list {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .stores-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .product-comparison {
+    padding: 0.5rem;
+  }
+
+  .product-image-section {
+    width: 120px;
+    height: 120px;
+  }
+
+  .product-title {
+    font-size: 1.5rem;
+  }
+
+  .price-summary {
+    padding: 1rem;
+  }
+
+  .price-text {
+    font-size: 1.75rem;
+  }
+}

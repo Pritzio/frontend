@@ -80,8 +80,18 @@ export class DateFormatPipe implements PipeTransform {
       const month = parseInt(parts[1], 10) - 1; // JavaScript months are 0-based
       const year = parseInt(parts[2], 10);
       
-      // Create date with correct day/month order
-      return new Date(year, month, day);
+      // Check if there's time information in the original string
+      const timeMatch = dateString.match(/(\d{1,2}):(\d{2})(:(\d{2}))?/);
+      if (timeMatch) {
+        const hours = parseInt(timeMatch[1], 10);
+        const minutes = parseInt(timeMatch[2], 10);
+        const seconds = timeMatch[4] ? parseInt(timeMatch[4], 10) : 0;
+        return new Date(year, month, day, hours, minutes, seconds);
+      } else {
+        // If no time specified, use current time instead of midnight
+        const now = new Date();
+        return new Date(year, month, day, now.getHours(), now.getMinutes(), now.getSeconds());
+      }
     }
     
     // Fallback to standard parsing

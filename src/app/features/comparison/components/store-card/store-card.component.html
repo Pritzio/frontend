@@ -1,0 +1,41 @@
+<div class="store-card">
+  <div class="store-header">
+    <img 
+      [src]="store.store.logo" 
+      [alt]="store.store.name"
+      class="store-logo"
+      (error)="$event.target.src='assets/images/default-store-logo.svg'"
+    />
+    <h4 class="store-name">{{ store.store.name }}</h4>
+  </div>
+  
+  <div class="product-details">
+    <!-- Product image -->
+    <div class="product-image-section" *ngIf="store.product.image">
+      <img
+        [src]="store.product.image"
+        [alt]="store.product.name"
+        class="product-image"
+        (error)="onImageError($event)"
+      />
+    </div>
+    
+    <!-- Placeholder if no image -->
+    <div class="product-image-placeholder" *ngIf="!store.product.image">
+      <div class="placeholder-content">
+        <div class="placeholder-icon">📦</div>
+      </div>
+    </div>
+    
+    <p class="product-name">{{ store.product.name }}</p>
+    <div class="price-section">
+      <span class="price">{{ formatPrice(store.price) }}</span>
+      <button 
+        (click)="onVisitStore(store.product.url)"
+        class="btn-visit-store"
+      >
+        Ver en tienda
+      </button>
+    </div>
+  </div>
+</div>

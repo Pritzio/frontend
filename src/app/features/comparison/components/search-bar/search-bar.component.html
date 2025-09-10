@@ -1,0 +1,32 @@
+<div class="search-container">
+  <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="search-form">
+    <div class="search-input-group">
+      <input
+        type="text"
+        formControlName="query"
+        (input)="onInputChange()"
+        placeholder="Buscar productos... (mínimo 2 caracteres)"
+        class="search-input"
+        autocomplete="off"
+      />
+      <button
+        type="button"
+        (click)="clearSearch()"
+        class="clear-button"
+        [disabled]="loading || !searchForm.get('query')?.value"
+        *ngIf="searchForm.get('query')?.value"
+      >
+        ✕
+      </button>
+    </div>
+    
+    <button
+      type="submit"
+      class="search-button"
+      [disabled]="searchForm.invalid"
+    >
+      <span *ngIf="loading" class="loading-spinner"></span>
+      {{ loading ? 'Buscando...' : 'Buscar' }}
+    </button>
+  </form>
+</div>

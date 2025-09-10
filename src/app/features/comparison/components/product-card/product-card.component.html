@@ -1,0 +1,57 @@
+<div class="product-card">
+        <div class="product-image">
+          <img
+            *ngIf="getProductImage()"
+            [src]="getProductImage()"
+            [alt]="product.name"
+            class="product-img"
+            (error)="onImageError($event)"
+            (load)="onImageLoad($event)"
+          />
+          <div
+            *ngIf="!getProductImage()"
+            class="css-placeholder"
+            [style.background-color]="getBrandColor()"
+          >
+            <div class="placeholder-content">
+              <div class="placeholder-icon">📦</div>
+              <div class="placeholder-text">{{ product.brand }}</div>
+            </div>
+          </div>
+        </div>
+  
+  <div class="product-header">
+    <h3 class="product-name">{{ product.name }}</h3>
+    <span class="product-brand">{{ product.brand }}</span>
+  </div>
+  
+  <div class="product-stats">
+    <div class="stat-item">
+      <span class="stat-icon">🏪</span>
+      <span class="stat-text">{{ getStoreCountText() }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-icon">📦</span>
+      <span class="stat-text">{{ getVariantsText() }}</span>
+    </div>
+  </div>
+
+  <!-- Product image in stats section -->
+  <div class="product-image-small" *ngIf="getProductImage()">
+    <img
+      [src]="getProductImage()"
+      [alt]="product.name"
+      class="product-img-small"
+      (error)="onImageError($event)"
+    />
+  </div>
+  
+  <div class="product-actions">
+    <button 
+      (click)="onViewDetails()"
+      class="btn-primary"
+    >
+      Ver Comparación
+    </button>
+  </div>
+</div>

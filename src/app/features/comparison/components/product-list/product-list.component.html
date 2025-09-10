@@ -1,0 +1,33 @@
+<div class="product-list-container">
+  <div *ngIf="loading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Cargando productos...</p>
+  </div>
+
+  <div *ngIf="!loading && products.length === 0 && query" class="no-results">
+    <div class="no-results-icon">🔍</div>
+    <h3>No se encontraron productos</h3>
+    <p>Intenta con otros términos de búsqueda</p>
+  </div>
+
+  <div *ngIf="!loading && products.length > 0" class="results-container">
+    <div class="results-header">
+      <h2>Resultados de búsqueda</h2>
+      <p class="results-count">{{ getResultsText() }}</p>
+    </div>
+    
+    <div class="products-grid">
+      <app-product-card
+        *ngFor="let product of products; trackBy: trackByProductId"
+        [product]="product"
+        (viewDetails)="onProductSelect($event)"
+      ></app-product-card>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !query" class="empty-state">
+    <div class="empty-state-icon">🛍️</div>
+    <h3>Busca productos para comparar precios</h3>
+    <p>Encuentra las mejores ofertas en diferentes tiendas</p>
+  </div>
+</div>

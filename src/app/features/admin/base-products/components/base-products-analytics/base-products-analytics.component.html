@@ -1,0 +1,245 @@
+<div class="p-6 bg-white min-h-screen">
+  <!-- Header -->
+  <header class="mb-8">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div class="flex-1">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Analytics de Productos Base</h1>
+        <p class="text-gray-600">Estadísticas y métricas de los productos base del sistema</p>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <button 
+          type="button" 
+          class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+          (click)="refreshAnalytics()"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="isLoading" class="inline-block w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mr-2"></span>
+          Actualizar
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="space-y-8">
+    <!-- Loading State -->
+    <div class="flex flex-col items-center justify-center gap-4 py-12" *ngIf="isLoading">
+      <div class="w-8 h-8 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+      <p class="text-gray-600">Cargando analytics...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="flex items-center justify-center py-12" *ngIf="error && !isLoading">
+      <div class="text-center">
+        <i class="icon-error text-5xl text-red-500 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Error</h3>
+        <p class="text-gray-600 mb-4">{{ error }}</p>
+        <button 
+          type="button" 
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          (click)="loadAnalytics()"
+        >
+          Reintentar
+        </button>
+      </div>
+    </div>
+
+    <!-- Analytics Content -->
+    <div *ngIf="analytics && !isLoading">
+      <!-- Overview Cards -->
+      <section class="mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Total Products -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <i class="icon-box text-blue-600 text-xl"></i>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold text-gray-900">{{ analytics.totalBaseProducts }}</h3>
+                <p class="text-sm text-gray-600">Total Productos Base</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Products -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <i class="icon-check text-green-600 text-xl"></i>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold text-gray-900">{{ analytics.activeBaseProducts }}</h3>
+                <p class="text-sm text-gray-600">Productos Activos</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inactive Products -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                <i class="icon-pause text-yellow-600 text-xl"></i>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold text-gray-900">{{ analytics.inactiveBaseProducts }}</h3>
+                <p class="text-sm text-gray-600">Productos Inactivos</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Products with Images -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                <i class="icon-image text-purple-600 text-xl"></i>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold text-gray-900">{{ analytics.productsWithImages }}</h3>
+                <p class="text-sm text-gray-600">Con Imágenes</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Additional Metrics -->
+      <section class="mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Products without Images -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                <i class="icon-image-off text-gray-600"></i>
+              </div>
+              <div>
+                <h4 class="text-lg font-semibold text-gray-900">{{ analytics.productsWithoutImages }}</h4>
+                <p class="text-xs text-gray-500">Sin Imágenes</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Average Stores per Product -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <i class="icon-store text-blue-600"></i>
+              </div>
+              <div>
+                <h4 class="text-lg font-semibold text-gray-900">{{ analytics.averageStoresPerProduct | number:'1.1-1' }}</h4>
+                <p class="text-xs text-gray-500">Promedio Tiendas/Producto</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Average Variants per Product -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                <i class="icon-layers text-green-600"></i>
+              </div>
+              <div>
+                <h4 class="text-lg font-semibold text-gray-900">{{ analytics.averageVariantsPerProduct | number:'1.1-1' }}</h4>
+                <p class="text-xs text-gray-500">Promedio Variantes/Producto</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Last Updated -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                <i class="icon-clock text-orange-600"></i>
+              </div>
+              <div>
+                <h4 class="text-lg font-semibold text-gray-900">{{ analytics.lastUpdated | date:'short' }}</h4>
+                <p class="text-xs text-gray-500">Última Actualización</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Distribution Charts -->
+      <section>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Products by Brand -->
+          <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-900">Productos por Marca</h3>
+            </div>
+            <div class="p-6">
+              <div class="space-y-4">
+                <div *ngFor="let item of getProductsByBrandArray()" class="flex items-center justify-between gap-4">
+                  <div class="flex items-center gap-3 min-w-0 flex-1">
+                    <span class="text-sm font-medium text-gray-900">{{ item.brand }}</span>
+                  </div>
+                  <div class="flex items-center gap-3 flex-1">
+                    <div class="flex-1 bg-gray-200 rounded-full h-2">
+                      <div 
+                        class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                        [style.width.%]="getPercentage(item.count, analytics.totalBaseProducts)"
+                      ></div>
+                    </div>
+                    <span class="text-sm text-gray-600 w-12 text-right">{{ item.count }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Products by Category -->
+          <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-900">Productos por Categoría</h3>
+            </div>
+            <div class="p-6">
+              <div class="space-y-4">
+                <div *ngFor="let item of getProductsByCategoryArray()" class="flex items-center justify-between gap-4">
+                  <div class="flex items-center gap-3 min-w-0 flex-1">
+                    <span class="text-sm font-medium text-gray-900">{{ item.category }}</span>
+                  </div>
+                  <div class="flex items-center gap-3 flex-1">
+                    <div class="flex-1 bg-gray-200 rounded-full h-2">
+                      <div 
+                        class="bg-green-600 h-2 rounded-full transition-all duration-300"
+                        [style.width.%]="getPercentage(item.count, analytics.totalBaseProducts)"
+                      ></div>
+                    </div>
+                    <span class="text-sm text-gray-600 w-12 text-right">{{ item.count }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Products by Status -->
+          <div class="bg-white border border-gray-200 rounded-lg overflow-hidden lg:col-span-2">
+            <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-900">Productos por Estado</h3>
+            </div>
+            <div class="p-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div *ngFor="let item of getProductsByStatusArray()" class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <div class="flex items-center justify-between mb-2">
+                    <h4 class="text-sm font-medium text-gray-900">{{ item.status | titlecase }}</h4>
+                    <span class="text-sm text-gray-600">{{ item.count }}</span>
+                  </div>
+                  <div class="bg-gray-200 rounded-full h-2">
+                    <div 
+                      class="h-2 rounded-full transition-all duration-300"
+                      [class.bg-green-600]="item.status === 'active'"
+                      [class.bg-red-600]="item.status === 'inactive'"
+                      [style.width.%]="getPercentage(item.count, analytics.totalBaseProducts)"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

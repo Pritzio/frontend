@@ -1,0 +1,37 @@
+<div class="product-comparison-page">
+  <div class="page-container">
+    <div class="page-header">
+      <button (click)="onBackToSearch()" class="back-button">
+        ← Volver a búsqueda
+      </button>
+    </div>
+
+    <div *ngIf="loading" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Cargando comparación...</p>
+    </div>
+
+    <div *ngIf="error" class="error-state">
+      <div class="error-icon">⚠️</div>
+      <h3>Error al cargar el producto</h3>
+      <p>No se pudo cargar la información del producto. Intenta nuevamente.</p>
+      <button (click)="onBackToSearch()" class="retry-button">
+        Volver a búsqueda
+      </button>
+    </div>
+
+    <div *ngIf="!comparison && !loading && !error" class="no-data-state">
+      <div class="no-data-icon">📦</div>
+      <h3>No hay datos de comparación</h3>
+      <p>No se pudieron cargar los datos del producto.</p>
+      <button (click)="onBackToSearch()" class="retry-button">
+        Volver a búsqueda
+      </button>
+    </div>
+
+    <app-product-comparison
+      *ngIf="comparison && !loading && !error"
+      [comparison]="comparison"
+    ></app-product-comparison>
+  </div>
+</div>

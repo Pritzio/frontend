@@ -31,6 +31,10 @@ const routes: Routes = [
         loadChildren: () => import('./store-products/store-products.module').then(m => m.StoreProductsModule)
       },
       {
+        path: 'base-products',
+        loadChildren: () => import('./base-products/base-products.module').then(m => m.BaseProductsModule)
+      },
+      {
         path: 'scraping',
         loadChildren: () => import('./scraping/scraping.module').then(m => m.ScrapingModule)
       },
