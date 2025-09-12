@@ -74,7 +74,6 @@ export class StoreProductDetailComponent implements OnInit, OnDestroy {
     if (!this.storeProduct) return;
     
     // Note: API v2.0 doesn't have status updates, this is a placeholder
-    console.log('Status change requested:', status);
   }
   
   /**

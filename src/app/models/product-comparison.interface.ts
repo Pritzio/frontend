@@ -1,24 +1,43 @@
 export interface Product {
   id: string;
   name: string;
-  brand: string;
-  model: string | null;
-  fullName: string;
+  brand: string | null;
+  model?: string | null;
+  fullName?: string;
   storeCount: number;
   totalVariants: number;
-  image: string | null;
-  description: string | null;
-  specifications: {
+  image?: string | null;
+  specifications?: {
     rating: number | null;
     categories: string[];
-    originalData: {
-      brand?: string;
-      categories?: string[];
-      highResImageUrl?: string | null;
-      [key: string]: any;
-    };
+    originalData: Record<string, any>;
   };
   createdAt?: string;
+  priceRange: {
+    min: number;
+    max: number;
+    avg: number;
+  };
+  stores: StoreProductInfo[];
+}
+
+export interface StoreProductInfo {
+  store: {
+    id: string;
+    name: string;
+    website: string;
+    type: string;
+    isVerified: boolean;
+  };
+  product: {
+    id: string;
+    name: string;
+    price: number;
+    url: string;
+    image: string | null;
+    lastScraped: string;
+  };
+  price: number;
 }
 
 export interface Store {

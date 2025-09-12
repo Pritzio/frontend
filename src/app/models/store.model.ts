@@ -42,7 +42,77 @@ export interface IStore {
   verifiedAt?: Date;
   verifiedBy?: string;
   metadata?: Record<string, any>;
-  displayName: string; // New in v2.2
+  displayName?: string;
+  createdBy?: string;
   createdAt: Date;
   updatedAt: Date;
+  // Additional fields from API
+  storeProductsCount?: number;
+  physicalLocationsCount?: number;
+  creator?: {
+    id: string;
+    username: string;
+    email: string;
+    roles: Array<{
+      id: string;
+      name: string;
+      displayName: string;
+    }>;
+  };
+  verificationStatus?: string;
+}
+
+export interface IStoreLocation {
+  id: string;
+  storeId: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  phone?: string;
+  hours?: string;
+  status: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IStoreAnalytics {
+  id: string;
+  name: string;
+  totalProducts: number;
+  activeProducts: number;
+  totalLocations: number;
+  activeLocations: number;
+  averageOnlinePrice: number;
+  averagePhysicalPrice: number;
+  priceComparison: {
+    onlineOnly: number;
+    physicalOnly: number;
+    both: number;
+    priceDifference: number;
+  };
+  lastActivity: Date;
+  scrapingStatus: {
+    lastScraped: Date;
+    productsNeedingScraping: number;
+    scrapingErrors: number;
+  };
+}
+
+export interface IStoreFilters {
+  page?: number;
+  limit?: number;
+  type?: StoreType;
+  status?: StoreStatus;
+  category?: StoreCategory;
+  country?: string;
+  isVerified?: boolean;
+  hasPhysicalLocations?: boolean;
+  search?: string;
+  createdAfter?: Date;
+  createdBefore?: Date;
 }

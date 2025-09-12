@@ -11,7 +11,7 @@
       <div
         *ngIf="!getProductImage()"
         class="css-placeholder"
-        [style.background-color]="getBrandColor(comparison.product.brand)"
+        [style.background-color]="getBrandColor(comparison.product.brand || '')"
       >
         <div class="placeholder-content">
           <div class="placeholder-icon">📦</div>
@@ -36,7 +36,7 @@
   
   <div class="stores-comparison" *ngIf="comparison.stores">
     <h3 class="stores-title">
-      Disponible en {{ getStoresCountText() }}
+      Tiendas disponibles
     </h3>
     
     <div class="stores-list">

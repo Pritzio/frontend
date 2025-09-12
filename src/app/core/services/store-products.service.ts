@@ -62,11 +62,9 @@ export class StoreProductsService {
     
     return this._http.get<IStoreProductsResponse>(this._baseUrl, { params }).pipe(
       tap(response => {
-
         if (response && response.data) {
           this._storeProducts.next(response.data);
         } else {
-          console.warn('StoreProductsService - No data in response:', response);
           this._storeProducts.next([]);
         }
       }),
@@ -181,6 +179,40 @@ export class StoreProductsService {
     return this._http.get<IStoreProductsResponse>(`${this._baseUrl}/admin`, { params }).pipe(
       tap(response => {
         this._storeProducts.next(response.data);
+      }),
+      catchError(error => this._handleError(error)),
+      finalize(() => this._setLoading(false))
+    );
+  }
+
+  /**
+   * Get unassociated store products (products without base product association)
+   */
+  getUnassociated(filters?: Partial<IStoreProductFilters>): Observable<IStoreProductsResponse> {
+    this._setLoading(true);
+    this._clearError();
+    
+    let params = new HttpParams();
+    
+    if (filters) {
+      if (filters.page) params = params.set('page', filters.page.toString());
+      if (filters.limit) params = params.set('limit', filters.limit.toString());
+      if (filters.search) params = params.set('search', filters.search);
+      if (filters.createdBy) params = params.set('createdBy', filters.createdBy);
+      if (filters.storeId) params = params.set('storeId', filters.storeId);
+      if (filters.storeName) params = params.set('storeName', filters.storeName);
+      if (filters.dateFrom) params = params.set('dateFrom', filters.dateFrom.toISOString());
+      if (filters.dateTo) params = params.set('dateTo', filters.dateTo.toISOString());
+    }
+    
+    return this._http.get<IStoreProductsResponse>(`${environment.apiUrl}/admin/products/store-products/unassociated`, { params }).pipe(
+      tap(response => {
+        if (response && response.data) {
+          this._storeProducts.next(response.data);
+        } else {
+          console.warn('StoreProductsService - No data in unassociated response:', response);
+          this._storeProducts.next([]);
+        }
       }),
       catchError(error => this._handleError(error)),
       finalize(() => this._setLoading(false))

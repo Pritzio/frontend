@@ -48,10 +48,6 @@ export class SearchPageComponent implements OnInit {
     this.onFilterChange({ brand: target.value || undefined });
   }
 
-  onAvailabilityFilterChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    this.onFilterChange({ availability: target.value || undefined });
-  }
 
   onProductSelect(productId: string): void {
     this.router.navigate(['/comparison/product', productId]);
@@ -62,17 +58,6 @@ export class SearchPageComponent implements OnInit {
     this.productComparisonService.searchProducts(this.query, this.filters)
       .subscribe({
         next: (response) => {
-          console.log('Search response:', response);
-          console.log('First product:', response.data[0]);
-          
-          // Debug image data
-          if (response.data.length > 0) {
-            const firstProduct = response.data[0];
-            console.log('First product image:', firstProduct.image);
-            console.log('First product specifications:', firstProduct.specifications);
-            console.log('First product highResImageUrl:', firstProduct.specifications?.originalData?.highResImageUrl);
-          }
-          
           this.products = response.data;
           this.total = response.total;
           this.loading = false;

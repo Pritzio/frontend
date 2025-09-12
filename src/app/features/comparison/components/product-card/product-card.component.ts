@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Product } from '../../../../models/product-comparison.interface';
+import { Product, StoreProductInfo } from '../../../../models/product-comparison.interface';
 import { ImagePlaceholderService } from '../../../../core/services/image-placeholder.service';
 
 @Component({
@@ -31,35 +31,23 @@ export class ProductCardComponent {
   }
 
   getPlaceholderImage(): string | null {
-    return this.imagePlaceholderService.generateBrandPlaceholder(this.product.brand);
+    return this.imagePlaceholderService.generateBrandPlaceholder(this.product.brand || '');
   }
 
   getBrandColor(): string {
-    return this.imagePlaceholderService.getBrandColor(this.product.brand);
+    return this.imagePlaceholderService.getBrandColor(this.product.brand || '');
   }
 
   getProductImage(): string | null {
-    console.log('=== IMAGE DEBUG ===');
-    console.log('Product:', this.product.name);
-    console.log('Product.image:', this.product.image);
-    console.log('Product.specifications:', this.product.specifications);
-    console.log('Product.specifications?.originalData:', this.product.specifications?.originalData);
-    console.log('Product.specifications?.originalData?.highResImageUrl:', this.product.specifications?.originalData?.highResImageUrl);
-    
     // First check for high-res image in specifications
-    if (this.product.specifications?.originalData?.highResImageUrl) {
-      console.log('✅ Using high-res image:', this.product.specifications.originalData.highResImageUrl);
-      return this.product.specifications.originalData.highResImageUrl;
+    if (this.product.specifications?.originalData?.['highResImageUrl']) {
+      return this.product.specifications.originalData['highResImageUrl'];
     }
     
     // Then check for basic image
     if (this.product.image) {
-      console.log('✅ Using basic image:', this.product.image);
       return this.product.image;
     }
-    
-    // Debug: Check if there are any other image fields
-    console.log('❌ No image found. Full product object:', this.product);
     
     // Return null to show placeholder
     return null;
@@ -80,5 +68,40 @@ export class ProductCardComponent {
     if (img.naturalWidth < 100 || img.naturalHeight < 100) {
       img.classList.add('small-image');
     }
+  }
+
+  hasStoreInfo(): boolean {
+    return !!(this.product?.storeCount || this.product?.totalVariants || this.product?.priceRange || (this.product?.stores && this.product.stores.length > 0));
+  }
+
+  formatPrice(price: number): string {
+    return new Intl.NumberFormat('es-CL', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(price);
+  }
+
+  getTopStores(): StoreProductInfo[] {
+    if (!this.product.stores || this.product.stores.length === 0) {
+      return [];
+    }
+    
+    // Sort by price (ascending) and return top 3 stores
+    return this.product.stores
+      .sort((a, b) => a.price - b.price)
+      .slice(0, 3);
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-CL', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  }
+
+  trackByStoreId(index: number, store: StoreProductInfo): string {
+    return store.store.id;
   }
 }

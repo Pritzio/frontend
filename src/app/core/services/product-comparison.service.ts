@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 import { 
   ProductSearchResponse, 
   ProductComparisonResponse, 
-  SearchFilters 
+  SearchFilters
 } from '../../models/product-comparison.interface';
 
 @Injectable({
@@ -37,6 +37,7 @@ export class ProductComparisonService {
     if (filters?.availability) {
       params += `&availability=${encodeURIComponent(filters.availability)}`;
     }
+    
 
     return this.http.get<ProductSearchResponse>(`${this.apiUrl}/search?${params}`, {
       headers: this.getAuthHeaders()
@@ -49,9 +50,6 @@ export class ProductComparisonService {
    * @returns Observable with product comparison data
    */
   getProductComparison(baseProductId: string): Observable<ProductComparisonResponse> {
-    console.log('Requesting product comparison for ID:', baseProductId);
-    console.log('API URL:', `${this.apiUrl}/${baseProductId}`);
-    
     return this.http.get<ProductComparisonResponse>(`${this.apiUrl}/${baseProductId}`, {
       headers: this.getAuthHeaders()
     });
@@ -71,6 +69,7 @@ export class ProductComparisonService {
       })
     );
   }
+
 
   /**
    * Get authentication headers

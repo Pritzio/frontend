@@ -7,6 +7,7 @@ import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
 import { StoreProductsService } from '../../../../../core/services/store-products.service';
 import { BaseProductsService } from '../../../../../core/services/base-products.service';
 import { ProductSimilarityService, SimilarityResult } from '../../../../../core/services/product-similarity.service';
+import { StoresService } from '../../../../../core/services/stores.service';
 import { AlertService } from '../../../../../core/services/alert.service';
 import { TranslatePipe } from '../../../../../shared/pipes/translate.pipe';
 import { PriceFormatPipe } from '../../../../../shared/pipes/price-format.pipe';
@@ -15,6 +16,7 @@ import {
   IStoreProductFilters
 } from '../../../../../models/store-product.model';
 import { IBaseProduct } from '../../../../../models/base-product.model';
+import { IStore } from '../../../../../models/store.model';
 import { IPaginatedResponse } from '../../../../../models/api.model';
 
 @Component({
@@ -32,6 +34,8 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
   public error: string | null = null;
   public selectedStoreProducts: string[] = [];
   public showFilters = false;
+  public availableStores: IStore[] = [];
+  public isLoadingStores: boolean = true;
   
   // Association modal properties
   public showAssociationModal = false;
@@ -70,6 +74,7 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
     private _storeProductsService: StoreProductsService,
     private _baseProductsService: BaseProductsService,
     private _productSimilarityService: ProductSimilarityService,
+    private _storesService: StoresService,
     private _alertService: AlertService,
     private _formBuilder: FormBuilder
   ) {
@@ -79,6 +84,7 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
   
   ngOnInit(): void {
     this._loadProducts();
+    this._loadStores();
     this._setupFormSubscriptions();
   }
   
@@ -95,7 +101,7 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
   public loadProducts(): void {
     this._loadProducts();
   }
-  
+
   /**
    * Toggle product selection
    */
@@ -454,7 +460,7 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
   private _createFiltersForm(): FormGroup {
     return this._formBuilder.group({
       search: [''],
-      storeName: [''],
+      storeId: [''],
       createdBy: [''],
       dateFrom: [''],
       dateTo: [''],
@@ -487,37 +493,94 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       takeUntil(this._destroy$)
     ).subscribe(() => {
-      // Auto-apply filters when they change (except search which has its own debounce)
-      const searchValue = this.filtersForm.get('search')?.value;
-      if (!searchValue) {
-        this.currentPage = 1;
-        this._loadProducts();
-      }
+      this.currentPage = 1;
+      this._loadProducts();
     });
   }
   
+  private _loadStores(): void {
+    this.isLoadingStores = true;
+    
+    this._storesService.getStores({ limit: 100 }).subscribe({
+      next: (response) => {
+        if (Array.isArray(response.data)) {
+          this.availableStores = response.data;
+        } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
+          this.availableStores = response.data.data;
+        } else if (response.data && Array.isArray(response.data)) {
+          this.availableStores = response.data;
+        } else {
+          this._loadStoresFromProducts();
+          return;
+        }
+        
+        this.isLoadingStores = false;
+      },
+      error: () => {
+        this._loadStoresFromProducts();
+      }
+    });
+  }
+
+  private _loadStoresFromProducts(): void {
+    this._storeProductsService.getAll({ limit: 200 }).subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          const storesMap = new Map();
+          
+          response.data.forEach((product) => {
+            if (product.store && product.store.id) {
+              storesMap.set(product.store.id, {
+                id: product.store.id,
+                name: product.store.name || product.store.displayName,
+                displayName: product.store.displayName || product.store.name,
+                website: product.store.website,
+                isVerified: product.store.isVerified
+              });
+            }
+          });
+          
+          this.availableStores = Array.from(storesMap.values());
+        } else {
+          this.availableStores = [];
+        }
+        
+        this.isLoadingStores = false;
+      },
+      error: () => {
+        this.availableStores = [];
+        this.isLoadingStores = false;
+      }
+    });
+  }
+
+
   private _loadProducts(): void {
     this.isLoading = true;
     this.error = null;
     
+    const formFilters = this._getFormFilters();
+    
     const filters: IStoreProductFilters = {
       page: this.currentPage,
       limit: this.itemsPerPage,
-      ...this._getFormFilters()
+      ...formFilters
     };
     
-    // Remove unassociated from backend filters since we'll handle it client-side
+    const isUnassociatedFilter = filters.unassociated;
     const backendFilters = { ...filters };
-    const isUnassociatedFilter = backendFilters.unassociated;
-    delete backendFilters.unassociated;
     
-    this._storeProductsService.getAll(backendFilters).subscribe({
-      next: (response) => {
-
-        
-        // Handle different response structures
+    if (isUnassociatedFilter) {
+      delete backendFilters.unassociated;
+    }
+    
+    const serviceCall = isUnassociatedFilter 
+      ? this._storeProductsService.getUnassociated(backendFilters)
+      : this._storeProductsService.getAll(backendFilters);
+    
+    serviceCall.subscribe({
+      next: (response: any) => {
         if (response && typeof response === 'object') {
-          // Check if response has the expected structure
           if (response.data && Array.isArray(response.data)) {
             this.storeProducts = response.data;
             this.totalItems = response.total || response.data.length;
@@ -525,7 +588,6 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
             this.hasNext = (response.page || 1) < this.totalPages;
             this.hasPrev = (response.page || 1) > 1;
           } 
-          // Check if response is directly an array (fallback)
           else if (Array.isArray(response)) {
             this.storeProducts = response;
             this.totalItems = response.length;
@@ -533,7 +595,6 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
             this.hasNext = false;
             this.hasPrev = false;
           }
-          // Check if response has a different structure
           else if (response.data && Array.isArray(response.data)) {
             this.storeProducts = response.data as IStoreProduct[];
             this.totalItems = response.total || (response.data as IStoreProduct[]).length;
@@ -558,7 +619,7 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
           this.hasPrev = false;
         }
         
-        // Apply client-side filtering for unassociated products
+        // Apply client-side filtering for unassociated products if needed
         if (isUnassociatedFilter) {
           this.storeProducts = this.storeProducts.filter(product => !product.baseProductId);
           this.totalItems = this.storeProducts.length;
@@ -566,11 +627,9 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
           this.hasNext = this.currentPage < this.totalPages;
           this.hasPrev = this.currentPage > 1;
         }
-
       },
       error: (error: any) => {
         console.error('Error loading store products:', error);
-
         
         if (error.status === 404) {
           this.error = 'PRODUCTS.ENDPOINT_NOT_AVAILABLE';
@@ -594,11 +653,9 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
     const formValue = this.filtersForm.value;
     const filters: Partial<IStoreProductFilters> = {};
     
-    // Only include non-empty values
     Object.keys(formValue).forEach(key => {
       const value = formValue[key];
       if (value !== null && value !== undefined && value !== '') {
-        // Handle date conversion for dateFrom and dateTo
         if (key === 'dateFrom' || key === 'dateTo') {
           (filters as any)[key] = new Date(value);
         } else {
@@ -607,7 +664,6 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
       }
     });
     
-    // Special handling for boolean filters (like unassociated)
     if (formValue.unassociated === true) {
       filters.unassociated = true;
     }
@@ -615,7 +671,3 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
     return filters;
   }
 }
-
-
-
-

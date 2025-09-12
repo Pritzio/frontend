@@ -1,37 +1,58 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil, finalize } from 'rxjs/operators';
 
-import { AdminService, Store } from '../../../core/services/admin.service';
-import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
-import { I18nService } from '../../../core/services/i18n.service';
+import { StoresService } from '../../../core/services/stores.service';
 import { AlertService } from '../../../core/services/alert.service';
+import { IStore, IStoreFilters, StoreType, StoreStatus, StoreCategory } from '../../../models/store.model';
 
 @Component({
   selector: 'app-stores',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './stores.component.html',
   styleUrls: ['./stores.component.scss']
 })
 export class StoresComponent implements OnInit, OnDestroy {
-  private _destroy$ = new Subject<void>();
+  public filtersForm: FormGroup;
+  public stores: IStore[] = [];
+  public isLoading = false;
+  public error: string | null = null;
+  public showFilters = false;
 
-  public stores: Store[] = [];
-  public isLoading = true;
-  public searchTerm = '';
-  public statusFilter = '';
-  public categoryFilter = '';
+  // Pagination properties
+  public currentPage = 1;
+  public itemsPerPage = 20;
+  public totalItems = 0;
+  public totalPages = 0;
+  public hasNext = false;
+  public hasPrev = false;
+
+  // Enums for template
+  public StoreType = StoreType;
+  public StoreStatus = StoreStatus;
+  public StoreCategory = StoreCategory;
+  public Math = Math;
+
+  private _destroy$ = new Subject<void>();
+  private _searchSubject = new Subject<string>();
 
   constructor(
-    private _adminService: AdminService,
-    private _i18nService: I18nService,
-    private _alertService: AlertService
-  ) {}
+    private _formBuilder: FormBuilder,
+    private _storesService: StoresService,
+    private _alertService: AlertService,
+    private _router: Router
+  ) {
+    this.filtersForm = this._createFiltersForm();
+    this._setupSearchDebounce();
+  }
 
   ngOnInit(): void {
     this._loadStores();
+    this._setupFormSubscriptions();
   }
 
   ngOnDestroy(): void {
@@ -39,118 +60,299 @@ export class StoresComponent implements OnInit, OnDestroy {
     this._destroy$.complete();
   }
 
-  private _loadStores(): void {
-    this.isLoading = true;
-    this._adminService.stores$
-      .pipe(takeUntil(this._destroy$))
-      .subscribe(stores => {
-        this.stores = stores;
-        this.isLoading = false;
-      });
+  // ===== Public Methods =====
 
-    this._adminService.getStores().subscribe();
+  public loadStores(): void {
+    this._loadStores();
   }
 
-  public get filteredStores(): Store[] {
-    let filtered = this.stores;
-
-    if (this.searchTerm) {
-      const search = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(store => 
-        store.name.toLowerCase().includes(search) ||
-        store.description?.toLowerCase().includes(search) ||
-        store.website.toLowerCase().includes(search)
-      );
-    }
-
-    if (this.statusFilter) {
-      filtered = filtered.filter(store => store.status === this.statusFilter);
-    }
-
-    if (this.categoryFilter) {
-      filtered = filtered.filter(store => store.category === this.categoryFilter);
-    }
-
-    return filtered;
+  public toggleFilters(): void {
+    this.showFilters = !this.showFilters;
   }
 
-  public async verifyStore(store: Store): Promise<void> {
-    const message = this._i18nService.translate('STORES.CONFIRMATIONS.VERIFY', { name: store.name });
-    
+  public clearFilters(): void {
+    this.filtersForm.reset();
+    this.currentPage = 1;
+    this._loadStores();
+  }
+
+  public applyFilters(): void {
+    this.currentPage = 1;
+    this._loadStores();
+  }
+
+  public goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this._loadStores();
+    }
+  }
+
+  public getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxPages = 5;
+
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxPages / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxPages - 1);
+
+    if (endPage - startPage + 1 < maxPages) {
+      startPage = Math.max(1, endPage - maxPages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  public viewStore(store: IStore): void {
+    this._router.navigate(['/admin/stores', store.id]);
+  }
+
+  public editStore(store: IStore): void {
+    this._router.navigate(['/admin/stores', store.id, 'edit']);
+  }
+
+  public async verifyStore(store: IStore): Promise<void> {
     const confirmed = await this._alertService.confirm(
-      message,
-      '¿Verificar tienda?',
+      `¿Verificar la tienda "${store.name}"?`,
+      'Verificar Tienda',
       'Sí, verificar',
       'Cancelar'
     );
 
     if (confirmed) {
-      this._adminService.verifyStore(store.id).subscribe({
+      this.isLoading = true;
+      this._storesService.verifyStore(store.id).pipe(
+        finalize(() => this.isLoading = false)
+      ).subscribe({
         next: () => {
+          this._alertService.success('Tienda verificada exitosamente');
           this._loadStores();
-          this._alertService.success('Tienda verificada exitosamente', 'Verificación Completada');
         },
-        error: (error) => {
-          const errorMessage = this._i18nService.translate('STORES.ERRORS.VERIFY');
-          this._alertService.error(errorMessage, 'Error');
+        error: (err) => {
+          this._alertService.error(err.message || 'Error al verificar la tienda');
         }
       });
     }
   }
 
-  public async deleteStore(store: Store): Promise<void> {
-    const message = this._i18nService.translate('STORES.CONFIRMATIONS.DELETE', { name: store.name });
-    
+  public async suspendStore(store: IStore): Promise<void> {
     const confirmed = await this._alertService.confirm(
-      message,
-      '¿Eliminar tienda?',
+      `¿Suspender la tienda "${store.name}"?`,
+      'Suspender Tienda',
+      'Sí, suspender',
+      'Cancelar'
+    );
+
+    if (confirmed) {
+      this.isLoading = true;
+      this._storesService.suspendStore(store.id).pipe(
+        finalize(() => this.isLoading = false)
+      ).subscribe({
+        next: () => {
+          this._alertService.success('Tienda suspendida exitosamente');
+          this._loadStores();
+        },
+        error: (err) => {
+          this._alertService.error(err.message || 'Error al suspender la tienda');
+        }
+      });
+    }
+  }
+
+  public async reactivateStore(store: IStore): Promise<void> {
+    const confirmed = await this._alertService.confirm(
+      `¿Reactivar la tienda "${store.name}"?`,
+      'Reactivar Tienda',
+      'Sí, reactivar',
+      'Cancelar'
+    );
+
+    if (confirmed) {
+      this.isLoading = true;
+      this._storesService.reactivateStore(store.id).pipe(
+        finalize(() => this.isLoading = false)
+      ).subscribe({
+        next: () => {
+          this._alertService.success('Tienda reactivada exitosamente');
+          this._loadStores();
+        },
+        error: (err) => {
+          this._alertService.error(err.message || 'Error al reactivar la tienda');
+        }
+      });
+    }
+  }
+
+  public createStore(): void {
+    this._router.navigate(['/admin/stores/new']);
+  }
+
+  public async deleteStore(store: IStore): Promise<void> {
+    const confirmed = await this._alertService.confirm(
+      `¿Eliminar la tienda "${store.name}"? Esta acción no se puede deshacer.`,
+      'Eliminar Tienda',
       'Sí, eliminar',
       'Cancelar'
     );
 
     if (confirmed) {
-      this._adminService.deleteStore(store.id).subscribe({
+      this.isLoading = true;
+      this._storesService.deleteStore(store.id).pipe(
+        finalize(() => this.isLoading = false)
+      ).subscribe({
         next: () => {
+          this._alertService.success('Tienda eliminada exitosamente');
           this._loadStores();
-          this._alertService.success('Tienda eliminada exitosamente', 'Eliminación Completada');
         },
-        error: (error) => {
-          const errorMessage = this._i18nService.translate('STORES.ERRORS.DELETE');
-          this._alertService.error(errorMessage, 'Error');
+        error: (err) => {
+          this._alertService.error(err.message || 'Error al eliminar la tienda');
         }
       });
     }
   }
 
-  public getStatusColor(status: string): string {
+  public getStatusBadgeClass(status: StoreStatus): string {
     switch (status) {
-      case 'ACTIVE': return 'text-success-600 bg-success-50';
-      case 'INACTIVE': return 'text-gray-600 bg-gray-50';
-      case 'PENDING_VERIFICATION': return 'text-warning-600 bg-warning-50';
-      default: return 'text-gray-600 bg-gray-50';
+      case StoreStatus.ACTIVE:
+        return 'bg-green-100 text-green-800';
+      case StoreStatus.INACTIVE:
+        return 'bg-gray-100 text-gray-800';
+      case StoreStatus.SUSPENDED:
+        return 'bg-red-100 text-red-800';
+      case StoreStatus.PENDING_VERIFICATION:
+        return 'bg-yellow-100 text-yellow-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   }
 
-  public getTypeColor(type: string): string {
+  public getTypeBadgeClass(type: StoreType): string {
     switch (type) {
-      case 'ONLINE': return 'text-primary-600 bg-primary-50';
-      case 'PHYSICAL': return 'text-success-600 bg-success-50';
-      case 'HYBRID': return 'text-warning-600 bg-warning-50';
-      default: return 'text-gray-600 bg-gray-50';
+      case StoreType.ONLINE:
+        return 'bg-blue-100 text-blue-800';
+      case StoreType.PHYSICAL:
+        return 'bg-green-100 text-green-800';
+      case StoreType.HYBRID:
+        return 'bg-purple-100 text-purple-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   }
 
-  public clearFilters(): void {
-    this.searchTerm = '';
-    this.statusFilter = '';
-    this.categoryFilter = '';
+  public getCategoryDisplayName(category: StoreCategory): string {
+    const categoryMap: Record<StoreCategory, string> = {
+      [StoreCategory.ELECTRONICS]: 'Electrónicos',
+      [StoreCategory.CLOTHING]: 'Ropa',
+      [StoreCategory.HOME_AND_GARDEN]: 'Hogar y Jardín',
+      [StoreCategory.SPORTS]: 'Deportes',
+      [StoreCategory.BEAUTY]: 'Belleza',
+      [StoreCategory.BOOKS]: 'Libros',
+      [StoreCategory.AUTOMOTIVE]: 'Automotriz',
+      [StoreCategory.FOOD_AND_BEVERAGES]: 'Alimentos y Bebidas',
+      [StoreCategory.HEALTH]: 'Salud',
+      [StoreCategory.TOYS]: 'Juguetes',
+      [StoreCategory.OTHER]: 'Otros'
+    };
+    return categoryMap[category] || category;
   }
 
-  public viewStore(store: Store): void {
-    // TODO: Implement view store functionality
+  // ===== Private Methods =====
+
+  private _createFiltersForm(): FormGroup {
+    return this._formBuilder.group({
+      search: [''],
+      type: [''],
+      status: [''],
+      category: [''],
+      country: [''],
+      isVerified: ['']
+    });
   }
 
-  public editStore(store: Store): void {
-    // TODO: Implement edit store functionality
+  private _setupSearchDebounce(): void {
+    this._searchSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      takeUntil(this._destroy$)
+    ).subscribe(value => {
+      this.currentPage = 1;
+      this._loadStores();
+    });
+  }
+
+  private _setupFormSubscriptions(): void {
+    this.filtersForm.get('search')?.valueChanges.pipe(
+      takeUntil(this._destroy$)
+    ).subscribe(value => {
+      this._searchSubject.next(value);
+    });
+
+    this.filtersForm.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      takeUntil(this._destroy$)
+    ).subscribe(() => {
+      this.currentPage = 1;
+      this._loadStores();
+    });
+  }
+
+  private _loadStores(): void {
+    this.isLoading = true;
+    this.error = null;
+
+    const formFilters = this._getFormFilters();
+    const filters: IStoreFilters = {
+      page: this.currentPage,
+      limit: this.itemsPerPage,
+      ...formFilters
+    };
+
+    this._storesService.getAdminStores(filters).subscribe({
+      next: (response) => {
+        if (response && response.stores) {
+          this.stores = response.stores || [];
+          this.totalItems = response.pagination?.total || 0;
+          this.totalPages = response.pagination?.pages || 0;
+          this.hasNext = response.pagination?.hasNext || false;
+          this.hasPrev = response.pagination?.hasPrev || false;
+        } else {
+          this.stores = [];
+          this.totalItems = 0;
+          this.totalPages = 0;
+          this.hasNext = false;
+          this.hasPrev = false;
+        }
+      },
+      error: (error) => {
+        this.error = 'Error al cargar las tiendas';
+        if (error.status === 404) {
+          this.error = 'No se encontraron tiendas';
+        } else if (error.status === 401) {
+          this.error = 'No autorizado';
+        } else if (error.status === 403) {
+          this.error = 'Sin permisos suficientes';
+        }
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
+  }
+
+  private _getFormFilters(): Partial<IStoreFilters> {
+    const formValue = this.filtersForm.value;
+    const filters: Partial<IStoreFilters> = {};
+
+    Object.keys(formValue).forEach(key => {
+      const value = formValue[key];
+      if (value !== null && value !== undefined && value !== '') {
+        filters[key as keyof IStoreFilters] = value;
+      }
+    });
+
+    return filters;
   }
 }

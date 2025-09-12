@@ -10,22 +10,6 @@
       [loading]="loading"
     ></app-search-bar>
 
-    <!-- Filtros básicos -->
-    <div class="filters-section">
-      <div class="filter-group">
-        <label for="availability-filter" class="filter-label">Disponibilidad:</label>
-        <select 
-          id="availability-filter"
-          (change)="onAvailabilityFilterChange($event)"
-          [disabled]="loading"
-          class="filter-select"
-        >
-          <option value="">Todas</option>
-          <option value="multiple">Múltiples tiendas</option>
-          <option value="single">Una tienda</option>
-        </select>
-      </div>
-    </div>
 
     <app-product-list
       [products]="products"

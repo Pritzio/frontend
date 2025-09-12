@@ -33,7 +33,6 @@ export class ProductComparisonPageComponent implements OnInit {
 
   private loadProductComparison(): void {
     const productId = this.route.snapshot.paramMap.get('id');
-    console.log('Loading product comparison for ID:', productId);
     
     if (!productId) {
       console.error('No product ID provided');
@@ -45,7 +44,6 @@ export class ProductComparisonPageComponent implements OnInit {
     this.productComparisonService.getProductComparison(productId)
       .subscribe({
         next: (response) => {
-          console.log('Product comparison loaded:', response);
           this.comparison = response;
           this.loading = false;
         },

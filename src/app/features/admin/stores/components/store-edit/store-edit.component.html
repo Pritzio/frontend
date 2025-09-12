@@ -1,0 +1,314 @@
+<div class="p-6 bg-white min-h-screen">
+  <!-- Header -->
+  <header class="mb-8">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div class="flex-1">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-2 text-sm mb-2">
+          <a routerLink="/admin/stores" class="text-blue-600 hover:underline">Gestión de Tiendas</a>
+          <span class="text-gray-400">/</span>
+          <span class="text-gray-600" *ngIf="isEditMode && store">{{ store.name }}</span>
+          <span class="text-gray-600" *ngIf="!isEditMode">Nueva Tienda</span>
+          <span class="text-gray-400">/</span>
+          <span class="text-gray-600">{{ isEditMode ? 'Editar' : 'Crear' }}</span>
+        </nav>
+        
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">
+          {{ isEditMode ? 'Editar Tienda' : 'Nueva Tienda' }}
+        </h1>
+        <p class="text-gray-600" *ngIf="isEditMode && store">ID: {{ store.id }}</p>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <button 
+          (click)="onCancel()"
+          class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+        >
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+          Cancelar
+        </button>
+        <button 
+          (click)="onSubmit()"
+          [disabled]="storeForm.invalid || isLoading"
+          class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" *ngIf="!isLoading">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <svg class="w-4 h-4 mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24" *ngIf="isLoading">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          {{ isLoading ? 'Guardando...' : (isEditMode ? 'Actualizar' : 'Crear') }}
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+    <div class="flex items-center">
+      <svg class="w-5 h-5 text-red-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <p class="text-red-800">{{ error }}</p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading && !store" class="flex items-center justify-center py-12">
+    <div class="text-center">
+      <svg class="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+      </svg>
+      <p class="text-gray-600">Cargando información de la tienda...</p>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form [formGroup]="storeForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading || store" class="max-w-4xl">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Basic Information -->
+      <div class="space-y-6">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Información Básica</h3>
+          
+          <!-- Store Name -->
+          <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+              Nombre de la Tienda *
+              <span *ngIf="isEditMode" class="text-xs text-gray-500 ml-2">(No editable - afecta productos asociados)</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              [readonly]="isEditMode"
+              [class]="isEditMode ? 'w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed' : 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'"
+              placeholder="Ej: Mi Tienda Online"
+            />
+            <div *ngIf="!isEditMode && storeForm.get('name')?.invalid && storeForm.get('name')?.touched" class="mt-1 text-sm text-red-600">
+              <p *ngIf="storeForm.get('name')?.errors?.['required']">El nombre es requerido</p>
+              <p *ngIf="storeForm.get('name')?.errors?.['minlength']">Mínimo 2 caracteres</p>
+              <p *ngIf="storeForm.get('name')?.errors?.['maxlength']">Máximo 100 caracteres</p>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-4">
+            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+              Descripción
+            </label>
+            <textarea
+              id="description"
+              formControlName="description"
+              rows="3"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Describe brevemente la tienda..."
+            ></textarea>
+            <div *ngIf="storeForm.get('description')?.invalid && storeForm.get('description')?.touched" class="mt-1 text-sm text-red-600">
+              <p *ngIf="storeForm.get('description')?.errors?.['maxlength']">Máximo 500 caracteres</p>
+            </div>
+          </div>
+
+          <!-- Website -->
+          <div class="mb-4">
+            <label for="website" class="block text-sm font-medium text-gray-700 mb-2">
+              Sitio Web
+            </label>
+            <input
+              type="url"
+              id="website"
+              formControlName="website"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="https://www.mitienda.com"
+            />
+            <div *ngIf="storeForm.get('website')?.invalid && storeForm.get('website')?.touched" class="mt-1 text-sm text-red-600">
+              <p *ngIf="storeForm.get('website')?.errors?.['pattern']">Ingresa una URL válida (ej: https://www.ejemplo.com)</p>
+            </div>
+          </div>
+
+          <!-- Logo URL -->
+          <div class="mb-4">
+            <label for="logo" class="block text-sm font-medium text-gray-700 mb-2">
+              Logo (URL)
+            </label>
+            <div class="flex gap-3">
+              <input
+                type="url"
+                id="logo"
+                formControlName="logo"
+                class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="https://www.mitienda.com/logo.png"
+              />
+              <div class="w-16 h-16 border border-gray-300 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center">
+                <img 
+                  *ngIf="storeForm.get('logo')?.value && storeForm.get('logo')?.valid" 
+                  [src]="storeForm.get('logo')?.value" 
+                  [alt]="'Logo de ' + storeForm.get('name')?.value"
+                  class="w-full h-full object-contain"
+                  (error)="onLogoError($event)"
+                />
+                <svg *ngIf="!storeForm.get('logo')?.value || storeForm.get('logo')?.invalid" class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+            </div>
+            <div *ngIf="storeForm.get('logo')?.invalid && storeForm.get('logo')?.touched" class="mt-1 text-sm text-red-600">
+              <p *ngIf="storeForm.get('logo')?.errors?.['pattern']">Ingresa una URL válida de imagen</p>
+            </div>
+            <p class="mt-1 text-xs text-gray-500">Vista previa del logo. Asegúrate de que la URL apunte a una imagen válida.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="space-y-6">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Información de Contacto</h3>
+          
+          <!-- Email -->
+          <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="contacto@mitienda.com"
+            />
+            <div *ngIf="storeForm.get('email')?.invalid && storeForm.get('email')?.touched" class="mt-1 text-sm text-red-600">
+              <p *ngIf="storeForm.get('email')?.errors?.['email']">Ingresa un email válido</p>
+            </div>
+          </div>
+
+          <!-- Phone -->
+          <div class="mb-4">
+            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+              Teléfono
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              formControlName="phone"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="+56 9 1234 5678"
+            />
+            <div *ngIf="storeForm.get('phone')?.invalid && storeForm.get('phone')?.touched" class="mt-1 text-sm text-red-600">
+              <p *ngIf="storeForm.get('phone')?.errors?.['pattern']">Ingresa un número de teléfono válido</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Store Configuration -->
+      <div class="space-y-6">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Configuración de la Tienda</h3>
+          
+          <!-- Store Type -->
+          <div class="mb-4">
+            <label for="type" class="block text-sm font-medium text-gray-700 mb-2">
+              Tipo de Tienda *
+            </label>
+            <select
+              id="type"
+              formControlName="type"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option [value]="StoreType.ONLINE">Online</option>
+              <option [value]="StoreType.PHYSICAL">Física</option>
+              <option [value]="StoreType.HYBRID">Híbrida</option>
+            </select>
+          </div>
+
+          <!-- Store Category -->
+          <div class="mb-4">
+            <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+              Categoría *
+            </label>
+            <select
+              id="category"
+              formControlName="category"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option [value]="StoreCategory.ELECTRONICS">Electrónicos</option>
+              <option [value]="StoreCategory.CLOTHING">Ropa</option>
+              <option [value]="StoreCategory.HOME_AND_GARDEN">Hogar y Jardín</option>
+              <option [value]="StoreCategory.SPORTS">Deportes</option>
+              <option [value]="StoreCategory.BEAUTY">Belleza</option>
+              <option [value]="StoreCategory.BOOKS">Libros</option>
+              <option [value]="StoreCategory.AUTOMOTIVE">Automotriz</option>
+              <option [value]="StoreCategory.FOOD_AND_BEVERAGES">Alimentos y Bebidas</option>
+              <option [value]="StoreCategory.HEALTH">Salud</option>
+              <option [value]="StoreCategory.TOYS">Juguetes</option>
+              <option [value]="StoreCategory.OTHER">Otro</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Location Information -->
+      <div class="space-y-6">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Información de Ubicación</h3>
+          
+          <!-- Timezone -->
+          <div class="mb-4">
+            <label for="timezone" class="block text-sm font-medium text-gray-700 mb-2">
+              Zona Horaria
+            </label>
+            <select
+              id="timezone"
+              formControlName="timezone"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="America/Santiago">Chile (Santiago)</option>
+              <option value="America/New_York">Estados Unidos (Nueva York)</option>
+              <option value="America/Los_Angeles">Estados Unidos (Los Ángeles)</option>
+              <option value="Europe/Madrid">España (Madrid)</option>
+              <option value="Europe/London">Reino Unido (Londres)</option>
+            </select>
+          </div>
+
+          <!-- Country -->
+          <div class="mb-4">
+            <label for="country" class="block text-sm font-medium text-gray-700 mb-2">
+              País
+            </label>
+            <input
+              type="text"
+              id="country"
+              formControlName="country"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Chile"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="mt-8 pt-6 border-t border-gray-200">
+      <div class="flex justify-end gap-3">
+        <button
+          type="button"
+          (click)="onCancel()"
+          class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          [disabled]="storeForm.invalid || isLoading"
+          class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {{ isLoading ? 'Guardando...' : (isEditMode ? 'Actualizar Tienda' : 'Crear Tienda') }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

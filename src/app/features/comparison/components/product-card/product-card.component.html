@@ -36,14 +36,18 @@
     </div>
   </div>
 
-  <!-- Product image in stats section -->
-  <div class="product-image-small" *ngIf="getProductImage()">
-    <img
-      [src]="getProductImage()"
-      [alt]="product.name"
-      class="product-img-small"
-      (error)="onImageError($event)"
-    />
+  <!-- Store prices section -->
+  <div class="store-prices" *ngIf="hasStoreInfo()">
+    <h4 class="prices-title">Precios por tienda</h4>
+    <div class="prices-list">
+      <div 
+        *ngFor="let store of getTopStores(); trackBy: trackByStoreId" 
+        class="price-item"
+      >
+        <span class="store-name">{{ store.store.name }}</span>
+        <span class="store-price">{{ formatPrice(store.price) }}</span>
+      </div>
+    </div>
   </div>
   
   <div class="product-actions">

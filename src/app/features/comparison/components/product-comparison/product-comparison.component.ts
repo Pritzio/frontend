@@ -52,6 +52,6 @@ export class ProductComparisonComponent {
   getProductImage(): string | null {
     if (!this.comparison?.product) return null;
     // Try highResImageUrl from originalData first, then fallback to image property
-    return this.comparison.product.specifications?.originalData?.highResImageUrl || this.comparison.product.image;
+    return this.comparison.product.specifications?.originalData?.['highResImageUrl'] || this.comparison.product.image;
   }
 }
