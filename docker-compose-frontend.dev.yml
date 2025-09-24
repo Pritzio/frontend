@@ -1,0 +1,10 @@
+version: "3"
+services:
+  app:
+    image: pritzio/frontend-dev:${GIT_SHA}
+    restart: always
+    container_name: frontend
+    ports:
+      - 80:80
+    dns:
+      - 1.1.1.1
