@@ -18,7 +18,7 @@ RUN npm ci --production --frozen-lockfile
 FROM nginx:alpine AS prod
 WORKDIR /app
 COPY --from=prod-deps /app/node_modules ./node_modules
-COPY --from=builder /app/dist/frontend ./www
+COPY --from=builder /app/dist/frontend/browser ./www
 
 FROM nginx:alpine
 COPY --from=prod /app/www /usr/share/nginx/html
