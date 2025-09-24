@@ -571,7 +571,7 @@
     "ENDPOINT_NOT_AVAILABLE": "El endpoint de productos storage no está disponible aún. El backend está implementado pero puede que necesite ser reiniciado o configurado.",
     "AUTHENTICATION_REQUIRED": "Autenticación requerida. Por favor, inicia sesión nuevamente.",
     "INSUFFICIENT_PERMISSIONS": "Permisos insuficientes para acceder a los productos storage.",
-    "NETWORK_ERROR": "Error de conexión. Verifica que el backend esté ejecutándose en http://localhost:3000.",
+    "NETWORK_ERROR": "Error de conexión. Verifica que el backend esté ejecutándose",
     "GENERAL_ERROR": "Error al cargar los productos storage. Por favor, intenta de nuevo más tarde.",
     "CREATE_FIRST": "Crear Primer Producto",
     "SELECTED": "seleccionados",
