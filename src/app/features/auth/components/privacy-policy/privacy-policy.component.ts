@@ -7,8 +7,8 @@ import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
   selector: 'app-privacy-policy',
   standalone: true,
   imports: [CommonModule, RouterLink, TranslatePipe],
-  templateUrl: './privacy-policy.html',
-  styleUrl: './privacy-policy.scss'
+  templateUrl: './privacy-policy.component.html',
+  styleUrl: './privacy-policy.component.scss'
 })
 export class PrivacyPolicyComponent {
 
