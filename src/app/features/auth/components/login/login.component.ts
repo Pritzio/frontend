@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { ILoginRequest } from '../../../../models/user.model';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 import { I18nService } from '../../../../core/services/i18n.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -20,16 +21,36 @@ export class LoginComponent implements OnInit {
   public isLoading = false;
   public errorMessage = '';
   public submitted = false;
+  public showVerifyEmailMessage = false;
+  public userEmail = '';
+  public isEmailVerified = false;
 
   constructor(
     private _authService: AuthService,
     private _router: Router,
     private _formBuilder: FormBuilder,
-    private _i18nService: I18nService
+    private _i18nService: I18nService,
+    private _notificationService: NotificationService,
+    private _route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this._initForm();
+    
+    // Check for verify email message
+    this._route.queryParams.subscribe(params => {
+      if (params['message'] === 'verify-email' && params['email']) {
+        this.showVerifyEmailMessage = true;
+        this.userEmail = params['email'];
+        this.isEmailVerified = false;
+        this._notificationService.showInfo('AUTH.REGISTER_SUCCESS');
+      } else if (params['message'] === 'email-verified' && params['email']) {
+        this.showVerifyEmailMessage = true;
+        this.userEmail = params['email'];
+        this.isEmailVerified = true;
+        this._notificationService.showSuccess('AUTH.VERIFY_EMAIL_SUCCESS_TITLE');
+      }
+    });
     
     // Check if user is already authenticated
     this._authService.isAuthenticated$.subscribe(isAuth => {

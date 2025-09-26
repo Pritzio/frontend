@@ -1,0 +1,68 @@
+// Estilos para indicadores de validación en tiempo real
+.status-checking {
+  color: #3b82f6; // blue-500
+}
+
+.status-available {
+  color: #10b981; // green-500
+}
+
+.status-taken {
+  color: #ef4444; // red-500
+}
+
+.status-invalid {
+  color: #ef4444; // red-500
+}
+
+.status-neutral {
+  display: none;
+}
+
+// Animación para el spinner
+.fa-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Mejoras para los campos con validación
+.relative input {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.relative input:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+// Estados de validación
+.relative input.border-green-500:focus {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.relative input.border-red-500:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+// Mensajes de éxito
+.text-green-600 {
+  color: #059669;
+  font-weight: 500;
+}
+
+// Mensajes de error
+.text-red-600 {
+  color: #dc2626;
+}
+
+// Transiciones suaves para los indicadores
+.absolute i {
+  transition: all 0.3s ease;
+}

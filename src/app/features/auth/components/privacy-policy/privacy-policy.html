@@ -1,0 +1,92 @@
+<div class="min-h-screen bg-gray-50 py-12 px-4">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-sm p-8 mb-8">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ 'PRIVACY.TITLE' | translate }}</h1>
+        <p class="text-lg text-gray-600">{{ 'PRIVACY.LAST_UPDATED' | translate }}: {{ 'PRIVACY.UPDATE_DATE' | translate }}</p>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="bg-white rounded-lg shadow-sm p-8 space-y-8">
+      
+      <!-- Introduction -->
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ 'PRIVACY.INTRODUCTION_TITLE' | translate }}</h2>
+        <p class="text-gray-700 leading-relaxed">{{ 'PRIVACY.INTRODUCTION_CONTENT' | translate }}</p>
+      </section>
+
+      <!-- Information Collection -->
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ 'PRIVACY.COLLECTION_TITLE' | translate }}</h2>
+        <p class="text-gray-700 leading-relaxed mb-4">{{ 'PRIVACY.COLLECTION_CONTENT' | translate }}</p>
+        <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4">
+          <li>{{ 'PRIVACY.COLLECTION_ITEM_1' | translate }}</li>
+          <li>{{ 'PRIVACY.COLLECTION_ITEM_2' | translate }}</li>
+          <li>{{ 'PRIVACY.COLLECTION_ITEM_3' | translate }}</li>
+          <li>{{ 'PRIVACY.COLLECTION_ITEM_4' | translate }}</li>
+        </ul>
+      </section>
+
+      <!-- Data Usage -->
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ 'PRIVACY.USAGE_TITLE' | translate }}</h2>
+        <p class="text-gray-700 leading-relaxed mb-4">{{ 'PRIVACY.USAGE_CONTENT' | translate }}</p>
+        <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4">
+          <li>{{ 'PRIVACY.USAGE_ITEM_1' | translate }}</li>
+          <li>{{ 'PRIVACY.USAGE_ITEM_2' | translate }}</li>
+          <li>{{ 'PRIVACY.USAGE_ITEM_3' | translate }}</li>
+          <li>{{ 'PRIVACY.USAGE_ITEM_4' | translate }}</li>
+        </ul>
+      </section>
+
+      <!-- Data Protection -->
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ 'PRIVACY.PROTECTION_TITLE' | translate }}</h2>
+        <p class="text-gray-700 leading-relaxed">{{ 'PRIVACY.PROTECTION_CONTENT' | translate }}</p>
+      </section>
+
+      <!-- Cookies -->
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ 'PRIVACY.COOKIES_TITLE' | translate }}</h2>
+        <p class="text-gray-700 leading-relaxed">{{ 'PRIVACY.COOKIES_CONTENT' | translate }}</p>
+      </section>
+
+      <!-- User Rights -->
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ 'PRIVACY.RIGHTS_TITLE' | translate }}</h2>
+        <p class="text-gray-700 leading-relaxed mb-4">{{ 'PRIVACY.RIGHTS_CONTENT' | translate }}</p>
+        <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4">
+          <li>{{ 'PRIVACY.RIGHTS_ITEM_1' | translate }}</li>
+          <li>{{ 'PRIVACY.RIGHTS_ITEM_2' | translate }}</li>
+          <li>{{ 'PRIVACY.RIGHTS_ITEM_3' | translate }}</li>
+          <li>{{ 'PRIVACY.RIGHTS_ITEM_4' | translate }}</li>
+        </ul>
+      </section>
+
+      <!-- Contact -->
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ 'PRIVACY.CONTACT_TITLE' | translate }}</h2>
+        <p class="text-gray-700 leading-relaxed">{{ 'PRIVACY.CONTACT_CONTENT' | translate }}</p>
+        <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+          <p class="text-gray-700"><strong>{{ 'PRIVACY.CONTACT_EMAIL' | translate }}:</strong> privacy@pritzio.com</p>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Back Button -->
+    <div class="text-center mt-8">
+      <a 
+        routerLink="/auth/register" 
+        class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+      >
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        {{ 'PRIVACY.BACK_TO_REGISTER' | translate }}
+      </a>
+    </div>
+  </div>
+</div>

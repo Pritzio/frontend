@@ -1,8 +1,13 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
+import { EmailVerificationComponent } from './features/auth/components/email-verification/email-verification.component';
 
 export const routes: Routes = [
+  {
+    path: 'verify-email',
+    component: EmailVerificationComponent
+  },
   {
     path: 'auth',
     loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)

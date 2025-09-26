@@ -1,0 +1,195 @@
+<div class="min-h-screen flex items-center justify-center p-8 px-4 bg-gradient-to-br from-blue-500 to-purple-600">
+  <div class="bg-white rounded-3xl shadow-2xl p-10 w-full max-w-lg">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ 'AUTH.REGISTER_TITLE' | translate }}</h1>
+      <p class="text-gray-600 text-lg">{{ 'AUTH.REGISTER_SUBTITLE' | translate }}</p>
+    </div>
+
+    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Username con validación en tiempo real -->
+      <div class="space-y-2">
+        <label for="username" class="block text-sm font-semibold text-gray-700">{{ 'COMMON.USERNAME' | translate }} *</label>
+        <div class="relative">
+          <input
+            type="text"
+            id="username"
+            formControlName="username"
+            class="w-full px-4 py-3 pr-12 border-2 border-gray-200 rounded-xl text-base transition-colors focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            [class.border-red-500]="getFieldError('username')"
+            [class.border-green-500]="getFieldStatus('username') === 'available'"
+            placeholder="Ingresa tu nombre de usuario"
+          />
+          <div class="absolute right-3 top-1/2 transform -translate-y-1/2" [ngClass]="'status-' + getFieldStatus('username')">
+            <i *ngIf="getFieldStatus('username') === 'checking'" class="fas fa-spinner fa-spin text-blue-500"></i>
+            <i *ngIf="getFieldStatus('username') === 'available'" class="fas fa-check text-green-500"></i>
+            <i *ngIf="getFieldStatus('username') === 'taken'" class="fas fa-times text-red-500"></i>
+          </div>
+        </div>
+        <div class="text-red-600 text-sm" *ngIf="getFieldError('username')">
+          {{ getFieldError('username') | translate }}
+        </div>
+        <div class="text-green-600 text-sm font-medium" *ngIf="getFieldStatus('username') === 'available'">
+          ¡Nombre de usuario disponible!
+        </div>
+      </div>
+
+      <!-- Email con validación en tiempo real -->
+      <div class="space-y-2">
+        <label for="email" class="block text-sm font-semibold text-gray-700">{{ 'COMMON.EMAIL' | translate }} *</label>
+        <div class="relative">
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="w-full px-4 py-3 pr-12 border-2 border-gray-200 rounded-xl text-base transition-colors focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            [class.border-red-500]="getFieldError('email')"
+            [class.border-green-500]="getFieldStatus('email') === 'available'"
+            placeholder="tu@email.com"
+          />
+          <div class="absolute right-3 top-1/2 transform -translate-y-1/2" [ngClass]="'status-' + getFieldStatus('email')">
+            <i *ngIf="getFieldStatus('email') === 'checking'" class="fas fa-spinner fa-spin text-blue-500"></i>
+            <i *ngIf="getFieldStatus('email') === 'available'" class="fas fa-check text-green-500"></i>
+            <i *ngIf="getFieldStatus('email') === 'taken'" class="fas fa-times text-red-500"></i>
+          </div>
+        </div>
+        <div class="text-red-600 text-sm" *ngIf="getFieldError('email')">
+          {{ getFieldError('email') | translate }}
+        </div>
+        <div class="text-green-600 text-sm font-medium" *ngIf="getFieldStatus('email') === 'available'">
+          ¡Correo electrónico disponible!
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="space-y-2">
+        <label for="password" class="block text-sm font-semibold text-gray-700">{{ 'COMMON.PASSWORD' | translate }} *</label>
+        <div class="relative">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            class="w-full px-4 py-3 pr-12 border-2 border-gray-200 rounded-xl text-base transition-colors focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            [class.border-red-500]="getFieldError('password')"
+            placeholder="Mínimo 8 caracteres"
+          />
+          <button
+            type="button"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            (click)="togglePasswordVisibility()"
+          >
+            <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+          </button>
+        </div>
+        <div class="text-red-600 text-sm" *ngIf="getFieldError('password')">
+          <span *ngIf="!getFieldError('password').includes('La longitud')">{{ getFieldError('password') | translate }}</span>
+          <span *ngIf="getFieldError('password').includes('La longitud')">{{ getFieldError('password') }}</span>
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="space-y-2">
+        <label for="confirmPassword" class="block text-sm font-semibold text-gray-700">{{ 'AUTH.REGISTER_CONFIRM_PASSWORD' | translate }} *</label>
+        <div class="relative">
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            class="w-full px-4 py-3 pr-12 border-2 border-gray-200 rounded-xl text-base transition-colors focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            [class.border-red-500]="getFieldError('confirmPassword')"
+            placeholder="Confirma tu contraseña"
+          />
+          <button
+            type="button"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            (click)="toggleConfirmPasswordVisibility()"
+          >
+            <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+          </button>
+        </div>
+        <div class="text-red-600 text-sm" *ngIf="getFieldError('confirmPassword')">
+          <span *ngIf="!getFieldError('confirmPassword').includes('La longitud')">{{ getFieldError('confirmPassword') | translate }}</span>
+          <span *ngIf="getFieldError('confirmPassword').includes('La longitud')">{{ getFieldError('confirmPassword') }}</span>
+        </div>
+      </div>
+
+      <!-- First Name -->
+      <div class="space-y-2">
+        <label for="firstName" class="block text-sm font-semibold text-gray-700">{{ 'COMMON.FIRST_NAME' | translate }} *</label>
+        <input
+          type="text"
+          id="firstName"
+          formControlName="firstName"
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-base transition-colors focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+          [class.border-red-500]="getFieldError('firstName')"
+          placeholder="Tu nombre"
+        />
+        <div class="text-red-600 text-sm" *ngIf="getFieldError('firstName')">
+          <span *ngIf="!getFieldError('firstName').includes('La longitud')">{{ getFieldError('firstName') | translate }}</span>
+          <span *ngIf="getFieldError('firstName').includes('La longitud')">{{ getFieldError('firstName') }}</span>
+        </div>
+      </div>
+
+      <!-- Last Name -->
+      <div class="space-y-2">
+        <label for="lastName" class="block text-sm font-semibold text-gray-700">{{ 'COMMON.LAST_NAME' | translate }} *</label>
+        <input
+          type="text"
+          id="lastName"
+          formControlName="lastName"
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-base transition-colors focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+          [class.border-red-500]="getFieldError('lastName')"
+          placeholder="Tu apellido"
+        />
+        <div class="text-red-600 text-sm" *ngIf="getFieldError('lastName')">
+          <span *ngIf="!getFieldError('lastName').includes('La longitud')">{{ getFieldError('lastName') | translate }}</span>
+          <span *ngIf="getFieldError('lastName').includes('La longitud')">{{ getFieldError('lastName') }}</span>
+        </div>
+      </div>
+
+
+      <!-- Terms and Conditions -->
+      <div class="space-y-2">
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            formControlName="acceptTermsAndConditions"
+            class="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          />
+          <span class="text-sm text-gray-700 leading-relaxed">
+            {{ 'AUTH.REGISTER_ACCEPT_TERMS' | translate }}
+            <a 
+              routerLink="/auth/privacy-policy" 
+              target="_blank"
+              class="text-blue-600 hover:text-blue-700 underline font-medium"
+            >
+              {{ 'AUTH.REGISTER_PRIVACY_POLICY' | translate }}
+            </a>
+            *
+          </span>
+        </label>
+        <div class="text-red-600 text-sm" *ngIf="getFieldError('acceptTermsAndConditions')">
+          {{ 'AUTH.REGISTER_TERMS_REQUIRED' | translate }}
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="w-full bg-blue-600 text-white py-4 px-6 rounded-xl font-semibold text-base transition-all duration-200 hover:bg-blue-700 hover:shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        [disabled]="registrationForm.invalid || isLoading"
+      >
+        <div *ngIf="isLoading" class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+        {{ isLoading ? ('COMMON.LOADING' | translate) : ('AUTH.REGISTER_BUTTON' | translate) }}
+      </button>
+    </form>
+
+    <div class="text-center mt-8">
+      <p class="text-gray-600 text-sm">
+        {{ 'AUTH.REGISTER_ALREADY_HAVE_ACCOUNT' | translate }} 
+        <a routerLink="/auth/login" class="text-blue-600 font-semibold hover:text-blue-700 hover:underline transition-colors">
+          {{ 'AUTH.REGISTER_GO_TO_LOGIN' | translate }}
+        </a>
+      </p>
+    </div>
+  </div>
+</div>

@@ -205,6 +205,9 @@
     <router-outlet></router-outlet>
   </main>
 
+  <!-- Sistema de Notificaciones -->
+  <app-notification></app-notification>
+
   <!-- Footer - Solo para usuarios NO admin -->
   <footer class="main-footer" *ngIf="isAuthenticated && !isAdminRoute">
     <div class="footer-content">

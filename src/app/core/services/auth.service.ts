@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { IUser, ILoginRequest, IRegisterRequest, IAuthResponse, IRefreshTokenRequest, IBackendAuthResponse } from '../../models/user.model';
 import { IApiResponse } from '../../models/api.model';
+import { RegisterRequest, VerifyEmailRequest, VerifyEmailResponse, ResendVerificationRequest, ResendVerificationResponse } from '../../models/registration.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,10 @@ export class AuthService {
     private _http: HttpClient,
     private _router: Router
   ) {
-    this._checkAuthStatus();
+    // Delay the auth check to allow components to load first
+    setTimeout(() => {
+      this._checkAuthStatus();
+    }, 100);
   }
 
   login(credentials: ILoginRequest): Observable<IBackendAuthResponse> {
@@ -45,6 +49,20 @@ export class AuthService {
           this._handleSuccessfulAuth(response);
         })
       );
+  }
+
+  registerNewUser(userData: RegisterRequest): Observable<IBackendAuthResponse> {
+    return this._http.post<IBackendAuthResponse>(`${this._apiUrl}/register`, userData);
+  }
+
+  verifyEmail(token: string): Observable<VerifyEmailResponse> {
+    const request: VerifyEmailRequest = { token };
+    return this._http.post<VerifyEmailResponse>(`${this._apiUrl}/verify-email`, request);
+  }
+
+  resendVerification(email: string): Observable<ResendVerificationResponse> {
+    const request: ResendVerificationRequest = { email };
+    return this._http.post<ResendVerificationResponse>(`${this._apiUrl}/resend-verification`, request);
   }
 
   logout(): void {
@@ -125,10 +143,21 @@ export class AuthService {
       this._isAuthenticated.next(true);
       this._isAdmin.next(userData.type === 'system');
       
-      // Check if admin user is on mobile and redirect if needed
-      this._checkMobileRedirect(userData);
+      // Don't redirect if we're on the verify-email page
+      const currentUrl = this._router.url;
+      
+      if (!currentUrl.includes('/verify-email')) {
+        // Check if admin user is on mobile and redirect if needed
+        this._checkMobileRedirect(userData);
+      }
     } else {
       this._clearAuthData();
+      
+      // Don't redirect if we're on the verify-email page
+      const currentUrl = this._router.url;
+      if (currentUrl.includes('/verify-email')) {
+        return;
+      }
     }
   }
 
@@ -137,6 +166,11 @@ export class AuthService {
     if (user.type === 'system') {
       const isMobileView = window.innerWidth < 1024; // lg breakpoint
       const currentUrl = this._router.url;
+      
+      // Don't redirect if we're on the verify-email page
+      if (currentUrl.includes('/verify-email')) {
+        return;
+      }
       
       // If on mobile and trying to access admin routes, redirect to dashboard
       if (isMobileView && currentUrl.startsWith('/admin')) {

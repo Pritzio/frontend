@@ -4,12 +4,13 @@ import { RouterModule, Router } from '@angular/router';
 
 import { AuthService } from './core/services/auth.service';
 import { TranslatePipe } from './shared/pipes/translate.pipe';
+import { NotificationComponent } from './shared/components/notification/notification.component';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe],
+  imports: [CommonModule, RouterModule, TranslatePipe, NotificationComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

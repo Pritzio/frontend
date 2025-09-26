@@ -212,6 +212,43 @@ Shows a small, non-intrusive toast notification.
 this._alertService.toast('Cambios guardados automáticamente', 'success', 'bottom-end');
 ```
 
+---
+
+### promptEmail(title?: string, message?: string, confirmText?: string, cancelText?: string): Promise<string | null>
+
+Shows an elegant email input dialog for user input.
+
+**Parameters:**
+- `title` (string, optional): Dialog title. Defaults to "Reenviar Verificación"
+- `message` (string, optional): Input prompt message. Defaults to "Por favor ingresa tu correo electrónico para reenviar la verificación:"
+- `confirmText` (string, optional): Confirm button text. Defaults to "Reenviar"
+- `cancelText` (string, optional): Cancel button text. Defaults to "Cancelar"
+
+**Returns:** Promise<string | null> - Email string if confirmed, null if canceled
+
+**Configuration:**
+- Email input validation
+- Placeholder text: "tu@email.com"
+- Real-time email format validation
+- Focus on cancel button (safer default)
+- Colors: Confirm (blue), Cancel (gray)
+- Button order: Reversed (Cancel left, Confirm right)
+
+**Example:**
+```typescript
+const email = await this._alertService.promptEmail(
+  'Reenviar Verificación',
+  'Por favor ingresa tu correo electrónico para reenviar la verificación:',
+  'Reenviar',
+  'Cancelar'
+);
+
+if (email) {
+  // Process email
+  this.resendVerification(email);
+}
+```
+
 ## Usage in Components
 
 ### 1. Injection
@@ -270,6 +307,30 @@ public async saveData(): Promise<void> {
     this._alertService.close();
     this._alertService.error('Error al guardar los datos');
   }
+}
+```
+
+### 5. Email Input Dialog
+
+```typescript
+public async resendVerification(): Promise<void> {
+  if (!this.email) {
+    const email = await this._alertService.promptEmail(
+      'Reenviar Verificación',
+      'Por favor ingresa tu correo electrónico para reenviar la verificación:',
+      'Reenviar',
+      'Cancelar'
+    );
+    
+    if (!email) {
+      this._alertService.error('No se ingresó un correo electrónico');
+      return;
+    }
+    this.email = email;
+  }
+
+  // Process with the email
+  this.processVerification(this.email);
 }
 ```
 
