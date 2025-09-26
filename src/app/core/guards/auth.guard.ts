@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree } from '@angular/router';
-import { Observable, map, take } from 'rxjs';
+import { Observable, map, take, switchMap, of, catchError } from 'rxjs';
 
 import { AuthService } from '../services/auth.service';
 
@@ -14,18 +14,28 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   canActivate(): Observable<boolean | UrlTree> {
-
     return this._authService.isAuthenticated$.pipe(
       take(1),
-      map(isAuthenticated => {
-
-        if (isAuthenticated) {
-          return true;
-        } else {
-
+      switchMap(isAuthenticated => {
+        if (!isAuthenticated) {
           this._router.navigate(['/auth/login']);
-          return false;
+          return of(false);
         }
+
+        // Check if token is expired
+        if (this._authService.isTokenExpired()) {
+          console.log('🔄 Token expired in guard - refreshing token...');
+          
+          return this._authService.refreshToken().pipe(
+            map(() => true),
+            catchError(() => {
+              this._router.navigate(['/auth/login']);
+              return of(false);
+            })
+          );
+        }
+
+        return of(true);
       })
     );
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 
@@ -18,6 +18,8 @@ export class AppComponent implements OnInit {
   public currentUser: any = null;
   public isAdminRoute = false;
   public isUserDropdownOpen = false;
+  public isMobileMenuOpen = false;
+  public isMobileView = false;
 
   constructor(
     private _authService: AuthService,
@@ -25,21 +27,35 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this._checkMobileView();
+    
     this._authService.isAuthenticated$.subscribe(
       isAuth => {
         this.isAuthenticated = isAuth;
+        if (isAuth && this._isAdminUser() && this.isMobileView && this._router.url === '/admin') {
+          // Redirect admin users away from admin panel on mobile
+          this._router.navigate(['/dashboard']);
+        }
       }
     );
     
     this._authService.currentUser$.subscribe(
       user => {
         this.currentUser = user;
+        if (user && this._isAdminUser() && this.isMobileView && this._router.url === '/admin') {
+          // Redirect admin users away from admin panel on mobile
+          this._router.navigate(['/dashboard']);
+        }
       }
     );
 
     // Detect if we are on an admin route
     this._router.events.subscribe(() => {
       this.isAdminRoute = this._router.url.startsWith('/admin');
+      // Redirect admin users away from admin panel on mobile
+      if (this.isAdminRoute && this.isMobileView && this._isAdminUser()) {
+        this._router.navigate(['/dashboard']);
+      }
     });
 
     // Cerrar dropdown cuando se hace click fuera
@@ -48,7 +64,23 @@ export class AppComponent implements OnInit {
       if (!target.closest('.user-menu')) {
         this.isUserDropdownOpen = false;
       }
+      if (!target.closest('.mobile-menu-toggle') && !target.closest('.mobile-nav')) {
+        this.isMobileMenuOpen = false;
+      }
     });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    this._checkMobileView();
+  }
+
+  private _checkMobileView(): void {
+    this.isMobileView = window.innerWidth < 1024; // lg breakpoint
+  }
+
+  public _isAdminUser(): boolean {
+    return this.currentUser?.type === 'system';
   }
 
   public toggleUserDropdown(): void {
@@ -59,9 +91,18 @@ export class AppComponent implements OnInit {
     this.isUserDropdownOpen = false;
   }
 
+  public toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  public closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+  }
+
   public logout(): void {
     this._authService.logout();
     this.isUserDropdownOpen = false;
+    this.isMobileMenuOpen = false;
   }
 
   public getInitials(firstName: string, lastName: string): string {

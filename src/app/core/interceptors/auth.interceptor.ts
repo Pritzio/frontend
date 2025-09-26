@@ -1,6 +1,6 @@
 import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, filter, take, switchMap, throwError, BehaviorSubject } from 'rxjs';
+import { catchError, filter, take, switchMap, throwError, BehaviorSubject, of } from 'rxjs';
 
 import { AuthService } from '../services/auth.service';
 
@@ -43,17 +43,39 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
     }
   };
 
+  // Skip token validation for auth endpoints
+  if (request.url.includes('/auth/')) {
+    return next(request);
+  }
+
   const token = authService.getAccessToken();
   
   if (token) {
-    request = addToken(request, token);
+    // Check if token is expired before making request
+    if (authService.isTokenExpired()) {
+      console.log('🔄 Token is expired, refreshing before request...');
+      
+      return authService.refreshToken().pipe(
+        switchMap((response) => {
+          const newToken = authService.getAccessToken();
+          if (newToken) {
+            request = addToken(request, newToken);
+          }
+          return next(request);
+        }),
+        catchError((error) => {
+          console.log('❌ Token refresh failed:', error);
+          return throwError(() => new HttpErrorResponse({ status: 401, statusText: 'Unauthorized' }));
+        })
+      );
+    } else {
+      // Token is still valid, add it to request
+      request = addToken(request, token);
+    }
   }
-
-  
 
   return next(request).pipe(
     catchError((error: HttpErrorResponse) => {
-
       if (error.status === 401 && !request.url.includes('auth/refresh')) {
         return handle401Error(request, next);
       }

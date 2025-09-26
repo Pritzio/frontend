@@ -97,9 +97,20 @@ export class AuthService {
   }
 
   private _redirectAfterLogin(user: IUser): void {
+    // Check if user is admin (system type)
     if (user.type === 'system') {
-      this._router.navigate(['/admin/dashboard']);
+      // Check if we're on mobile view
+      const isMobileView = window.innerWidth < 1024; // lg breakpoint
+      
+      if (isMobileView) {
+        // Redirect admin users to dashboard on mobile instead of admin panel
+        this._router.navigate(['/dashboard']);
+      } else {
+        // Redirect to admin panel on desktop
+        this._router.navigate(['/admin/dashboard']);
+      }
     } else {
+      // Regular users always go to dashboard
       this._router.navigate(['/dashboard']);
     }
   }
@@ -113,8 +124,24 @@ export class AuthService {
       this._currentUser.next(userData);
       this._isAuthenticated.next(true);
       this._isAdmin.next(userData.type === 'system');
+      
+      // Check if admin user is on mobile and redirect if needed
+      this._checkMobileRedirect(userData);
     } else {
       this._clearAuthData();
+    }
+  }
+
+  private _checkMobileRedirect(user: IUser): void {
+    // Only check for admin users (system type)
+    if (user.type === 'system') {
+      const isMobileView = window.innerWidth < 1024; // lg breakpoint
+      const currentUrl = this._router.url;
+      
+      // If on mobile and trying to access admin routes, redirect to dashboard
+      if (isMobileView && currentUrl.startsWith('/admin')) {
+        this._router.navigate(['/dashboard']);
+      }
     }
   }
 
