@@ -224,7 +224,7 @@
                     formControlName="phone"
                     class="input w-full"
                     [class.input-error]="isFieldInvalid('phone')"
-                    placeholder="+1 (555) 123-4567"
+                    [placeholder]="'PLACEHOLDERS.USER_PHONE_EXAMPLE' | translate"
                   />
                   <div *ngIf="isFieldInvalid('phone')" class="mt-1 text-sm text-red-600">
                     {{ getFieldError('phone') }}
@@ -242,7 +242,7 @@
                     formControlName="website"
                     class="input w-full"
                     [class.input-error]="isFieldInvalid('website')"
-                    placeholder="https://example.com"
+                    [placeholder]="'PLACEHOLDERS.USER_WEBSITE_EXAMPLE' | translate"
                   />
                   <div *ngIf="isFieldInvalid('website')" class="mt-1 text-sm text-red-600">
                     {{ getFieldError('website') }}
@@ -374,7 +374,7 @@
                     formControlName="avatar"
                     class="input w-full"
                     [class.input-error]="isFieldInvalid('avatar')"
-                    placeholder="https://example.com/avatar.jpg"
+                    [placeholder]="'PLACEHOLDERS.USER_AVATAR_EXAMPLE' | translate"
                   />
                   <div *ngIf="isFieldInvalid('avatar')" class="mt-1 text-sm text-red-600">
                     {{ getFieldError('avatar') }}

@@ -420,7 +420,7 @@
           type="text"
           [(ngModel)]="baseProductSearchQuery"
           (input)="onBaseProductSearch()"
-          placeholder="Buscar por nombre, marca o SKU..."
+          [placeholder]="'PLACEHOLDERS.SEARCH_PRODUCTS' | translate"
           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
       </div>

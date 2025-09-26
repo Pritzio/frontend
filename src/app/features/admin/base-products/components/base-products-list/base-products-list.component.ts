@@ -7,6 +7,7 @@ import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
 import { BaseProductsService } from '../../../../../core/services/base-products.service';
 import { ProductSimilarityService, DuplicateGroup } from '../../../../../core/services/product-similarity.service';
 import { AlertService } from '../../../../../core/services/alert.service';
+import { TranslatePipe } from '../../../../../shared/pipes/translate.pipe';
 import { 
   IBaseProduct, 
   IBaseProductFilters
@@ -15,7 +16,7 @@ import {
 @Component({
   selector: 'app-base-products-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './base-products-list.component.html',
   styleUrls: []
 })

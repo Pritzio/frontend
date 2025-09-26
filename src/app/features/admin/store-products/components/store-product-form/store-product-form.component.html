@@ -60,7 +60,7 @@
             formControlName="name"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             [class.border-red-500]="storeProductForm.get('name')?.invalid && storeProductForm.get('name')?.touched"
-            placeholder="Ej: Salsa de Tomate Pomarola 200 g 6 un."
+            [placeholder]="'PLACEHOLDERS.STORE_PRODUCT_NAME_EXAMPLE' | translate"
           />
           <div class="text-sm text-red-600 mt-1" *ngIf="storeProductForm.get('name')?.invalid && storeProductForm.get('name')?.touched">
             Este campo es requerido
@@ -77,7 +77,7 @@
             formControlName="description"
             rows="4"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Descripción detallada del producto..."
+            [placeholder]="'PLACEHOLDERS.STORE_PRODUCT_DESCRIPTION' | translate"
           ></textarea>
         </div>
 
@@ -91,7 +91,7 @@
             id="url"
             formControlName="url"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://jumbo.cl/producto..."
+            [placeholder]="'PLACEHOLDERS.STORE_PRODUCT_URL' | translate"
           />
         </div>
 
@@ -105,7 +105,7 @@
             id="sku"
             formControlName="sku"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Código SKU del producto"
+            [placeholder]="'PLACEHOLDERS.PRODUCT_SKU_CODE' | translate"
           />
         </div>
 
@@ -119,7 +119,7 @@
             id="storeProductId"
             formControlName="storeProductId"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="ID interno de la tienda"
+            [placeholder]="'PLACEHOLDERS.STORE_PRODUCT_INTERNAL_ID' | translate"
           />
         </div>
 
@@ -155,7 +155,7 @@
             id="image"
             formControlName="image"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://ejemplo.com/imagen.jpg"
+            [placeholder]="'PLACEHOLDERS.PRODUCT_IMAGE' | translate"
           />
         </div>
 
@@ -169,7 +169,7 @@
             formControlName="notes"
             rows="3"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Notas adicionales sobre el producto..."
+            [placeholder]="'PLACEHOLDERS.STORE_PRODUCT_NOTES' | translate"
           ></textarea>
         </div>
       </div>
@@ -193,7 +193,7 @@
             id="storeName"
             formControlName="storeName"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Ej: Jumbo, Líder, etc."
+            [placeholder]="'PLACEHOLDERS.STORE_BRAND_EXAMPLE' | translate"
           />
           <p class="text-sm text-gray-500 mt-1">Si la tienda no existe, se creará automáticamente</p>
         </div>
@@ -208,7 +208,7 @@
             id="storeWebsite"
             formControlName="storeWebsite"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://jumbo.cl"
+            [placeholder]="'PLACEHOLDERS.STORE_URL_EXAMPLE' | translate"
           />
           <p class="text-sm text-gray-500 mt-1">Opcional: URL del sitio web de la tienda</p>
         </div>
@@ -234,7 +234,7 @@
               id="brand"
               formControlName="brand"
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Ej: Cuisine & Co"
+              [placeholder]="'PLACEHOLDERS.STORE_BRAND_NAME_EXAMPLE' | translate"
             />
           </div>
 
@@ -382,7 +382,7 @@
               id="highResImageUrl"
               formControlName="highResImageUrl"
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="https://ejemplo.com/imagen-alta-resolucion.jpg"
+              [placeholder]="'PLACEHOLDERS.PRODUCT_HIGH_RES_IMAGE' | translate"
             />
             <p class="text-sm text-gray-500 mt-1">URL de la imagen en alta resolución para mejor calidad de visualización</p>
           </div>
@@ -397,7 +397,7 @@
               id="ppum"
               formControlName="ppum"
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Ej: $2.786 x kg"
+              [placeholder]="'PLACEHOLDERS.STORE_PRODUCT_PRICE_EXAMPLE' | translate"
             />
             <p class="text-sm text-gray-500 mt-1">Información de precios por unidad de medida</p>
           </div>

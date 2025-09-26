@@ -86,7 +86,7 @@
               formControlName="name"
               [readonly]="isEditMode"
               [class]="isEditMode ? 'w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed' : 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'"
-              placeholder="Ej: Mi Tienda Online"
+              [placeholder]="'PLACEHOLDERS.STORE_NAME_EXAMPLE' | translate"
             />
             <div *ngIf="!isEditMode && storeForm.get('name')?.invalid && storeForm.get('name')?.touched" class="mt-1 text-sm text-red-600">
               <p *ngIf="storeForm.get('name')?.errors?.['required']">El nombre es requerido</p>
@@ -105,7 +105,7 @@
               formControlName="description"
               rows="3"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Describe brevemente la tienda..."
+              [placeholder]="'PLACEHOLDERS.STORE_DESCRIPTION' | translate"
             ></textarea>
             <div *ngIf="storeForm.get('description')?.invalid && storeForm.get('description')?.touched" class="mt-1 text-sm text-red-600">
               <p *ngIf="storeForm.get('description')?.errors?.['maxlength']">Máximo 500 caracteres</p>
@@ -122,7 +122,7 @@
               id="website"
               formControlName="website"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="https://www.mitienda.com"
+              [placeholder]="'PLACEHOLDERS.STORE_WEBSITE' | translate"
             />
             <div *ngIf="storeForm.get('website')?.invalid && storeForm.get('website')?.touched" class="mt-1 text-sm text-red-600">
               <p *ngIf="storeForm.get('website')?.errors?.['pattern']">Ingresa una URL válida (ej: https://www.ejemplo.com)</p>
@@ -140,7 +140,7 @@
                 id="logo"
                 formControlName="logo"
                 class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="https://www.mitienda.com/logo.png"
+                [placeholder]="'PLACEHOLDERS.STORE_LOGO' | translate"
               />
               <div class="w-16 h-16 border border-gray-300 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center">
                 <img 
@@ -178,7 +178,7 @@
               id="email"
               formControlName="email"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="contacto@mitienda.com"
+              [placeholder]="'PLACEHOLDERS.STORE_EMAIL' | translate"
             />
             <div *ngIf="storeForm.get('email')?.invalid && storeForm.get('email')?.touched" class="mt-1 text-sm text-red-600">
               <p *ngIf="storeForm.get('email')?.errors?.['email']">Ingresa un email válido</p>
@@ -195,7 +195,7 @@
               id="phone"
               formControlName="phone"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="+56 9 1234 5678"
+              [placeholder]="'PLACEHOLDERS.STORE_PHONE' | translate"
             />
             <div *ngIf="storeForm.get('phone')?.invalid && storeForm.get('phone')?.touched" class="mt-1 text-sm text-red-600">
               <p *ngIf="storeForm.get('phone')?.errors?.['pattern']">Ingresa un número de teléfono válido</p>
@@ -284,7 +284,7 @@
               id="country"
               formControlName="country"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Chile"
+              [placeholder]="'PLACEHOLDERS.STORE_COUNTRY' | translate"
             />
           </div>
         </div>

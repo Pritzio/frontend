@@ -5,6 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { BaseProductsService } from '../../../../../core/services/base-products.service';
 import { AlertService } from '../../../../../core/services/alert.service';
+import { TranslatePipe } from '../../../../../shared/pipes/translate.pipe';
 import { 
   IBaseProduct
 } from '../../../../../models/base-product.model';
@@ -12,7 +13,7 @@ import {
 @Component({
   selector: 'app-base-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './base-product-detail.component.html',
   styleUrls: []
 })

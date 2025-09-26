@@ -7,6 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { BaseProductsService } from '../../../../../core/services/base-products.service';
 import { CategoriesService, ICategoryResponse } from '../../../../../core/services/categories.service';
 import { AlertService } from '../../../../../core/services/alert.service';
+import { TranslatePipe } from '../../../../../shared/pipes/translate.pipe';
 import { 
   IBaseProduct, 
   ICreateBaseProductRequest, 
@@ -16,7 +17,7 @@ import {
 @Component({
   selector: 'app-base-product-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './base-product-form.component.html',
   styleUrls: []
 })

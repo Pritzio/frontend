@@ -8,6 +8,7 @@ import { StoreProductsService } from '../../../../../core/services/store-product
 import { BaseProductsService } from '../../../../../core/services/base-products.service';
 import { ProductSimilarityService, SimilarityResult } from '../../../../../core/services/product-similarity.service';
 import { AlertService } from '../../../../../core/services/alert.service';
+import { TranslatePipe } from '../../../../../shared/pipes/translate.pipe';
 import { PriceFormatPipe } from '../../../../../shared/pipes/price-format.pipe';
 import { DateFormatPipe } from '../../../../../shared/pipes/date-format.pipe';
 
@@ -19,7 +20,7 @@ import { IBaseProduct } from '../../../../../models/base-product.model';
 @Component({
   selector: 'app-store-product-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, PriceFormatPipe, DateFormatPipe],
+  imports: [CommonModule, FormsModule, RouterModule, TranslatePipe, PriceFormatPipe, DateFormatPipe],
   templateUrl: './store-product-detail.component.html',
   styleUrls: []
 })

@@ -7,6 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { StoreProductsService } from '../../../../../core/services/store-products.service';
 import { CategoriesService, ICategoryResponse } from '../../../../../core/services/categories.service';
 import { AlertService } from '../../../../../core/services/alert.service';
+import { TranslatePipe } from '../../../../../shared/pipes/translate.pipe';
 import { 
   IStoreProduct, 
   ICreateStoreProductRequest, 
@@ -17,7 +18,7 @@ import {
 @Component({
   selector: 'app-store-product-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './store-product-form.component.html',
   styleUrls: []
 })

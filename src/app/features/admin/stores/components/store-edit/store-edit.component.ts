@@ -6,12 +6,13 @@ import { Subject, takeUntil, finalize } from 'rxjs';
 
 import { StoresService } from '../../../../../core/services/stores.service';
 import { AlertService } from '../../../../../core/services/alert.service';
+import { TranslatePipe } from '../../../../../shared/pipes/translate.pipe';
 import { IStore, StoreType, StoreStatus, StoreCategory } from '../../../../../models/store.model';
 
 @Component({
   selector: 'app-store-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './store-edit.component.html',
   styleUrls: ['./store-edit.component.scss']
 })

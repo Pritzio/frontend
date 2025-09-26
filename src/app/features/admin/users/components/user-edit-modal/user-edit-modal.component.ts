@@ -553,11 +553,11 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
     }
     
     if (errors['hasNumbers']) {
-      return 'El nombre no puede contener números';
+      return this._i18nService.translate('VALIDATION.NAME_NO_NUMBERS');
     }
     
     if (errors['invalidCharacters']) {
-      return 'El nombre solo puede contener letras, espacios, guiones y apóstrofes';
+      return this._i18nService.translate('VALIDATION.NAME_INVALID_CHARACTERS');
     }
     
     return this._i18nService.translate('VALIDATION.INVALID');

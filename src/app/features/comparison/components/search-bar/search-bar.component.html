@@ -5,7 +5,7 @@
         type="text"
         formControlName="query"
         (input)="onInputChange()"
-        placeholder="Buscar productos... (mínimo 2 caracteres)"
+        [placeholder]="'PLACEHOLDERS.SEARCH_COMPARISON' | translate"
         class="search-input"
         autocomplete="off"
       />

@@ -8,11 +8,12 @@ import { debounceTime, distinctUntilChanged, takeUntil, finalize } from 'rxjs/op
 import { StoresService } from '../../../core/services/stores.service';
 import { AlertService } from '../../../core/services/alert.service';
 import { IStore, IStoreFilters, StoreType, StoreStatus, StoreCategory } from '../../../models/store.model';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-stores',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './stores.component.html',
   styleUrls: ['./stores.component.scss']
 })
