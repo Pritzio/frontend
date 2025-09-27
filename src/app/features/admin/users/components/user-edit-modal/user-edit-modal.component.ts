@@ -152,6 +152,7 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
     this.canEditRoles = this._rolePermissionService.canChangeUserRoles(this.user);
     this.availableRoles = this._rolePermissionService.getAssignableRoles(this.user);
     
+    
     if (this.canEditRoles) {
       // Only clear cache on first initialization to avoid conflicts
       if (!this._hasBeenInitialized) {
@@ -164,21 +165,43 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
         .pipe(takeUntil(this._destroy$))
         .subscribe({
           next: (roles) => {
-            // Filter roles based on what the user can assign (this should already exclude SUPER_ADMIN if needed)
-            this.availableRolesList = roles.filter(role => 
-              this.availableRoles.some(availableRole => 
-                availableRole === role.name
-              )
+            // Check if we have all the roles we need (at least 6 roles excluding super_admin)
+            const expectedRoles = ['admin', 'store_admin', 'store_manager', 'store_employee', 'customer', 'guest'];
+            const hasAllRoles = expectedRoles.every(roleName => 
+              roles.some(role => role.name === roleName)
             );
             
-            // Double-check: Remove SUPER_ADMIN if it somehow still appears
-            const superAdminIndex = this.availableRolesList.findIndex(role => role.name === 'super_admin');
-            if (superAdminIndex !== -1) {
-              this.availableRolesList.splice(superAdminIndex, 1);
+            if (hasAllRoles && roles.length >= 6) {
+              // Use roles from service
+              this.availableRolesList = roles.filter(role => 
+                role.name !== 'super_admin'
+              );
+            } else {
+              // Use fallback - create roles from available roles list
+              this.availableRolesList = this.availableRoles
+                .filter(role => role !== 'super_admin')
+                .map(role => ({
+                  id: `fallback-${role}`,
+                  name: role,
+                  displayName: this._getRoleDisplayName(role),
+                  description: `Role: ${role}`,
+                  isActive: true
+                }));
             }
           },
           error: (error) => {
-            console.error('❌ Error loading roles:', error);
+            console.error('Error loading roles from service, using fallback:', error);
+            
+            // Fallback: Create roles from available roles list
+            this.availableRolesList = this.availableRoles
+              .filter(role => role !== 'super_admin')
+              .map(role => ({
+                id: `fallback-${role}`,
+                name: role,
+                displayName: this._getRoleDisplayName(role),
+                description: `Role: ${role}`,
+                isActive: true
+              }));
           }
         });
     }
@@ -304,7 +327,7 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
           }
         },
         error: (error) => {
-          console.error('❌ Error updating user basic data:', error);
+          console.error('Error updating user basic data:', error);
           this.isLoading = false;
           
           // Extract specific error messages from backend
@@ -392,6 +415,15 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
       return;
     }
     
+    // Validate that all new roles are assignable by current user
+    const invalidRoles = newRoles.filter(role => !this.availableRoles.includes(role as UserRoles));
+    if (invalidRoles.length > 0) {
+      this.isLoading = false;
+      this.error = `No tienes permisos para asignar los roles: ${invalidRoles.join(', ')}`;
+      this._alertService.error(this.error, 'Error de Permisos');
+      return;
+    }
+    
     // Find roles to add and remove
     const rolesToAdd = newRoles.filter(role => !currentRoles.includes(role));
     const rolesToRemove = currentRoles.filter(role => !newRoles.includes(role));
@@ -410,7 +442,7 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
             if (role) {
               roleOperations.push(this._usersService.assignRoleToUser(userId, role.id));
             } else {
-              console.warn(`❌ Role not found for assignment: ${roleName}`);
+              console.warn(`Role not found for assignment: ${roleName}`);
             }
           });
           
@@ -420,7 +452,7 @@ export class UserEditModalComponent implements OnInit, OnDestroy, OnChanges {
             if (role) {
               roleOperations.push(this._usersService.removeRoleFromUser(userId, role.id));
             } else {
-              console.warn(`❌ Role not found for removal: ${roleName}`);
+              console.warn(`Role not found for removal: ${roleName}`);
             }
           });
           
