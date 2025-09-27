@@ -38,6 +38,25 @@ export class StoreProductsService {
   constructor(private _http: HttpClient) {}
 
   /**
+   * Transform store product data to ensure proper Date objects
+   */
+  private _transformStoreProduct(storeProduct: any): IStoreProduct {
+    return {
+      ...storeProduct,
+      createdAt: storeProduct.createdAt ? new Date(storeProduct.createdAt) : new Date(),
+      updatedAt: storeProduct.updatedAt ? new Date(storeProduct.updatedAt) : new Date(),
+      lastScraped: storeProduct.lastScraped ? new Date(storeProduct.lastScraped) : undefined
+    };
+  }
+
+  /**
+   * Transform store products array
+   */
+  private _transformStoreProducts(storeProducts: any[]): IStoreProduct[] {
+    return storeProducts.map(product => this._transformStoreProduct(product));
+  }
+
+  /**
    * Get all store products with optional filters
    */
   getAll(filters?: IStoreProductFilters): Observable<IStoreProductsResponse> {
@@ -61,12 +80,12 @@ export class StoreProductsService {
 
     
     return this._http.get<IStoreProductsResponse>(this._baseUrl, { params }).pipe(
+      map(response => ({
+        ...response,
+        data: response.data ? this._transformStoreProducts(response.data) : []
+      })),
       tap(response => {
-        if (response && response.data) {
-          this._storeProducts.next(response.data);
-        } else {
-          this._storeProducts.next([]);
-        }
+        this._storeProducts.next(response.data);
       }),
       catchError(error => this._handleError(error)),
       finalize(() => this._setLoading(false))
@@ -81,6 +100,7 @@ export class StoreProductsService {
     this._clearError();
     
     return this._http.get<IStoreProduct>(`${this._baseUrl}/${id}`).pipe(
+      map(storeProduct => this._transformStoreProduct(storeProduct)),
       tap(storeProduct => {
         this._currentStoreProduct.next(storeProduct);
       }),
@@ -97,6 +117,7 @@ export class StoreProductsService {
     this._clearError();
     
     return this._http.post<IStoreProduct>(this._baseUrl, storeProductData).pipe(
+      map(storeProduct => this._transformStoreProduct(storeProduct)),
       tap(newStoreProduct => {
         // Add to current list
         const currentStoreProducts = this._storeProducts.value;
@@ -116,6 +137,7 @@ export class StoreProductsService {
     this._clearError();
     
     return this._http.put<IStoreProduct>(`${this._baseUrl}/${id}`, storeProductData).pipe(
+      map(storeProduct => this._transformStoreProduct(storeProduct)),
       tap(updatedStoreProduct => {
         // Update in current list
         const currentStoreProducts = this._storeProducts.value;
