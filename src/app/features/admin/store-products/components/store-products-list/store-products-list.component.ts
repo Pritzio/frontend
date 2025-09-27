@@ -603,7 +603,6 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
             this.hasPrev = (response.page || 1) > 1;
           }
           else {
-            console.warn('Unexpected response structure:', response);
             this.storeProducts = [];
             this.totalItems = 0;
             this.totalPages = 1;
@@ -611,7 +610,6 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
             this.hasPrev = false;
           }
         } else {
-          console.warn('Invalid response:', response);
           this.storeProducts = [];
           this.totalItems = 0;
           this.totalPages = 1;

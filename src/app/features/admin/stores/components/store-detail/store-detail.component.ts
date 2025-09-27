@@ -44,8 +44,6 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
       takeUntil(this._destroy$)
     ).subscribe(params => {
       const storeId = params.get('id');
-      console.log('🔍 Route params changed, storeId:', storeId);
-      console.log('🔍 All params:', params);
       if (storeId) {
         this._loadStore(storeId);
       } else {
@@ -231,7 +229,6 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
   // ===== Private Methods =====
 
   private _loadStore(storeId: string): void {
-    console.log('🔍 Loading store with ID:', storeId);
     if (!storeId) {
       this.error = 'ID de tienda no válido';
       return;
@@ -245,23 +242,19 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
       finalize(() => this.isLoading = false)
     ).subscribe({
       next: (response: any) => {
-        console.log('🔍 Store response received:', response);
         if (response && response.data) {
           // Standard API response
           this.store = response.data;
-          console.log('🔍 Store loaded from data object:', this.store?.name, this.store?.id);
           this._loadStoreAnalytics();
           this._loadStoreLocations();
         } else if (response && response.store) {
           // Direct store response
           this.store = response.store;
-          console.log('🔍 Store loaded from store object:', this.store?.name, this.store?.id);
           this._loadStoreAnalytics();
           this._loadStoreLocations();
         } else if (response && response.id) {
           // Direct store object response
           this.store = response;
-          console.log('🔍 Store loaded from direct object:', this.store?.name, this.store?.id);
           this._loadStoreAnalytics();
           this._loadStoreLocations();
         } else {

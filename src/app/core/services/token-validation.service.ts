@@ -56,11 +56,9 @@ export class TokenValidationService {
     return this._refreshToken().pipe(
       tap(() => {
         this._isValidating.next(false);
-        console.log('✅ Token refreshed successfully');
       }),
       catchError((error) => {
         this._isValidating.next(false);
-        console.log('❌ Token refresh failed, logging out');
         this._handleTokenExpired();
         return [false];
       }),

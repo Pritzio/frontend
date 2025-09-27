@@ -53,7 +53,6 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
   if (token) {
     // Check if token is expired before making request
     if (authService.isTokenExpired()) {
-      console.log('🔄 Token is expired, refreshing before request...');
       
       return authService.refreshToken().pipe(
         switchMap((response) => {
@@ -64,7 +63,6 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
           return next(request);
         }),
         catchError((error) => {
-          console.log('❌ Token refresh failed:', error);
           return throwError(() => new HttpErrorResponse({ status: 401, statusText: 'Unauthorized' }));
         })
       );

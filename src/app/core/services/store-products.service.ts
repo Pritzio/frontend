@@ -270,7 +270,6 @@ export class StoreProductsService {
         if (response && response.data) {
           this._storeProducts.next(response.data);
         } else {
-          console.warn('StoreProductsService - No data in unassociated response:', response);
           this._storeProducts.next([]);
         }
       }),

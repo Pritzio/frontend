@@ -24,7 +24,6 @@ export class AuthGuard implements CanActivate {
 
         // Check if token is expired
         if (this._authService.isTokenExpired()) {
-          console.log('🔄 Token expired in guard - refreshing token...');
           
           return this._authService.refreshToken().pipe(
             map(() => true),

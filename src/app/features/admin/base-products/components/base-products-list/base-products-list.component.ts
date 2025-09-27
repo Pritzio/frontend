@@ -589,7 +589,6 @@ export class BaseProductsListComponent implements OnInit, OnDestroy {
           this.hasNext = response.hasNext || false;
           this.hasPrev = response.hasPrev || false;
         } else {
-          console.warn('Unexpected response structure:', response);
           this.baseProducts = [];
           this.totalItems = 0;
           this.totalPages = 1;

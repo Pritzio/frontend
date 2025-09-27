@@ -180,18 +180,12 @@ export class StoresService {
    */
   verifyStore(storeId: string): Observable<IApiResponse<IStore>> {
     const url = `${this._apiUrl}/admin/${storeId}/verify`;
-    console.log('🔍 Verifying store with URL:', url);
-    console.log('🔍 Store ID:', storeId);
-    console.log('🔍 Headers:', this._getAuthHeaders());
     
     return this._http.put<IApiResponse<IStore>>(url, {}, {
       headers: this._getAuthHeaders()
     }).pipe(
       catchError(error => {
-        console.error('❌ Error in verifyStore:', error);
-        console.error('❌ Error status:', error.status);
-        console.error('❌ Error message:', error.message);
-        console.error('❌ Error URL:', error.url);
+        console.error('Error in verifyStore:', error);
         return this._handleError(error);
       })
     );
@@ -228,7 +222,6 @@ export class StoresService {
     const token = localStorage.getItem('accessToken');
     
     if (!token) {
-      console.error('No access token found in localStorage');
       return new HttpHeaders();
     }
     
