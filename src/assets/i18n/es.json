@@ -377,11 +377,11 @@
       "TITLE": "Configuración"
     },
     "FEATURES": {
-      "SEARCH_PRODUCTS": {
-        "TITLE": "Buscar Productos",
-        "DESCRIPTION": "Encuentra productos en múltiples tiendas y compara precios",
-        "BUTTON": "Comenzar Búsqueda"
-      },
+        "SEARCH_PRODUCTS": {
+          "TITLE": "Buscar Productos",
+          "DESCRIPTION": "Encuentra productos en múltiples tiendas y compara precios",
+          "BUTTON": "Comparar Precios"
+        },
       "PRICE_HISTORY": {
         "TITLE": "Historial de Precios",
         "DESCRIPTION": "Visualiza tendencias de precios y datos históricos de productos",

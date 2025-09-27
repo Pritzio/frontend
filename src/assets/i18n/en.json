@@ -369,7 +369,7 @@
       "SEARCH_PRODUCTS": {
         "TITLE": "Search Products",
         "DESCRIPTION": "Find products across multiple stores and compare prices",
-        "BUTTON": "Start Searching"
+        "BUTTON": "Compare Prices"
       },
       "PRICE_HISTORY": {
         "TITLE": "Price History",
