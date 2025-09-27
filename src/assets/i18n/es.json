@@ -209,6 +209,7 @@
         "VERIFY_EMAIL_TRY_AGAIN": "Sí, intentar de nuevo",
         "VERIFY_EMAIL_ALREADY_VERIFIED": "Email ya verificado",
         "VERIFY_EMAIL_ALREADY_VERIFIED_MESSAGE": "Este correo electrónico ya está verificado. Serás redirigido al login en unos segundos.",
+        "VERIFY_EMAIL_RESENT_SUCCESS": "Correo de verificación reenviado exitosamente. Revisa tu bandeja de entrada.",
     "LOGOUT_SUCCESS": "Sesión cerrada exitosamente",
     "LOGOUT_ERROR": "Error durante el cierre de sesión",
     "LOGOUT": "Cerrar Sesión"

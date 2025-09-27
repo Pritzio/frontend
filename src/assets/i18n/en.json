@@ -209,6 +209,7 @@
         "VERIFY_EMAIL_TRY_AGAIN": "Yes, try again",
         "VERIFY_EMAIL_ALREADY_VERIFIED": "Email already verified",
         "VERIFY_EMAIL_ALREADY_VERIFIED_MESSAGE": "This email address is already verified. You will be redirected to login in a few seconds.",
+        "VERIFY_EMAIL_RESENT_SUCCESS": "Verification email resent successfully. Please check your inbox.",
     "LOGOUT_SUCCESS": "Logged out successfully",
     "LOGOUT_ERROR": "Error during logout",
     "LOGOUT": "Logout"

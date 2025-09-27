@@ -113,7 +113,16 @@ export class EmailVerificationComponent implements OnInit {
     this.authService.resendVerification(this.email).subscribe({
       next: (response) => {
         this.isResending = false;
-        this.notificationService.showSuccess('AUTH.VERIFY_EMAIL_RESEND_SUCCESS');
+        this.notificationService.showSuccess('AUTH.VERIFY_EMAIL_RESENT_SUCCESS');
+        // Redirigir al login después del reenvío exitoso
+        setTimeout(() => {
+          this.router.navigate(['/auth/login'], {
+            queryParams: {
+              message: 'verification-resent',
+              email: this.email
+            }
+          });
+        }, 2000); // Esperar 2 segundos para que el usuario vea el mensaje
       },
       error: (error) => {
         this.isResending = false;
