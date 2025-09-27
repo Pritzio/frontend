@@ -269,7 +269,7 @@
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="text-sm text-gray-900">
-                {{ baseProduct.createdAt | date:'short' }}
+                {{ baseProduct.createdAt ? (baseProduct.createdAt | date:'dd/MM/yy') : 'N/A' }}
               </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

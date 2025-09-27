@@ -43,10 +43,48 @@ export class StoreProductsService {
   private _transformStoreProduct(storeProduct: any): IStoreProduct {
     return {
       ...storeProduct,
-      createdAt: storeProduct.createdAt ? new Date(storeProduct.createdAt) : new Date(),
-      updatedAt: storeProduct.updatedAt ? new Date(storeProduct.updatedAt) : new Date(),
-      lastScraped: storeProduct.lastScraped ? new Date(storeProduct.lastScraped) : undefined
+      createdAt: this._parseDate(storeProduct.createdAt),
+      updatedAt: this._parseDate(storeProduct.updatedAt),
+      lastScraped: storeProduct.lastScraped ? this._parseDate(storeProduct.lastScraped) : undefined
     };
+  }
+
+  /**
+   * Safely parse a date string or return a valid Date object
+   */
+  private _parseDate(dateValue: any): Date {
+    if (!dateValue) {
+      return new Date();
+    }
+    
+    // Handle different date formats
+    let parsedDate: Date;
+    
+    // Check if it's already a Date object
+    if (dateValue instanceof Date) {
+      parsedDate = dateValue;
+    } else if (typeof dateValue === 'string') {
+      // Try to parse DD/MM/YYYY HH:mm:ss format first
+      const ddmmyyyyMatch = dateValue.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})$/);
+      if (ddmmyyyyMatch) {
+        const [, day, month, year, hours, minutes, seconds] = ddmmyyyyMatch;
+        // Create date with MM/DD/YYYY format for JavaScript
+        parsedDate = new Date(`${month}/${day}/${year} ${hours}:${minutes}:${seconds}`);
+      } else {
+        // Try standard parsing
+        parsedDate = new Date(dateValue);
+      }
+    } else {
+      parsedDate = new Date(dateValue);
+    }
+    
+    // Check if the date is valid
+    if (isNaN(parsedDate.getTime())) {
+      // Silent fallback - no console warning to avoid spam
+      return new Date();
+    }
+    
+    return parsedDate;
   }
 
   /**

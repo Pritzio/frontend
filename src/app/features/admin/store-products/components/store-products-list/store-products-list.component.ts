@@ -670,4 +670,11 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
 
     return filters;
   }
+
+  /**
+   * Check if a date is valid for display
+   */
+  public isValidDate(date: any): boolean {
+    return date && !isNaN(new Date(date).getTime());
+  }
 }

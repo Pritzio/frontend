@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { 
   IBaseProduct, 
@@ -19,6 +19,62 @@ export class BaseProductsService {
   private readonly apiUrl = `${environment.apiUrl}/admin/products`;
 
   constructor(private http: HttpClient) {}
+
+  /**
+   * Safely parse a date string or return a valid Date object
+   */
+  private _parseDate(dateValue: any): Date {
+    if (!dateValue) {
+      return new Date();
+    }
+    
+    // Handle different date formats
+    let parsedDate: Date;
+    
+    // Check if it's already a Date object
+    if (dateValue instanceof Date) {
+      parsedDate = dateValue;
+    } else if (typeof dateValue === 'string') {
+      // Try to parse DD/MM/YYYY HH:mm:ss format first
+      const ddmmyyyyMatch = dateValue.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})$/);
+      if (ddmmyyyyMatch) {
+        const [, day, month, year, hours, minutes, seconds] = ddmmyyyyMatch;
+        // Create date with MM/DD/YYYY format for JavaScript
+        parsedDate = new Date(`${month}/${day}/${year} ${hours}:${minutes}:${seconds}`);
+      } else {
+        // Try standard parsing
+        parsedDate = new Date(dateValue);
+      }
+    } else {
+      parsedDate = new Date(dateValue);
+    }
+    
+    // Check if the date is valid
+    if (isNaN(parsedDate.getTime())) {
+      // Silent fallback - no console warning to avoid spam
+      return new Date();
+    }
+    
+    return parsedDate;
+  }
+
+  /**
+   * Transform base product data to ensure proper Date objects
+   */
+  private _transformBaseProduct(baseProduct: any): IBaseProduct {
+    return {
+      ...baseProduct,
+      createdAt: this._parseDate(baseProduct.createdAt),
+      updatedAt: this._parseDate(baseProduct.updatedAt)
+    };
+  }
+
+  /**
+   * Transform base products array
+   */
+  private _transformBaseProducts(baseProducts: any[]): IBaseProduct[] {
+    return baseProducts.map(product => this._transformBaseProduct(product));
+  }
 
   /**
    * Get all base products with optional filters
@@ -43,6 +99,10 @@ export class BaseProductsService {
       headers: this.getAuthHeaders(),
       params
     }).pipe(
+      map(response => ({
+        ...response,
+        data: response.data ? this._transformBaseProducts(response.data) : []
+      })),
       catchError((error: HttpErrorResponse) => {
         if (error.status === 404) {
           // Backend endpoint not implemented yet, return empty response
@@ -68,6 +128,7 @@ export class BaseProductsService {
     return this.http.get<IBaseProduct>(`${this.apiUrl}/base-product/${id}`, {
       headers: this.getAuthHeaders()
     }).pipe(
+      map(baseProduct => this._transformBaseProduct(baseProduct)),
       catchError((error: HttpErrorResponse) => {
         if (error.status === 404) {
           throw new Error('Producto no encontrado');
