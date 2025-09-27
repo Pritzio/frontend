@@ -94,8 +94,41 @@ export class I18nService {
   }
 
   private _loadTranslationsSync(): void {
-    // Load translations from JSON files asynchronously
-    this._loadTranslationsFromFiles();
+    // Load translations from JSON files synchronously using fetch
+    this._loadTranslationsFromFilesSync();
+  }
+
+  private _loadTranslationsFromFilesSync(): void {
+    // Load translations synchronously to prevent flash of untranslated content
+    const currentLang = this._currentLanguage.value;
+    
+    // Load current language first
+    this._loadLanguageSync(currentLang);
+    
+    // Load fallback language (Spanish) if different
+    if (currentLang !== 'es') {
+      this._loadLanguageSync('es');
+    }
+    
+    // Mark as loaded
+    this._isLoaded.next(true);
+  }
+
+  private _loadLanguageSync(language: string): void {
+    try {
+      // Use synchronous XMLHttpRequest for immediate loading
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', `/assets/i18n/${language}.json`, false); // false = synchronous
+      xhr.send();
+      
+      if (xhr.status === 200) {
+        this._translations[language] = JSON.parse(xhr.responseText);
+      } else {
+        console.error(`Failed to load ${language} translations`);
+      }
+    } catch (error) {
+      console.error(`Error loading ${language} translations:`, error);
+    }
   }
 
   private async _loadTranslationsFromFiles(): Promise<void> {
@@ -137,8 +170,10 @@ export class I18nService {
   }
 
   translate(key: string, params?: { [key: string]: any }): string {
+    // If translations are not loaded yet, return a loading placeholder or the key
     if (!this._isLoaded.value) {
-      return key;
+      // Return a more user-friendly placeholder instead of the raw key
+      return this._getLoadingPlaceholder(key);
     }
 
     const keys = key.split('.');
@@ -165,6 +200,98 @@ export class I18nService {
     }
 
     return typeof translation === 'string' ? translation : key;
+  }
+
+  private _getLoadingPlaceholder(key: string): string {
+    // Return a more user-friendly placeholder based on the key
+    if (key.includes('TITLE')) return '...';
+    if (key.includes('SUBTITLE')) return '...';
+    if (key.includes('BUTTON')) return '...';
+    if (key.includes('MESSAGE')) return '...';
+    if (key.includes('ERROR')) return '...';
+    if (key.includes('SUCCESS')) return '...';
+    if (key.includes('LOADING')) return 'Cargando...';
+    
+    // For common keys, return appropriate placeholders
+    const commonKeys: { [key: string]: string } = {
+      'COMMON.LOADING': 'Cargando...',
+      'COMMON.SAVE': 'Guardar',
+      'COMMON.CANCEL': 'Cancelar',
+      'COMMON.DELETE': 'Eliminar',
+      'COMMON.EDIT': 'Editar',
+      'COMMON.CREATE': 'Crear',
+      'COMMON.SEARCH': 'Buscar',
+      'COMMON.FILTER': 'Filtrar',
+      'COMMON.ACTIONS': 'Acciones',
+      'COMMON.STATUS': 'Estado',
+      'COMMON.ACTIVE': 'Activo',
+      'COMMON.INACTIVE': 'Inactivo',
+      'COMMON.YES': 'Sí',
+      'COMMON.NO': 'No',
+      'COMMON.SUCCESS': 'Éxito',
+      'COMMON.ERROR': 'Error',
+      'COMMON.WARNING': 'Advertencia',
+      'COMMON.INFO': 'Información',
+      'COMMON.CLOSE': 'Cerrar',
+      'COMMON.UNDERSTOOD': 'Entendido',
+      'COMMON.BACK': 'Atrás',
+      'COMMON.NEXT': 'Siguiente',
+      'COMMON.PREVIOUS': 'Anterior',
+      'COMMON.SUBMIT': 'Enviar',
+      'COMMON.RESET': 'Restablecer',
+      'COMMON.CONFIRM': 'Confirmar',
+      'COMMON.DISCARD': 'Descartar',
+      'COMMON.UPLOAD': 'Subir',
+      'COMMON.DOWNLOAD': 'Descargar',
+      'COMMON.EXPORT': 'Exportar',
+      'COMMON.IMPORT': 'Importar',
+      'COMMON.REFRESH': 'Actualizar',
+      'COMMON.UPDATE': 'Actualizar',
+      'COMMON.VIEW': 'Ver',
+      'COMMON.DETAILS': 'Detalles',
+      'COMMON.RETRY': 'Reintentar',
+      'COMMON.TOTAL': 'Total',
+      'COMMON.NO_DATA': 'Sin Datos',
+      'COMMON.NO_DATA_DESCRIPTION': 'No hay datos disponibles para mostrar',
+      'COMMON.VIEW_ALL': 'Ver Todo',
+      'COMMON.SETTINGS': 'Configuración',
+      'COMMON.PROFILE': 'Perfil',
+      'COMMON.LOGOUT': 'Cerrar Sesión',
+      'COMMON.LOGIN': 'Iniciar Sesión',
+      'COMMON.REGISTER': 'Registrarse',
+      'COMMON.FORGOT_PASSWORD': 'Olvidé mi Contraseña',
+      'COMMON.RESET_PASSWORD': 'Restablecer Contraseña',
+      'COMMON.CHANGE_PASSWORD': 'Cambiar Contraseña',
+      'COMMON.EMAIL': 'Correo Electrónico',
+      'COMMON.PASSWORD': 'Contraseña',
+      'COMMON.USERNAME': 'Nombre de Usuario',
+      'COMMON.FIRST_NAME': 'Nombre',
+      'COMMON.LAST_NAME': 'Apellido',
+      'COMMON.PHONE': 'Teléfono',
+      'COMMON.ADDRESS': 'Dirección',
+      'COMMON.CITY': 'Ciudad',
+      'COMMON.COUNTRY': 'País',
+      'COMMON.POSTAL_CODE': 'Código Postal',
+      'COMMON.LANGUAGE': 'Idioma',
+      'COMMON.ENGLISH': 'Inglés',
+      'COMMON.SPANISH': 'Español',
+      'COMMON.REMEMBER_ME': 'Recordarme',
+      'COMMON.OR': 'o',
+      'COMMON.EMAIL_REQUIRED': 'El correo electrónico es requerido',
+      'COMMON.EMAIL_INVALID': 'Por favor ingresa un correo electrónico válido',
+      'COMMON.PASSWORD_REQUIRED': 'La contraseña es requerida',
+      'COMMON.CONTINUE_WITH_GOOGLE': 'Continuar con Google',
+      'COMMON.CONTINUE_WITH_FACEBOOK': 'Continuar con Facebook',
+      'COMMON.COMPARE_AND_SAVE': 'Compara y Ahorra',
+      'COMMON.COMPARE_DESCRIPTION': 'Encuentra los mejores precios en múltiples tiendas',
+      'COMMON.COMPARE': 'Comparar',
+      'COMMON.FAVORITES': 'Favoritos',
+      'COMMON.HOME': 'Inicio',
+      'COMMON.FOOTER_DESCRIPTION': 'Tu plataforma confiable para comparación de precios y ahorros',
+      'COMMON.PROGRESS': 'Progreso'
+    };
+    
+    return commonKeys[key] || '...';
   }
 
   private _findTranslation(translations: any, keys: string[]): string | null {
