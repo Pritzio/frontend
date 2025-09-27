@@ -170,36 +170,46 @@ export class I18nService {
   }
 
   translate(key: string, params?: { [key: string]: any }): string {
-    // If translations are not loaded yet, return a loading placeholder or the key
-    if (!this._isLoaded.value) {
-      // Return a more user-friendly placeholder instead of the raw key
-      return this._getLoadingPlaceholder(key);
-    }
+    try {
+      // Validate input
+      if (!key || typeof key !== 'string') {
+        return '';
+      }
 
-    const keys = key.split('.');
-    const currentLang = this._currentLanguage.value;
-    
-    // Try current language first
-    let translation = this._findTranslation(this._translations[currentLang], keys);
-    
-    // If not found, try Spanish as fallback
-    if (!translation && currentLang !== 'es') {
-      translation = this._findTranslation(this._translations['es'], keys);
-    }
-    
-    // If still not found, return the key
-    if (!translation) {
+      // If translations are not loaded yet, return a loading placeholder or the key
+      if (!this._isLoaded.value) {
+        // Return a more user-friendly placeholder instead of the raw key
+        return this._getLoadingPlaceholder(key);
+      }
+
+      const keys = key.split('.');
+      const currentLang = this._currentLanguage.value;
+      
+      // Try current language first
+      let translation = this._findTranslation(this._translations[currentLang], keys);
+      
+      // If not found, try Spanish as fallback
+      if (!translation && currentLang !== 'es') {
+        translation = this._findTranslation(this._translations['es'], keys);
+      }
+      
+      // If still not found, return the key
+      if (!translation) {
+        return key;
+      }
+
+      // Handle parameters replacement
+      if (typeof translation === 'string' && params) {
+        return translation.replace(/\{\{(\w+)\}\}/g, (match, param) => {
+          return params[param] !== undefined ? params[param] : match;
+        });
+      }
+
+      return typeof translation === 'string' ? translation : key;
+    } catch (error) {
+      console.warn(`Translation error for key "${key}":`, error);
       return key;
     }
-
-    // Handle parameters replacement
-    if (typeof translation === 'string' && params) {
-      return translation.replace(/\{\{(\w+)\}\}/g, (match, param) => {
-        return params[param] !== undefined ? params[param] : match;
-      });
-    }
-
-    return typeof translation === 'string' ? translation : key;
   }
 
   private _getLoadingPlaceholder(key: string): string {
