@@ -250,6 +250,13 @@
                 <ng-template #noPrice>
                   <span class="text-gray-400">-</span>
                 </ng-template>
+                
+                <!-- Promotional Price -->
+                <div *ngIf="hasPromotionalPrice(storeProduct)" class="mt-1">
+                  <span class="text-sm font-bold text-red-600">
+                    {{ getPromotionalPrice(storeProduct) }}
+                  </span>
+                </div>
               </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">

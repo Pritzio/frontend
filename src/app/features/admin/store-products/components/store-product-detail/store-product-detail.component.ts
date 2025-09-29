@@ -651,6 +651,21 @@ export class StoreProductDetailComponent implements OnInit, OnDestroy {
     
     return 0;
   }
+
+  /**
+   * Check if a store product has promotional price in metadata
+   */
+  public hasPromotionalPrice(storeProduct: IStoreProduct): boolean {
+    return !!(storeProduct.metadata?.['originalData']?.['promotions']?.['price']);
+  }
+
+  /**
+   * Get promotional price from metadata
+   */
+  public getPromotionalPrice(storeProduct: IStoreProduct): string {
+    const promotionalPrice = storeProduct.metadata?.['originalData']?.['promotions']?.['price'];
+    return promotionalPrice || '';
+  }
 }
 
 

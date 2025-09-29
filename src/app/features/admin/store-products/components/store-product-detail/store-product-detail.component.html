@@ -109,6 +109,13 @@
             <div *ngIf="storeProduct.metadata?.['originalPrice']" class="text-xs text-gray-500">
               {{ 'PRODUCTS.ORIGINAL_PRICE' | translate }}: ${{ getOriginalPrice(storeProduct.metadata?.['originalPrice']) | number }}
             </div>
+            
+            <!-- Promotional Price -->
+            <div *ngIf="hasPromotionalPrice(storeProduct)" class="mt-2">
+              <span class="text-sm font-bold text-red-600">
+                {{ getPromotionalPrice(storeProduct) }}
+              </span>
+            </div>
           </div>
           <ng-template #noPrice>
             <div class="text-gray-400">{{ 'COMMON.NOT_AVAILABLE' | translate }}</div>
