@@ -386,6 +386,25 @@ export class BaseProductsListComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Get total stores count for a base product
+   */
+  public getTotalStores(baseProduct: IBaseProduct): number {
+    if (baseProduct.totalStores !== undefined) {
+      return baseProduct.totalStores;
+    }
+    
+    if (baseProduct.storeProducts && baseProduct.storeProducts.length > 0) {
+      // Get unique store IDs
+      const uniqueStoreIds = new Set(
+        baseProduct.storeProducts.map(sp => sp.store.id)
+      );
+      return uniqueStoreIds.size;
+    }
+    
+    return 0;
+  }
+
+  /**
    * Get product image
    */
   public getProductImage(baseProduct: IBaseProduct): string | null {
