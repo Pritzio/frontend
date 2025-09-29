@@ -751,6 +751,7 @@
     "NO_BASE_PRODUCTS": "No base products found",
     "NOT_ASSOCIATED": "This store product is not associated with any base product",
     "NOTES": "Notes",
+    "ORIGINAL_PRICE": "Original price",
     "ENDPOINT_NOT_AVAILABLE": "Store products endpoint is not available yet. Backend is implemented but may need to be restarted or configured.",
     "AUTHENTICATION_REQUIRED": "Authentication required. Please login again.",
     "INSUFFICIENT_PERMISSIONS": "Insufficient permissions to access store products.",

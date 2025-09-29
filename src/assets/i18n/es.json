@@ -762,6 +762,7 @@
     "NO_BASE_PRODUCTS": "No se encontraron productos base",
     "NOT_ASSOCIATED": "Este producto de tienda no está asociado a ningún producto base",
     "NOTES": "Notas",
+    "ORIGINAL_PRICE": "Precio original",
     "ENDPOINT_NOT_AVAILABLE": "El endpoint de productos storage no está disponible aún. El backend está implementado pero puede que necesite ser reiniciado o configurado.",
     "AUTHENTICATION_REQUIRED": "Autenticación requerida. Por favor, inicia sesión nuevamente.",
     "INSUFFICIENT_PERMISSIONS": "Permisos insuficientes para acceder a los productos storage.",

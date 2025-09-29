@@ -107,7 +107,7 @@
               ${{ storeProduct.price | priceFormat }}
             </div>
             <div *ngIf="storeProduct.metadata?.['originalPrice']" class="text-xs text-gray-500">
-              Precio original: ${{ storeProduct.metadata?.['originalPrice'] | number }}
+              {{ 'PRODUCTS.ORIGINAL_PRICE' | translate }}: ${{ getOriginalPrice(storeProduct.metadata?.['originalPrice']) | number }}
             </div>
           </div>
           <ng-template #noPrice>

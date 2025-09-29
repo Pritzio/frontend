@@ -630,6 +630,27 @@ export class StoreProductDetailComponent implements OnInit, OnDestroy {
   public getSuggestedBaseProductBrand(): string {
     return this.suggestedBaseProduct?.brand || 'Sin marca';
   }
+
+  /**
+   * Get original price as a number (remove currency symbols)
+   */
+  public getOriginalPrice(originalPrice: any): number {
+    if (!originalPrice) return 0;
+    
+    // If it's already a number, return it
+    if (typeof originalPrice === 'number') {
+      return originalPrice;
+    }
+    
+    // If it's a string, remove currency symbols and convert to number
+    if (typeof originalPrice === 'string') {
+      const cleanPrice = originalPrice.replace(/[$,]/g, '').trim();
+      const parsed = parseFloat(cleanPrice);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+    
+    return 0;
+  }
 }
 
 
