@@ -7,6 +7,7 @@ import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
 import { BaseProductsService } from '../../../../../core/services/base-products.service';
 import { ProductSimilarityService, DuplicateGroup } from '../../../../../core/services/product-similarity.service';
 import { AlertService } from '../../../../../core/services/alert.service';
+import { I18nService } from '../../../../../core/services/i18n.service';
 import { TranslatePipe } from '../../../../../shared/pipes/translate.pipe';
 import { 
   IBaseProduct, 
@@ -62,6 +63,7 @@ export class BaseProductsListComponent implements OnInit, OnDestroy {
     private _baseProductsService: BaseProductsService,
     private _productSimilarityService: ProductSimilarityService,
     private _alertService: AlertService,
+    private _i18nService: I18nService,
     private _formBuilder: FormBuilder
   ) {
     this.filtersForm = this._createFiltersForm();
@@ -160,28 +162,28 @@ export class BaseProductsListComponent implements OnInit, OnDestroy {
    * Toggle base product active status
    */
   public async toggleActive(baseProductId: string, currentStatus: boolean): Promise<void> {
-    const action = currentStatus ? 'desactivar' : 'activar';
+    const action = currentStatus ? 'deactivate' : 'activate';
     const confirmed = await this._alertService.confirm(
-      `¿Está seguro de ${action} este producto base?`,
-      `Confirmar ${action.charAt(0).toUpperCase() + action.slice(1)}`,
-      `Sí, ${action}`,
-      'Cancelar'
+      this._i18nService.translate('BASE_PRODUCTS.CONFIRMATION_MESSAGES.TOGGLE_ACTIVE', { action: this._i18nService.translate(`BASE_PRODUCTS.ACTIONS.${action.toUpperCase()}`) }),
+      this._i18nService.translate('BASE_PRODUCTS.CONFIRMATION_MESSAGES.TOGGLE_ACTIVE_TITLE', { action: this._i18nService.translate(`BASE_PRODUCTS.ACTIONS.${action.toUpperCase()}`) }),
+      this._i18nService.translate('BASE_PRODUCTS.CONFIRMATION_MESSAGES.TOGGLE_ACTIVE_CONFIRM', { action: this._i18nService.translate(`BASE_PRODUCTS.ACTIONS.${action.toUpperCase()}`) }),
+      this._i18nService.translate('BASE_PRODUCTS.CANCEL')
     );
     
     if (confirmed) {
-      this._alertService.loading(`${action.charAt(0).toUpperCase() + action.slice(1)} producto...`);
+      this._alertService.loading(this._i18nService.translate('BASE_PRODUCTS.LOADING.TOGGLE_ACTIVE', { action: this._i18nService.translate(`BASE_PRODUCTS.ACTIONS.${action.toUpperCase()}`) }));
       
       this._baseProductsService.toggleActive(baseProductId, !currentStatus).subscribe({
         next: () => {
           this._alertService.close();
-          this._alertService.success(`Producto ${action} exitosamente`);
+          this._alertService.success(this._i18nService.translate('BASE_PRODUCTS.SUCCESS_MESSAGES.TOGGLE_ACTIVE', { action: this._i18nService.translate(`BASE_PRODUCTS.ACTIONS.${action.toUpperCase()}`) }));
           this._loadBaseProducts();
           this._updateDuplicateGroupsAfterToggle(baseProductId, !currentStatus);
         },
         error: (error: any) => {
           this._alertService.close();
           console.error(`Error ${action} product:`, error);
-          this._alertService.error(`Error al ${action} el producto. Intente nuevamente.`);
+          this._alertService.error(this._i18nService.translate('BASE_PRODUCTS.ERROR_MESSAGES.TOGGLE_ACTIVE', { action: this._i18nService.translate(`BASE_PRODUCTS.ACTIONS.${action.toUpperCase()}`) }));
         }
       });
     }
@@ -192,29 +194,31 @@ export class BaseProductsListComponent implements OnInit, OnDestroy {
    */
   public async deleteBaseProduct(baseProductId: string): Promise<void> {
     const product = this.baseProducts.find(p => p.id === baseProductId);
-    const productName = product?.name || 'este producto';
+    const productName = product?.name || this._i18nService.translate('BASE_PRODUCTS.DEFAULT_PRODUCT_NAME');
     
     const confirmed = await this._alertService.confirm(
-      `¿Está seguro de eliminar permanentemente "${productName}"? Esta acción no se puede deshacer.`,
-      'Confirmar Eliminación',
-      'Sí, eliminar',
-      'Cancelar'
+      this._i18nService.translate('BASE_PRODUCTS.CONFIRMATION_MESSAGES.DELETE', { productName }),
+      this._i18nService.translate('BASE_PRODUCTS.CONFIRMATION_MESSAGES.DELETE_TITLE'),
+      this._i18nService.translate('BASE_PRODUCTS.CONFIRMATION_MESSAGES.DELETE_CONFIRM'),
+      this._i18nService.translate('BASE_PRODUCTS.CANCEL')
     );
     
     if (confirmed) {
-      this._alertService.loading('Eliminando producto...');
+      this._alertService.loading(this._i18nService.translate('BASE_PRODUCTS.LOADING.DELETE'));
       
       this._baseProductsService.hardDelete(baseProductId).subscribe({
         next: (response: any) => {
           this._alertService.close();
-          this._alertService.success(`Producto eliminado exitosamente. ${response.disassociatedStoreProducts || 0} productos de tienda desasociados.`);
+          this._alertService.success(this._i18nService.translate('BASE_PRODUCTS.SUCCESS_MESSAGES.DELETE', { 
+            disassociatedCount: response.disassociatedStoreProducts || 0 
+          }));
           this._loadBaseProducts();
           this._updateDuplicateGroupsAfterDeletion(baseProductId);
         },
         error: (error: any) => {
           this._alertService.close();
           console.error('Error deleting product:', error);
-          this._alertService.error('Error al eliminar el producto. Intente nuevamente.');
+          this._alertService.error(this._i18nService.translate('BASE_PRODUCTS.ERROR_MESSAGES.DELETE'));
         }
       });
     }
@@ -225,28 +229,30 @@ export class BaseProductsListComponent implements OnInit, OnDestroy {
    */
   public async hardDeleteBaseProduct(baseProductId: string): Promise<void> {
     const product = this.baseProducts.find(p => p.id === baseProductId);
-    const productName = product?.name || 'este producto';
+    const productName = product?.name || this._i18nService.translate('BASE_PRODUCTS.DEFAULT_PRODUCT_NAME');
     
     const confirmed = await this._alertService.confirm(
-      `¿Está seguro de eliminar permanentemente "${productName}"? Esta acción NO se puede deshacer y eliminará todos los datos asociados.`,
-      'Confirmar Eliminación Permanente',
-      'Sí, eliminar permanentemente',
-      'Cancelar'
+      this._i18nService.translate('BASE_PRODUCTS.CONFIRMATION_MESSAGES.HARD_DELETE', { productName }),
+      this._i18nService.translate('BASE_PRODUCTS.CONFIRMATION_MESSAGES.HARD_DELETE_TITLE'),
+      this._i18nService.translate('BASE_PRODUCTS.CONFIRMATION_MESSAGES.HARD_DELETE_CONFIRM'),
+      this._i18nService.translate('BASE_PRODUCTS.CANCEL')
     );
     
     if (confirmed) {
-      this._alertService.loading('Eliminando producto permanentemente...');
+      this._alertService.loading(this._i18nService.translate('BASE_PRODUCTS.LOADING.HARD_DELETE'));
       
       this._baseProductsService.hardDelete(baseProductId).subscribe({
         next: (response: any) => {
           this._alertService.close();
-          this._alertService.success(`Producto eliminado permanentemente. ${response.disassociatedStoreProducts || 0} productos de tienda desasociados.`);
+          this._alertService.success(this._i18nService.translate('BASE_PRODUCTS.SUCCESS_MESSAGES.HARD_DELETE', { 
+            disassociatedCount: response.disassociatedStoreProducts || 0 
+          }));
           this._loadBaseProducts();
         },
         error: (error: any) => {
           this._alertService.close();
           console.error('Error hard deleting product:', error);
-          this._alertService.error('Error al eliminar el producto. Intente nuevamente.');
+          this._alertService.error(this._i18nService.translate('BASE_PRODUCTS.ERROR_MESSAGES.HARD_DELETE'));
         }
       });
     }
@@ -351,7 +357,7 @@ export class BaseProductsListComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error loading duplicate groups:', error);
-        this._alertService.error('Error al cargar productos duplicados');
+        this._alertService.error(this._i18nService.translate('BASE_PRODUCTS.ERRORS.LOAD_DUPLICATES'));
         this.isLoadingDuplicates = false;
       }
     });
@@ -506,11 +512,11 @@ export class BaseProductsListComponent implements OnInit, OnDestroy {
   public getStatusFilterText(): string {
     const isActiveValue = this.filtersForm.get('isActive')?.value;
     if (isActiveValue === true || isActiveValue === 'true') {
-      return 'Solo Activos';
+      return 'BASE_PRODUCTS.ACTIVE_ONLY';
     } else if (isActiveValue === false || isActiveValue === 'false') {
-      return 'Solo Inactivos';
+      return 'BASE_PRODUCTS.INACTIVE_ONLY';
     } else {
-      return 'Todos';
+      return 'BASE_PRODUCTS.ALL';
     }
   }
 
@@ -619,15 +625,15 @@ export class BaseProductsListComponent implements OnInit, OnDestroy {
         console.error('Error loading base products:', error);
         
         if (error.status === 404) {
-          this.error = 'Los endpoints de productos base aún no están implementados en el backend';
+          this.error = this._i18nService.translate('BASE_PRODUCTS.ERRORS.ENDPOINTS_NOT_IMPLEMENTED');
         } else if (error.status === 401) {
-          this.error = 'Autenticación requerida';
+          this.error = this._i18nService.translate('BASE_PRODUCTS.ERRORS.AUTHENTICATION_REQUIRED');
         } else if (error.status === 403) {
-          this.error = 'Permisos insuficientes';
+          this.error = this._i18nService.translate('BASE_PRODUCTS.ERRORS.INSUFFICIENT_PERMISSIONS');
         } else if (error.status === 0) {
-          this.error = 'Error de conexión';
+          this.error = this._i18nService.translate('BASE_PRODUCTS.ERRORS.CONNECTION_ERROR');
         } else {
-          this.error = 'Error al cargar los productos base';
+          this.error = this._i18nService.translate('BASE_PRODUCTS.ERRORS.LOAD_PRODUCTS');
         }
       },
       complete: () => {

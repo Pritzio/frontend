@@ -35,10 +35,12 @@
     "UPDATE": "Update",
     "VIEW": "View",
     "DETAILS": "Details",
+    "SHOW": "Show",
     "RETRY": "Retry",
     "TOTAL": "Total",
     "NO_DATA": "No Data",
     "NO_DATA_DESCRIPTION": "No data available to display",
+    "NOT_AVAILABLE": "Not available",
     "VIEW_ALL": "View All",
     "SETTINGS": "Settings",
     "PROFILE": "Profile",
@@ -621,10 +623,113 @@
     "CONFIRMATIONS": {
       "DELETE": "Are you sure you want to delete the store {{name}}?"
     },
+    "VALIDATION": {
+      "NAME_REQUIRED": "Name is required",
+      "EMAIL_VALID": "Enter a valid email",
+      "PHONE_VALID": "Enter a valid phone number"
+    },
     "ERRORS": {
       "DELETE": "Error deleting store. Please try again.",
       "VERIFY": "Error verifying store. Please try again."
     }
+  },
+  "BASE_PRODUCTS": {
+    "TITLE": "Base Products",
+    "SUBTITLE": "Manage base products for the comparison system",
+    "CREATE": "Create Base Product",
+    "EDIT": "Edit Base Product",
+    "DELETE": "Delete Base Product",
+    "VIEW": "View Base Product",
+    "SEARCH": "Search",
+    "SEARCH_PLACEHOLDER": "Search base products...",
+    "FILTERS": "Filters",
+    "CLEAR_FILTERS": "Clear Filters",
+    "APPLY_FILTERS": "Apply Filters",
+    "SHOWING": "Showing",
+    "SHOWING_RESULTS": "Showing {{start}} - {{end}} of {{total}} results",
+    "TOTAL_ITEMS": "base products",
+    "NO_PRODUCTS": "No base products",
+    "NO_PRODUCTS_DESCRIPTION": "Start by creating your first base product",
+    "CREATE_FIRST": "Create First Base Product",
+    "BRAND": "Brand",
+    "CATEGORY": "Category",
+    "STATUS": "Status",
+    "ALL": "All",
+    "ACTIVE_ONLY": "Active Only",
+    "INACTIVE_ONLY": "Inactive Only",
+    "DATE_FROM": "Date From",
+    "DATE_TO": "Date To",
+    "CREATED_AT": "Created",
+    "ACTIONS": "Actions",
+    "VIEW_DETAILS": "View Details",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "ACTIVATE": "Activate",
+    "DEACTIVATE": "Deactivate",
+    "SEARCH_DUPLICATES": "Search Duplicates",
+    "DUPLICATES_TITLE": "Duplicate Products Analysis",
+    "NO_DUPLICATES": "No duplicates found",
+    "NO_DUPLICATES_DESCRIPTION": "All base products are unique",
+    "SIMILARITY_THRESHOLD": "Similarity Threshold",
+    "RESULTS_LIMIT": "Results Limit",
+    "INCLUDE_INACTIVE": "Include inactive",
+    "SEARCH_BUTTON": "Search",
+    "RESET_BUTTON": "Reset",
+    "CLOSE_MODAL": "Close",
+    "PRODUCT_COUNT": "product",
+    "PRODUCTS_COUNT": "products",
+    "BASIC_FIELDS": "Basic fields of the base product",
+    "SELECT_CATEGORIES": "Select the available categories for this product",
+    "INACTIVE_INFO": "Inactive products will not appear in searches",
+    "CANCEL": "Cancel",
+    "ERRORS": {
+      "LOAD_DUPLICATES": "Error loading duplicate products",
+      "ENDPOINTS_NOT_IMPLEMENTED": "Base products endpoints are not yet implemented in the backend",
+      "AUTHENTICATION_REQUIRED": "Authentication required",
+      "INSUFFICIENT_PERMISSIONS": "Insufficient permissions",
+      "CONNECTION_ERROR": "Connection error",
+      "LOAD_PRODUCTS": "Error loading base products"
+    },
+    "SUCCESS": {
+      "PRODUCT_DELETED": "Product deleted successfully",
+      "PRODUCT_ASSOCIATED": "Product associated successfully"
+    },
+    "STATUS_VALUES": {
+      "ASSOCIATED": "Associated",
+      "NOT_ASSOCIATED": "Not associated",
+      "NO_BRAND": "No brand"
+    },
+    "CONFIRMATION_MESSAGES": {
+      "DELETE": "Are you sure you want to permanently delete \"{{productName}}\"? This action cannot be undone.",
+      "DELETE_TITLE": "Confirm Deletion",
+      "DELETE_CONFIRM": "Yes, delete",
+      "HARD_DELETE": "Are you sure you want to permanently delete \"{{productName}}\"? This action CANNOT be undone and will delete all associated data.",
+      "HARD_DELETE_TITLE": "Confirm Permanent Deletion",
+      "HARD_DELETE_CONFIRM": "Yes, delete permanently",
+      "TOGGLE_ACTIVE": "Are you sure you want to {{action}} this base product?",
+      "TOGGLE_ACTIVE_TITLE": "Confirm {{action}}",
+      "TOGGLE_ACTIVE_CONFIRM": "Yes, {{action}}"
+    },
+    "LOADING": {
+      "DELETE": "Deleting product...",
+      "HARD_DELETE": "Deleting product permanently...",
+      "TOGGLE_ACTIVE": "{{action}} product..."
+    },
+    "SUCCESS_MESSAGES": {
+      "DELETE": "Product deleted successfully. {{disassociatedCount}} store products disassociated.",
+      "HARD_DELETE": "Product deleted permanently. {{disassociatedCount}} store products disassociated.",
+      "TOGGLE_ACTIVE": "Product {{action}} successfully"
+    },
+    "ERROR_MESSAGES": {
+      "DELETE": "Error deleting the product. Please try again.",
+      "HARD_DELETE": "Error deleting the product. Please try again.",
+      "TOGGLE_ACTIVE": "Error {{action}} the product. Please try again."
+    },
+    "ACTIONS": {
+      "ACTIVATE": "activate",
+      "DEACTIVATE": "deactivate"
+    },
+    "DEFAULT_PRODUCT_NAME": "this product"
   },
   "PRODUCTS": {
     "TITLE": "Store Products",
@@ -641,6 +746,11 @@
     "LOADING": "Loading products...",
     "NO_PRODUCTS": "No products found",
     "NO_PRODUCTS_DESCRIPTION": "No products match the current filters. Try adjusting your search criteria.",
+    "NO_SIMILAR_PRODUCTS": "No similar base products found",
+    "SEARCH_MANUALLY": "You can search manually in the list below",
+    "NO_BASE_PRODUCTS": "No base products found",
+    "NOT_ASSOCIATED": "This store product is not associated with any base product",
+    "NOTES": "Notes",
     "ENDPOINT_NOT_AVAILABLE": "Store products endpoint is not available yet. Backend is implemented but may need to be restarted or configured.",
     "AUTHENTICATION_REQUIRED": "Authentication required. Please login again.",
     "INSUFFICIENT_PERMISSIONS": "Insufficient permissions to access store products.",
@@ -733,11 +843,13 @@
     },
     "ERROR_TITLE": "Error Loading",
     "PRICE": "Price",
+    "STORE": "Store",
+    "DESCRIPTION": "Description",
+    "VERIFICATION": "Verification",
     "REFRESH": "Refresh",
     "RETRY": "Retry",
     "SHOWING_RESULTS": "Showing {{start}} - {{end}} of {{total}} results",
     "SKU": "SKU",
-    "STORE": "Store",
     "STORE_NAME": "Store Name",
     "STORE_NAME_PLACEHOLDER": "Filter by store name",
     "TOTAL_ITEMS": "total items",

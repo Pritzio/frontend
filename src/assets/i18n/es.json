@@ -35,10 +35,12 @@
     "UPDATE": "Actualizar",
     "VIEW": "Ver",
     "DETAILS": "Detalles",
+    "SHOW": "Mostrar",
     "RETRY": "Reintentar",
     "TOTAL": "Total",
     "NO_DATA": "Sin Datos",
     "NO_DATA_DESCRIPTION": "No hay datos disponibles para mostrar",
+    "NOT_AVAILABLE": "No disponible",
     "VIEW_ALL": "Ver Todo",
     "SETTINGS": "Configuración",
     "PROFILE": "Perfil",
@@ -632,10 +634,113 @@
     "CONFIRMATIONS": {
       "DELETE": "¿Estás seguro de que quieres eliminar la tienda {{name}}?"
     },
+    "VALIDATION": {
+      "NAME_REQUIRED": "El nombre es requerido",
+      "EMAIL_VALID": "Ingresa un email válido",
+      "PHONE_VALID": "Ingresa un número de teléfono válido"
+    },
     "ERRORS": {
       "DELETE": "Error al eliminar tienda. Por favor intenta de nuevo.",
       "VERIFY": "Error al verificar tienda. Por favor intenta de nuevo."
     }
+  },
+  "BASE_PRODUCTS": {
+    "TITLE": "Productos Base",
+    "SUBTITLE": "Gestiona los productos base del sistema de comparación",
+    "CREATE": "Crear Producto Base",
+    "EDIT": "Editar Producto Base",
+    "DELETE": "Eliminar Producto Base",
+    "VIEW": "Ver Producto Base",
+    "SEARCH": "Buscar",
+    "SEARCH_PLACEHOLDER": "Buscar productos base...",
+    "FILTERS": "Filtros",
+    "CLEAR_FILTERS": "Limpiar Filtros",
+    "APPLY_FILTERS": "Aplicar Filtros",
+    "SHOWING": "Mostrando",
+    "SHOWING_RESULTS": "Mostrando {{start}} - {{end}} de {{total}} resultados",
+    "TOTAL_ITEMS": "productos base",
+    "NO_PRODUCTS": "No hay productos base",
+    "NO_PRODUCTS_DESCRIPTION": "Comienza creando tu primer producto base del sistema",
+    "CREATE_FIRST": "Crear Primer Producto Base",
+    "BRAND": "Marca",
+    "CATEGORY": "Categoría",
+    "STATUS": "Estado",
+    "ALL": "Todos",
+    "ACTIVE_ONLY": "Solo Activos",
+    "INACTIVE_ONLY": "Solo Inactivos",
+    "DATE_FROM": "Fecha Desde",
+    "DATE_TO": "Fecha Hasta",
+    "CREATED_AT": "Creado",
+    "ACTIONS": "Acciones",
+    "VIEW_DETAILS": "Ver Detalles",
+    "EDIT": "Editar",
+    "DELETE": "Eliminar",
+    "ACTIVATE": "Activar",
+    "DEACTIVATE": "Desactivar",
+    "SEARCH_DUPLICATES": "Buscar Duplicados",
+    "DUPLICATES_TITLE": "Análisis de Productos Duplicados",
+    "NO_DUPLICATES": "No se encontraron duplicados",
+    "NO_DUPLICATES_DESCRIPTION": "Todos los productos base son únicos",
+    "SIMILARITY_THRESHOLD": "Umbral de Similitud",
+    "RESULTS_LIMIT": "Límite de Resultados",
+    "INCLUDE_INACTIVE": "Incluir inactivos",
+    "SEARCH_BUTTON": "Buscar",
+    "RESET_BUTTON": "Resetear",
+    "CLOSE_MODAL": "Cerrar",
+    "PRODUCT_COUNT": "producto",
+    "PRODUCTS_COUNT": "productos",
+    "BASIC_FIELDS": "Campos básicos del producto base",
+    "SELECT_CATEGORIES": "Selecciona las categorías disponibles para este producto",
+    "INACTIVE_INFO": "Los productos inactivos no aparecerán en las búsquedas",
+    "CANCEL": "Cancelar",
+    "ERRORS": {
+      "LOAD_DUPLICATES": "Error al cargar productos duplicados",
+      "ENDPOINTS_NOT_IMPLEMENTED": "Los endpoints de productos base aún no están implementados en el backend",
+      "AUTHENTICATION_REQUIRED": "Autenticación requerida",
+      "INSUFFICIENT_PERMISSIONS": "Permisos insuficientes",
+      "CONNECTION_ERROR": "Error de conexión",
+      "LOAD_PRODUCTS": "Error al cargar los productos base"
+    },
+    "SUCCESS": {
+      "PRODUCT_DELETED": "Producto eliminado exitosamente",
+      "PRODUCT_ASSOCIATED": "Producto asociado exitosamente"
+    },
+    "STATUS_VALUES": {
+      "ASSOCIATED": "Asociado",
+      "NOT_ASSOCIATED": "Sin asociar",
+      "NO_BRAND": "Sin marca"
+    },
+    "CONFIRMATION_MESSAGES": {
+      "DELETE": "¿Está seguro de eliminar permanentemente \"{{productName}}\"? Esta acción no se puede deshacer.",
+      "DELETE_TITLE": "Confirmar Eliminación",
+      "DELETE_CONFIRM": "Sí, eliminar",
+      "HARD_DELETE": "¿Está seguro de eliminar permanentemente \"{{productName}}\"? Esta acción NO se puede deshacer y eliminará todos los datos asociados.",
+      "HARD_DELETE_TITLE": "Confirmar Eliminación Permanente",
+      "HARD_DELETE_CONFIRM": "Sí, eliminar permanentemente",
+      "TOGGLE_ACTIVE": "¿Está seguro de {{action}} este producto base?",
+      "TOGGLE_ACTIVE_TITLE": "Confirmar {{action}}",
+      "TOGGLE_ACTIVE_CONFIRM": "Sí, {{action}}"
+    },
+    "LOADING": {
+      "DELETE": "Eliminando producto...",
+      "HARD_DELETE": "Eliminando producto permanentemente...",
+      "TOGGLE_ACTIVE": "{{action}} producto..."
+    },
+    "SUCCESS_MESSAGES": {
+      "DELETE": "Producto eliminado exitosamente. {{disassociatedCount}} productos de tienda desasociados.",
+      "HARD_DELETE": "Producto eliminado permanentemente. {{disassociatedCount}} productos de tienda desasociados.",
+      "TOGGLE_ACTIVE": "Producto {{action}} exitosamente"
+    },
+    "ERROR_MESSAGES": {
+      "DELETE": "Error al eliminar el producto. Intente nuevamente.",
+      "HARD_DELETE": "Error al eliminar el producto. Intente nuevamente.",
+      "TOGGLE_ACTIVE": "Error al {{action}} el producto. Intente nuevamente."
+    },
+    "ACTIONS": {
+      "ACTIVATE": "activar",
+      "DEACTIVATE": "desactivar"
+    },
+    "DEFAULT_PRODUCT_NAME": "este producto"
   },
   "PRODUCTS": {
     "TITLE": "Productos Storage",
@@ -652,6 +757,11 @@
     "LOADING": "Cargando productos...",
     "NO_PRODUCTS": "No se encontraron productos",
     "NO_PRODUCTS_DESCRIPTION": "Ningún producto coincide con los filtros actuales. Intenta ajustar tus criterios de búsqueda.",
+    "NO_SIMILAR_PRODUCTS": "No se encontraron productos base similares",
+    "SEARCH_MANUALLY": "Puedes buscar manualmente en la lista de abajo",
+    "NO_BASE_PRODUCTS": "No se encontraron productos base",
+    "NOT_ASSOCIATED": "Este producto de tienda no está asociado a ningún producto base",
+    "NOTES": "Notas",
     "ENDPOINT_NOT_AVAILABLE": "El endpoint de productos storage no está disponible aún. El backend está implementado pero puede que necesite ser reiniciado o configurado.",
     "AUTHENTICATION_REQUIRED": "Autenticación requerida. Por favor, inicia sesión nuevamente.",
     "INSUFFICIENT_PERMISSIONS": "Permisos insuficientes para acceder a los productos storage.",
@@ -752,9 +862,11 @@
       "DESCRIPTION": "Ningún producto coincide con los filtros actuales. Intenta ajustar tus criterios de búsqueda."
     },
     "PRICE": "Precio",
+    "STORE": "Tienda",
+    "DESCRIPTION": "Descripción",
+    "VERIFICATION": "Verificación",
     "REFRESH": "Actualizar",
     "RETRY": "Reintentar",
-    "STORE": "Tienda",
     "STORE_NAME": "Nombre de Tienda",
     "STORE_NAME_PLACEHOLDER": "Filtrar por nombre de tienda",
     "UPDATED_THIS_MONTH": "Actualizados Este Mes"

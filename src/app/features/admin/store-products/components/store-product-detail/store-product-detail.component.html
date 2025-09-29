@@ -41,7 +41,7 @@
     <div class="flex items-center gap-3">
       <div class="text-red-600 text-xl">⚠️</div>
       <div>
-        <h3 class="text-red-800 font-medium">Error</h3>
+        <h3 class="text-red-800 font-medium">{{ 'COMMON.ERROR' | translate }}</h3>
         <p class="text-red-600 mt-1">{{ error }}</p>
       </div>
     </div>
@@ -76,7 +76,7 @@
           </div>
           
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'PRODUCTS.DESCRIPTION' | translate }}</label>
             <p class="text-gray-900">{{ storeProduct.description || 'Sin descripción' }}</p>
           </div>
           
@@ -91,7 +91,7 @@
               <a *ngIf="storeProduct.url" [href]="storeProduct.url" target="_blank" class="text-blue-600 hover:underline">
                 {{ storeProduct.url }}
               </a>
-              <span *ngIf="!storeProduct.url">No disponible</span>
+              <span *ngIf="!storeProduct.url">{{ 'COMMON.NOT_AVAILABLE' | translate }}</span>
             </p>
           </div>
         </div>
@@ -99,7 +99,7 @@
 
       <!-- Precio destacado -->
       <div class="bg-white border border-gray-200 rounded-lg p-4">
-        <h2 class="text-lg font-semibold text-gray-900 mb-3">Precio</h2>
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">{{ 'PRODUCTS.PRICE' | translate }}</h2>
         
         <div class="text-center">
           <div *ngIf="storeProduct.price; else noPrice" class="space-y-2">
@@ -111,7 +111,7 @@
             </div>
           </div>
           <ng-template #noPrice>
-            <div class="text-gray-400">No disponible</div>
+            <div class="text-gray-400">{{ 'COMMON.NOT_AVAILABLE' | translate }}</div>
           </ng-template>
         </div>
       </div>
@@ -141,7 +141,7 @@
           </div>
           
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'COMMON.STATUS' | translate }}</label>
             <p class="text-gray-900">
               <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
                     [class]="storeProduct.store.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
@@ -151,7 +151,7 @@
           </div>
           
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Verificación</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'PRODUCTS.VERIFICATION' | translate }}</label>
             <p class="text-gray-900">
               <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
                     [class]="storeProduct.store.isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
@@ -237,7 +237,7 @@
       <div *ngIf="!associatedBaseProduct" class="text-center py-8">
         <i class="icon-package text-gray-400 text-4xl mb-3"></i>
         <h3 class="text-lg font-medium text-gray-900 mb-2">Sin Producto Base Asociado</h3>
-        <p class="text-gray-600 mb-4">Este producto de tienda no está asociado a ningún producto base</p>
+        <p class="text-gray-600 mb-4">{{ 'PRODUCTS.NOT_ASSOCIATED' | translate }}</p>
         <button 
           (click)="openBaseProductModal()"
           class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -256,7 +256,7 @@
         
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Creado por</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'PRODUCTS.CREATED_BY' | translate }}</label>
             <p class="text-gray-900">{{ storeProduct.creatorName }}</p>
           </div>
           
@@ -292,7 +292,7 @@
 
     <!-- Tercera fila: Notas -->
     <div *ngIf="storeProduct.notes" class="bg-white border border-gray-200 rounded-lg p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-4">Notas</h2>
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ 'PRODUCTS.NOTES' | translate }}</h2>
       <p class="text-gray-900">{{ storeProduct.notes }}</p>
     </div>
   </div>
@@ -407,8 +407,8 @@
           
           <div *ngIf="!isLoadingSuggestion && suggestedBaseProducts.length === 0" class="text-center py-4">
             <i class="icon-info text-gray-400 text-xl mb-2"></i>
-            <p class="text-sm text-gray-600">No se encontraron productos base similares</p>
-            <p class="text-xs text-gray-500 mt-1">Puedes buscar manualmente en la lista de abajo</p>
+            <p class="text-sm text-gray-600">{{ 'PRODUCTS.NO_SIMILAR_PRODUCTS' | translate }}</p>
+            <p class="text-xs text-gray-500 mt-1">{{ 'PRODUCTS.SEARCH_MANUALLY' | translate }}</p>
           </div>
         </div>
       </div>
@@ -433,7 +433,7 @@
         
         <div *ngIf="!isLoadingBaseProducts && availableBaseProducts.length === 0" class="text-center py-8">
           <i class="icon-package text-gray-400 text-4xl mb-3"></i>
-          <p class="text-gray-600">No se encontraron productos base</p>
+          <p class="text-gray-600">{{ 'PRODUCTS.NO_BASE_PRODUCTS' | translate }}</p>
         </div>
         
         <div *ngIf="!isLoadingBaseProducts && availableBaseProducts.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">

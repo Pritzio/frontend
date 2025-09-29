@@ -47,7 +47,7 @@
 
         <!-- Store Filter -->
         <div>
-          <label for="storeId" class="block text-sm font-medium text-gray-700 mb-2">Tienda</label>
+          <label for="storeId" class="block text-sm font-medium text-gray-700 mb-2">{{ 'PRODUCTS.STORE' | translate }}</label>
           <select
             id="storeId"
             formControlName="storeId"
@@ -492,8 +492,8 @@
             
             <div *ngIf="!isLoadingSuggestion && suggestedBaseProducts.length === 0" class="text-center py-4">
               <i class="icon-info text-gray-400 text-xl mb-2"></i>
-              <p class="text-sm text-gray-600">No se encontraron productos base similares</p>
-              <p class="text-xs text-gray-500 mt-1">Puedes buscar manualmente en la lista de abajo</p>
+              <p class="text-sm text-gray-600">{{ 'PRODUCTS.NO_SIMILAR_PRODUCTS' | translate }}</p>
+              <p class="text-xs text-gray-500 mt-1">{{ 'PRODUCTS.SEARCH_MANUALLY' | translate }}</p>
             </div>
           </div>
         </div>
@@ -518,7 +518,7 @@
           
           <div *ngIf="!isLoadingBaseProducts && availableBaseProducts.length === 0" class="text-center py-8">
             <i class="icon-package text-gray-400 text-4xl mb-3"></i>
-            <p class="text-gray-600">No se encontraron productos base</p>
+            <p class="text-gray-600">{{ 'PRODUCTS.NO_BASE_PRODUCTS' | translate }}</p>
           </div>
           
         <div *ngIf="!isLoadingBaseProducts && availableBaseProducts.length > 0" class="grid grid-cols-1 gap-4">

@@ -9,6 +9,7 @@ import { BaseProductsService } from '../../../../../core/services/base-products.
 import { ProductSimilarityService, SimilarityResult } from '../../../../../core/services/product-similarity.service';
 import { StoresService } from '../../../../../core/services/stores.service';
 import { AlertService } from '../../../../../core/services/alert.service';
+import { I18nService } from '../../../../../core/services/i18n.service';
 import { TranslatePipe } from '../../../../../shared/pipes/translate.pipe';
 import { PriceFormatPipe } from '../../../../../shared/pipes/price-format.pipe';
 import { 
@@ -76,6 +77,7 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
     private _productSimilarityService: ProductSimilarityService,
     private _storesService: StoresService,
     private _alertService: AlertService,
+    private _i18nService: I18nService,
     private _formBuilder: FormBuilder
   ) {
     this.filtersForm = this._createFiltersForm();
@@ -182,7 +184,7 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
       `¿Está seguro de eliminar "${productName}"? Esta acción no se puede deshacer.`,
       'Confirmar Eliminación',
       'Sí, eliminar',
-      'Cancelar'
+      this._i18nService.translate('BASE_PRODUCTS.CANCEL')
     );
     
     if (confirmed) {
@@ -191,7 +193,7 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
       this._storeProductsService.delete(storeProductId).subscribe({
         next: () => {
           this._alertService.close();
-          this._alertService.success('Producto eliminado exitosamente');
+          this._alertService.success(this._i18nService.translate('BASE_PRODUCTS.SUCCESS.PRODUCT_DELETED'));
           this._loadProducts();
         },
         error: (error: any) => {
@@ -271,7 +273,7 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error loading base products:', error);
-        this._alertService.error('Error al cargar productos base disponibles');
+        this._alertService.error(this._i18nService.translate('BASE_PRODUCTS.ERRORS.LOAD_PRODUCTS'));
         this.isLoadingBaseProducts = false;
       }
     });
@@ -299,13 +301,13 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
 
     this._baseProductsService.associateStoreProduct(this.selectedStoreProduct.id, this.selectedBaseProduct.id).subscribe({
       next: () => {
-        this._alertService.success('Producto asociado exitosamente');
+        this._alertService.success(this._i18nService.translate('BASE_PRODUCTS.SUCCESS.PRODUCT_ASSOCIATED'));
         this._loadProducts(); // Refresh the list to update association status
         this.closeAssociationModal();
       },
       error: (error) => {
         console.error('Error associating store product:', error);
-        this._alertService.error('Error al asociar el producto');
+        this._alertService.error(this._i18nService.translate('BASE_PRODUCTS.ERRORS.LOAD_PRODUCTS'));
       }
     });
   }
@@ -361,7 +363,7 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
    * Get suggested base product brand
    */
   public getSuggestedBaseProductBrand(): string {
-    return this.suggestedBaseProduct?.brand || 'Sin marca';
+    return this.suggestedBaseProduct?.brand || this._i18nService.translate('BASE_PRODUCTS.STATUS_VALUES.NO_BRAND');
   }
 
   /**
@@ -406,9 +408,9 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
    */
   public getAssociationStatusText(storeProduct: IStoreProduct): string {
     if (storeProduct.baseProductId) {
-      return 'Asociado';
+      return this._i18nService.translate('BASE_PRODUCTS.STATUS_VALUES.ASSOCIATED');
     } else {
-      return 'Sin asociar';
+      return this._i18nService.translate('BASE_PRODUCTS.STATUS_VALUES.NOT_ASSOCIATED');
     }
   }
   
