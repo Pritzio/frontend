@@ -238,6 +238,11 @@
                     <div *ngIf="storeProduct.storeProductId" class="text-sm text-gray-500">
                       ID: {{ storeProduct.storeProductId }}
                     </div>
+                    <div *ngIf="isOutOfStock(storeProduct)" class="mt-1">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        Agotado
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>

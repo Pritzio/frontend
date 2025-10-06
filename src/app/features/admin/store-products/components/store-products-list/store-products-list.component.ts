@@ -692,4 +692,11 @@ export class StoreProductsListComponent implements OnInit, OnDestroy {
     const promotionalPrice = storeProduct.metadata?.['originalData']?.['promotions']?.['price'];
     return promotionalPrice || '';
   }
+
+  /**
+   * Check if a store product is out of stock from metadata
+   */
+  public isOutOfStock(storeProduct: IStoreProduct): boolean {
+    return !!(storeProduct.metadata?.['is_out_of_stock']);
+  }
 }

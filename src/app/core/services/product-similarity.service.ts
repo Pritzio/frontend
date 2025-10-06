@@ -140,24 +140,40 @@ export class ProductSimilarityService {
   findDuplicateBaseProducts(
     filters: SimilarityFilters = {}
   ): Observable<DuplicateGroup[]> {
-    let params = new HttpParams()
-      .set('threshold', (filters.threshold || 0.8).toString())
-      .set('limit', (filters.limit || 50).toString())
-      .set('includeInactive', (filters.includeInactive || false).toString());
-
-    // Add brand filter if provided
+    let params = new HttpParams();
+    
+    // Add filters as query parameters
+    if (filters.threshold !== undefined) {
+      params = params.set('threshold', filters.threshold.toString());
+    }
+    if (filters.limit !== undefined) {
+      params = params.set('limit', filters.limit.toString());
+    }
+    if (filters.includeInactive !== undefined) {
+      params = params.set('includeInactive', filters.includeInactive.toString());
+    }
     if (filters.brand) {
       params = params.set('brand', filters.brand);
     }
 
     return this.http.get<DuplicateGroup[]>(
-      `${this.apiUrl}/admin/products/duplicates`,
+      `${this.apiUrl}/product-comparison/duplicates`,
       { 
         headers: this.getAuthHeaders(),
         params
       }
     ).pipe(
-      map(groups => this._enrichDuplicateGroups(groups)),
+      map(response => {
+        // Handle different response structures
+        let groups = response;
+        if (response && typeof response === 'object' && 'data' in response) {
+          groups = (response as any).data;
+        } else if (response && typeof response === 'object' && 'groups' in response) {
+          groups = (response as any).groups;
+        }
+        
+        return this._enrichDuplicateGroups(groups);
+      }),
       catchError(error => {
         console.error('Error finding duplicate products:', error);
         return of([]);
@@ -246,6 +262,11 @@ export class ProductSimilarityService {
    * Enrich duplicate groups with confidence levels
    */
   private _enrichDuplicateGroups(groups: DuplicateGroup[]): DuplicateGroup[] {
+    // Ensure groups is an array before mapping
+    if (!Array.isArray(groups)) {
+      return [];
+    }
+    
     return groups.map(group => ({
       ...group,
       confidence: this._getConfidenceLevel(group.avgSimilarity)

@@ -45,7 +45,12 @@
         class="price-item"
       >
         <span class="store-name">{{ store.store.name }}</span>
-        <span class="store-price">{{ formatPrice(store.price) }}</span>
+        <ng-container *ngIf="isOutOfStock(store); else showPrice">
+          <span class="out-of-stock-text">Agotado</span>
+        </ng-container>
+        <ng-template #showPrice>
+          <span class="store-price">{{ formatPrice(store.price) }}</span>
+        </ng-template>
       </div>
     </div>
   </div>

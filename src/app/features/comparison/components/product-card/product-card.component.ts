@@ -104,4 +104,8 @@ export class ProductCardComponent {
   trackByStoreId(index: number, store: StoreProductInfo): string {
     return store.store.id;
   }
+
+  isOutOfStock(store: StoreProductInfo): boolean {
+    return !!store.product.metadata?.['is_out_of_stock'];
+  }
 }

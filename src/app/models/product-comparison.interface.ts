@@ -36,6 +36,7 @@ export interface StoreProductInfo {
     url: string;
     image: string | null;
     lastScraped: string;
+    metadata?: Record<string, any>;
   };
   price: number;
 }

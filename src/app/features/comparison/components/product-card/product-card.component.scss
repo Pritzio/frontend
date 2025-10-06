@@ -311,6 +311,33 @@
   padding-top: 1rem;
 }
 
+.out-of-stock-text {
+  color: #b91c1c;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.price-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.out-of-stock-badge {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.store-price.out-of-stock {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+
 .btn-primary {
   width: 100%;
   background: #3b82f6;

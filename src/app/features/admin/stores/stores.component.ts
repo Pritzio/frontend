@@ -259,6 +259,19 @@ export class StoresComponent implements OnInit, OnDestroy {
     return categoryMap[category] || category;
   }
 
+  /**
+   * Get total products count for a store
+   */
+  public getTotalProducts(store: IStore): number {
+    // If the store already has the count from the API, use it
+    if (store.storeProductsCount !== undefined) {
+      return store.storeProductsCount;
+    }
+    
+    // If not available, return 0 (this will be updated when we load the data)
+    return 0;
+  }
+
   // ===== Private Methods =====
 
   private _createFiltersForm(): FormGroup {
@@ -356,4 +369,5 @@ export class StoresComponent implements OnInit, OnDestroy {
 
     return filters;
   }
+
 }
