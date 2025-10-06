@@ -489,7 +489,7 @@
             </div>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <div *ngFor="let product of group.products" 
+              <div *ngFor="let product of group.products; let i = index" 
                    class="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors bg-white">
                 <div class="flex items-start gap-4">
                   <img 
@@ -524,18 +524,31 @@
                         <i class="icon-hash mr-1"></i>
                         ID: {{ product.id }}
                       </p>
-                      <div *ngIf="product.storeProducts && product.storeProducts.length > 1" class="text-xs text-gray-500">
-                        <i class="icon-info mr-1"></i>
-                        Disponible en {{ product.storeProducts.length }} tiendas
+                      <div *ngIf="product.storeProducts && product.storeProducts.length > 0" class="text-xs text-gray-500">
+                        <i class="icon-store mr-1"></i>
+                        Tiendas: 
+                        <span *ngFor="let storeProduct of product.storeProducts; let last = last">
+                          {{ storeProduct.store || 'Tienda desconocida' }}<span *ngIf="!last">, </span>
+                        </span>
+                      </div>
+                      <div *ngIf="product.createdAt" class="text-xs text-gray-500">
+                        <i class="icon-calendar mr-1"></i>
+                        Creado: {{ product.createdAt | date:'dd/MM/yyyy' }}
+                      </div>
+                    </div>
+                    <div class="mb-2">
+                      <div class="text-xs text-gray-500">
+                        <i class="icon-store mr-1"></i>
+                        Tienda original: <span class="font-medium">{{ product.storeName || 'Tienda desconocida' }}</span>
                       </div>
                     </div>
                     <div class="flex items-center gap-2 flex-wrap">
                       <a 
-                        *ngIf="getProductUrl(product)"
-                        [href]="getProductUrl(product)" 
+                        [href]="product.url" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         class="px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-100 hover:bg-blue-200 rounded-md transition-colors"
+                        title="Ver producto en la tienda"
                       >
                         <i class="icon-external-link mr-1"></i>
                         Ver Producto

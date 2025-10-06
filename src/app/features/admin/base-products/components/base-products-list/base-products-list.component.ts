@@ -391,6 +391,8 @@ export class BaseProductsListComponent implements OnInit, OnDestroy {
     return this._productSimilarityService.formatAvgSimilarityPercentage(group);
   }
 
+
+
   /**
    * Get total stores count for a base product
    */

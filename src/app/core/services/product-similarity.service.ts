@@ -42,6 +42,7 @@ export interface ProductSummary {
   brand: string | null;
   image: string;
   url: string | null;            // Product URL (from first store product)
+  storeName?: string;            // Store name (from first store product)
   storeCount: number;
   totalVariants: number;
   createdAt: string;
