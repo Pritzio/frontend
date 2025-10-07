@@ -24,17 +24,6 @@
     <h3 class="product-name">{{ product.name }}</h3>
     <span class="product-brand">{{ product.brand }}</span>
   </div>
-  
-  <div class="product-stats">
-    <div class="stat-item">
-      <span class="stat-icon">🏪</span>
-      <span class="stat-text">{{ getStoreCountText() }}</span>
-    </div>
-    <div class="stat-item">
-      <span class="stat-icon">📦</span>
-      <span class="stat-text">{{ getVariantsText() }}</span>
-    </div>
-  </div>
 
   <!-- Store prices section -->
   <div class="store-prices" *ngIf="hasStoreInfo()">

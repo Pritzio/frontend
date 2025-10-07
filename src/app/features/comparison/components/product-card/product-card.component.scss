@@ -133,13 +133,6 @@
   font-weight: 500;
 }
 
-.product-stats {
-  display: flex;
-  gap: 1rem;
-  margin: 1rem 0;
-  flex-wrap: wrap;
-}
-
 .store-prices {
   margin: 1rem 0;
   padding: 0.75rem;
@@ -362,14 +355,56 @@
 
 @media (max-width: 640px) {
   .product-card {
-    padding: 1rem;
-  }
-
-  .product-stats {
-    gap: 0.75rem;
+    padding: 8px;
   }
 
   .stat-item {
     font-size: 0.8rem;
   }
+
+  .product-header {
+    margin-bottom: 5px;
+  }
+
+  .product-name {
+    font-size: 12px;
+  }
+
+  .product-brand {
+    font-size: 10px;
+  }
+
+  .product-image {
+    height: 100px;
+  }
+
+  .store-prices {
+    margin: 0px;
+    padding: 4px;
+  }
+
+  .prices-title {
+    font-size: 12px;
+  }
+
+  .price-item {
+    padding: 4px;
+  }
+
+  .store-name {
+    font-size: 12px;
+  }
+
+  .store-price {
+    font-size: 12px;
+  }
+
+  .btn-primary {
+    padding: 4px;
+  }
+
+  .product-actions {
+    padding-top: 4px;
+  }
+
 }
